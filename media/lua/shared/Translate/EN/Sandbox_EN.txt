@@ -1,0 +1,169 @@
+Sandbox_EN = {
+
+
+
+    Sandbox_EnclosureChallenge = "Enclosure Challenge",
+	Sandbox_EnclosureChallenge_TempMapSymbol = "Temp Map Symbols",
+	Sandbox_EnclosureChallenge_TempMapSymbol_tooltip = "Enclosure Map Symbols Deleted after every challenges. May delete symbols that you personally added",
+
+	Sandbox_EnclosureChallenge_AllowQuitChallenge = "Allow Quit Challenge",
+	Sandbox_EnclosureChallenge_StatusChat = "Announce Challenge Status",
+	Sandbox_EnclosureChallenge_StatusChat_tooltip = "Multiplayer Only",
+
+	Sandbox_EnclosureChallenge_ShowArrowGuide = "Show Arrow Guide",
+	Sandbox_EnclosureChallenge_AllowRemoteChallenge = "Allow Remote Challenge",
+	Sandbox_EnclosureChallenge_AllowRemoteChallenge_tooltip = "Involves Teleporting Players. Might need to disable AntiCheatProtectionType2 and 3",
+	Sandbox_EnclosureChallenge_CoordNotif = "Announcements Includes Enclosure Number",
+
+
+	Sandbox_EnclosureChallenge_ChallengeHours = "Challenge Hours",
+
+	Sandbox_EnclosureChallenge_StartingUnlockPoints = "Starting Unlock Points",
+	Sandbox_EnclosureChallenge_StartingUnlockPoints_tooltip = "Starting Unlock Points given at every start of new character",
+
+	Sandbox_EnclosureChallenge_UnlockPointsReward = "Unlock Points Reward",
+	Sandbox_EnclosureChallenge_UnlockPointsReward_tooltip = "Unlock Points Reward Given Per Conquered Enclosure",
+
+
+
+
+	Sandbox_EnclosureChallenge_CountdownSeconds = "Countdown Seconds",
+	Sandbox_EnclosureChallenge_CountdownSeconds_tooltip = "Next Level Delay Countdown in real life seconds",
+
+	Sandbox_EnclosureChallenge_StopCar = "Stop Car",
+	Sandbox_EnclosureChallenge_StopCar_tooltip = "Cant Start vehicles during challenges",
+
+	Sandbox_EnclosureChallenge_LeakBattery = "Drain Car Batteries",
+	Sandbox_EnclosureChallenge_LeakBattery_tooltip = "Drain Car Batteries during challenges",
+
+	Sandbox_EnclosureChallenge_ReturnStaggered = "Return Staggered",
+	Sandbox_EnclosureChallenge_ReturnStaggered_tooltip = "Out-of-bounds players are teleported back and briefly staggered",
+
+
+	Sandbox_EnclosureChallenge14 = "Enclosure Challenge Rewards 14",
+    Sandbox_EnclosureChallenge13 = "Enclosure Challenge Rewards 13",
+	Sandbox_EnclosureChallenge12 = "Enclosure Challenge Rewards 12",
+	Sandbox_EnclosureChallenge11 = "Enclosure Challenge Rewards 11",
+	Sandbox_EnclosureChallenge10 = "Enclosure Challenge Rewards 10",
+	Sandbox_EnclosureChallenge9 = "Enclosure Challenge Rewards 9",
+    Sandbox_EnclosureChallenge8 = "Enclosure Challenge Rewards 8",
+	Sandbox_EnclosureChallenge7 = "Enclosure Challenge Rewards 7",
+	Sandbox_EnclosureChallenge6 = "Enclosure Challenge Rewards 6",
+	Sandbox_EnclosureChallenge5 = "Enclosure Challenge Rewards 5",
+	Sandbox_EnclosureChallenge4 = "Enclosure Challenge Rewards 4",
+    Sandbox_EnclosureChallenge3 = "Enclosure Challenge Rewards 3",
+	Sandbox_EnclosureChallenge2 = "Enclosure Challenge Rewards 2",
+	Sandbox_EnclosureChallenge1 = "Enclosure Challenge Rewards 1",
+
+	Sandbox_EnclosureChallengeColor = "Enclosure Challenge Colors"
+
+	Sandbox_EnclosureChallengeColor_MarkerColor = "Marker Color",
+	Sandbox_EnclosureChallengeColor_MarkerColor_tooltip = "Red;Green;Blue;Alpha",
+
+	Sandbox_EnclosureChallengeColor_GoodColor = "Good Color",
+	Sandbox_EnclosureChallengeColor_GoodColor_tooltip = "Red;Green;Blue;Alpha",
+
+	Sandbox_EnclosureChallengeColor_BadColor = "Good Color",
+	Sandbox_EnclosureChallengeColor_BadColor_tooltip = "Red;Green;Blue;Alpha",
+
+	Sandbox_EnclosureChallengeColor_NeutralColor = "Neutral Color",
+	Sandbox_EnclosureChallengeColor_NeutralColor_tooltip = "Red;Green;Blue;Alpha",
+
+	Sandbox_EnclosureChallenge1_RewardTitle = "Rewards 1 Category Title",
+	Sandbox_EnclosureChallenge1_RewardTitle_tooltip = "Leave the title blank to disable the category",
+	Sandbox_EnclosureChallenge1_Rewards = "Rewards 1 Rewards List",
+	Sandbox_EnclosureChallenge1_Rewards_tooltip = "Separate the reward items using ; as delimiter",
+	Sandbox_EnclosureChallenge1_RewardChance = "Rewards 1 Reward Chance",
+	Sandbox_EnclosureChallenge1_RewardChance_tooltip = "Set to 0 to disable rewards for this category",
+
+	Sandbox_EnclosureChallenge2_RewardTitle = "Rewards 2 Category Title",
+	Sandbox_EnclosureChallenge2_RewardTitle_tooltip = "Leave the title blank to disable the category",
+	Sandbox_EnclosureChallenge2_Rewards = "Rewards 2 Rewards List",
+	Sandbox_EnclosureChallenge2_Rewards_tooltip = "Separate the reward items using ; as delimiter",
+	Sandbox_EnclosureChallenge2_RewardChance = "Rewards 2 Reward Chance",
+	Sandbox_EnclosureChallenge2_RewardChance_tooltip = "Set to 0 to disable rewards for this category",
+
+	Sandbox_EnclosureChallenge3_RewardTitle = "Rewards 3 Category Title",
+	Sandbox_EnclosureChallenge3_RewardTitle_tooltip = "Leave the title blank to disable the category",
+	Sandbox_EnclosureChallenge3_Rewards = "Rewards 3 Rewards List",
+	Sandbox_EnclosureChallenge3_Rewards_tooltip = "Separate the reward items using ; as delimiter",
+	Sandbox_EnclosureChallenge3_RewardChance = "Rewards 3 Reward Chance",
+	Sandbox_EnclosureChallenge3_RewardChance_tooltip = "Set to 0 to disable rewards for this category",
+
+	Sandbox_EnclosureChallenge4_RewardTitle = "Rewards 4 Category Title",
+	Sandbox_EnclosureChallenge4_RewardTitle_tooltip = "Leave the title blank to disable the category",
+	Sandbox_EnclosureChallenge4_Rewards = "Rewards 4 Rewards List",
+	Sandbox_EnclosureChallenge4_Rewards_tooltip = "Separate the reward items using ; as delimiter",
+	Sandbox_EnclosureChallenge4_RewardChance = "Rewards 4 Reward Chance",
+	Sandbox_EnclosureChallenge4_RewardChance_tooltip = "Set to 0 to disable rewards for this category",
+
+	Sandbox_EnclosureChallenge5_RewardTitle = "Rewards 5 Category Title",
+	Sandbox_EnclosureChallenge5_RewardTitle_tooltip = "Leave the title blank to disable the category",
+	Sandbox_EnclosureChallenge5_Rewards = "Rewards 5 Rewards List",
+	Sandbox_EnclosureChallenge5_Rewards_tooltip = "Separate the reward items using ; as delimiter",
+	Sandbox_EnclosureChallenge5_RewardChance = "Rewards 5 Reward Chance",
+	Sandbox_EnclosureChallenge5_RewardChance_tooltip = "Set to 0 to disable rewards for this category",
+
+	Sandbox_EnclosureChallenge6_RewardTitle = "Rewards 6 Category Title",
+	Sandbox_EnclosureChallenge6_RewardTitle_tooltip = "Leave the title blank to disable the category",
+	Sandbox_EnclosureChallenge6_Rewards = "Rewards 6 Rewards List",
+	Sandbox_EnclosureChallenge6_Rewards_tooltip = "Separate the reward items using ; as delimiter",
+	Sandbox_EnclosureChallenge6_RewardChance = "Rewards 6 Reward Chance",
+	Sandbox_EnclosureChallenge6_RewardChance_tooltip = "Set to 0 to disable rewards for this category",
+
+	Sandbox_EnclosureChallenge7_RewardTitle = "Rewards 7 Category Title",
+	Sandbox_EnclosureChallenge7_RewardTitle_tooltip = "Leave the title blank to disable the category",
+	Sandbox_EnclosureChallenge7_Rewards = "Rewards 7 Rewards List",
+	Sandbox_EnclosureChallenge7_Rewards_tooltip = "Separate the reward items using ; as delimiter",
+	Sandbox_EnclosureChallenge7_RewardChance = "Rewards 7 Reward Chance",
+	Sandbox_EnclosureChallenge7_RewardChance_tooltip = "Set to 0 to disable rewards for this category",
+
+	Sandbox_EnclosureChallenge8_RewardTitle = "Rewards 8 Category Title",
+	Sandbox_EnclosureChallenge8_RewardTitle_tooltip = "Leave the title blank to disable the category",
+	Sandbox_EnclosureChallenge8_Rewards = "Rewards 8 Rewards List",
+	Sandbox_EnclosureChallenge8_Rewards_tooltip = "Separate the reward items using ; as delimiter",
+	Sandbox_EnclosureChallenge8_RewardChance = "Rewards 8 Reward Chance",
+	Sandbox_EnclosureChallenge8_RewardChance_tooltip = "Set to 0 to disable rewards for this category",
+
+	Sandbox_EnclosureChallenge9_RewardTitle = "Rewards 9 Category Title",
+	Sandbox_EnclosureChallenge9_RewardTitle_tooltip= "Leave the title blank to disable the category",
+	Sandbox_EnclosureChallenge9_Rewards = "Rewards 9 Rewards List",
+	Sandbox_EnclosureChallenge9_Rewards_tooltip = "Separate the reward items using ; as delimiter",
+	Sandbox_EnclosureChallenge9_RewardChance = "Rewards 9 Reward Chance",
+	Sandbox_EnclosureChallenge9_RewardChance_tooltip = "Set to 0 to disable rewards for this category",
+
+	Sandbox_EnclosureChallenge10_RewardTitle = "Rewards 10 Category Title",
+	Sandbox_EnclosureChallenge10_RewardTitle_tooltip= "Leave the title blank to disable the category",
+	Sandbox_EnclosureChallenge10_Rewards = "Rewards 10 Rewards List",
+	Sandbox_EnclosureChallenge10_Rewards_tooltip = "Separate the reward items using ; as delimiter",
+	Sandbox_EnclosureChallenge10_RewardChance = "Rewards 10 Reward Chance",
+	Sandbox_EnclosureChallenge10_RewardChance_tooltip = "Set to 0 to disable rewards for this category",
+
+	Sandbox_EnclosureChallenge11_RewardTitle = "Rewards 11 Category Title",
+	Sandbox_EnclosureChallenge11_RewardTitle_tooltip= "Leave the title blank to disable the category",
+	Sandbox_EnclosureChallenge11_Rewards = "Rewards 11 Rewards List",
+	Sandbox_EnclosureChallenge11_Rewards_tooltip = "Separate the reward items using ; as delimiter",
+	Sandbox_EnclosureChallenge11_RewardChance = "Rewards 11 Reward Chance",
+	Sandbox_EnclosureChallenge11_RewardChance_tooltip = "Set to 0 to disable rewards for this category",
+
+	Sandbox_EnclosureChallenge12_RewardTitle = "Rewards 12 Category Title",
+	Sandbox_EnclosureChallenge12_RewardTitle_tooltip= "Leave the title blank to disable the category",
+	Sandbox_EnclosureChallenge12_Rewards = "Rewards 12 Rewards List",
+	Sandbox_EnclosureChallenge12_Rewards_tooltip = "Separate the reward items using ; as delimiter",
+	Sandbox_EnclosureChallenge12_RewardChance = "Rewards 12 Reward Chance",
+	Sandbox_EnclosureChallenge12_RewardChance_tooltip = "Set to 0 to disable rewards for this category",
+
+	Sandbox_EnclosureChallenge13_RewardTitle = "Rewards 13 Category Title",
+	Sandbox_EnclosureChallenge13_RewardTitle_tooltip = "Leave the title blank to disable the category",
+	Sandbox_EnclosureChallenge13_Rewards = "Rewards 13 Rewards List",
+	Sandbox_EnclosureChallenge13_Rewards_tooltip = "Separate the reward items using ; as delimiter",
+	Sandbox_EnclosureChallenge13_RewardChance = "Rewards 13 Reward Chance",
+	Sandbox_EnclosureChallenge13_RewardChance_tooltip = "Set to 0 to disable rewards for this category",
+
+	Sandbox_EnclosureChallenge14_RewardTitle = "Rewards 14 Category Title",
+	Sandbox_EnclosureChallenge14_RewardTitle_tooltip = "Leave the title blank to disable the category",
+	Sandbox_EnclosureChallenge14_Rewards = "Rewards 14 Rewards List",
+	Sandbox_EnclosureChallenge14_Rewards_tooltip = "Separate the reward items using ; as delimiter",
+	Sandbox_EnclosureChallenge14_RewardChance = "Rewards 14 Reward Chance",
+	Sandbox_EnclosureChallenge14_RewardChance_tooltip = "Set to 0 to disable rewards for this category",
+

@@ -1,0 +1,35 @@
+ContextMenu_EN = {
+
+	ContextMenu_EnclosureChallenge = "Enclosure Challenge",
+	ContextMenu_EnclosureChallenge_StartHere = "Start Challenge Here",
+	ContextMenu_EnclosureChallenge_StartRemote = "Start Remote Challenge",
+	ContextMenu_EnclosureChallenge_StartRemote_tip = "Start challenge from a random remote location",
+
+	ContextMenu_EnclosureChallenge_GiveUp = "Forfeit Challenge",
+
+	ContextMenu_EnclosureChallenge_Unlock = "Unlock Enclosure",
+
+	ContextMenu_EnclosureChallenge_Quit = "Quit Challenge",
+	ContextMenu_EnclosureChallenge_Quit_tip = "Quit current challenge early",
+
+	ContextMenu_EnclosureChallenge_ChallengeWithdrawn = "Withdrawn Enclosure Challenge",
+	ContextMenu_EnclosureChallenge_ChallengeAccepted = "Accepted Enclosure Challenge",
+	ContextMenu_EnclosureChallenge_MidSq = "Center Square: ",
+
+	ContextMenu_EnclosureChallenge_Cell = "Enclosure: ",
+	ContextMenu_EnclosureChallenge_Time = "Remaining Hrs: ",
+	ContextMenu_EnclosureChallenge_Confirm = "Challenge Enclosure: ",
+	ContextMenu_EnclosureChallenge_Conquer = "Conquered Enclosure Challenge",
+
+	ContextMenu_EnclosureChallenge_Fail = "Failed The Challenge",
+
+	ContextMenu_EnclosureChallenge_ChooseCategory = "Choose Reward Category",
+	ContextMenu_EnclosureChallenge_Next = "Proceed to next level",
+
+
+
+}
+
+
+
+

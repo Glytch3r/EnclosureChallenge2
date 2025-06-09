@@ -1,0 +1,10 @@
+
+module Base {
+	sound  EnclosureChallenge_In { category = UI, clip { file = media/sound/EnclosureChallenge_In.ogg, distanceMax = 80, is3D = true, volume = 0.4, maxGain = 1,  } }
+	sound  EnclosureChallenge_Out { category = UI, clip { file = media/sound/EnclosureChallenge_Out.ogg, distanceMax = 80, is3D = true, volume = 0.8, maxGain = 1, } }
+	sound  EnclosureChallenge_Prompt { category = UI, clip { file = media/sound/EnclosureChallenge_Prompt.ogg, distanceMax = 80, is3D = true, volume = 0.6, maxGain = 1, } }
+	sound  EnclosureChallenge_Count { category = UI, clip { file = media/sound/EnclosureChallenge_Count.ogg, distanceMax = 80, is3D = true, volume = 0.7, maxGain = 1, } }
+
+}
+
+
