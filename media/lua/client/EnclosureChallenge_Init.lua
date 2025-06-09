@@ -29,7 +29,7 @@ function EnclosureChallenge.initChallengeData(pl)
 
     local ec = EnclosureChallenge.getData()
 
-    if ec.EnclosureX or ec.EnclosureY or ec.enclosureX or ec.enclosureY then
+    if ec.EnclosureX or ec.EnclosureY then
         EnclosureChallenge.resetData()
         return
     end
@@ -37,12 +37,13 @@ function EnclosureChallenge.initChallengeData(pl)
     ec.UnlockPoints     = ec.UnlockPoints     or SandboxVars.EnclosureChallenge.StartingUnlockPoints or 1
     ec.RewardChoice     = ec.RewardChoice     or 0
     ec.ChallengeTime    = ec.ChallengeTime    or 0
-    ec.RemoteChallenge  = ec.RemoteChallenge  or ""
     ec.RemoteWins       = ec.RemoteWins       or 0
     ec.Challenges       = ec.Challenges       or {}
     ec.Conquered        = ec.Conquered        or {}
     ec.PrevCoord        = {}
     ec.Rebound          = ec.Rebound          or {}
+    ec.RemoteChallenge  = ec.RemoteChallenge  or ""
+    ec.Stage            = ec.Stage            or ""
 end
 
 Events.OnCreatePlayer.Add(function()
@@ -56,7 +57,7 @@ Events.OnCreatePlayer.Add(function()
 
     local encStr = EnclosureChallenge.getEnclosureStr(pl)
     EnclosureChallenge.PreviousEnclosure = encStr
-
+    EnclosureChallenge.setReturnPointMarker()
     triggerEvent("OnEnclosureChange", encStr, encStr)
 
     EnclosureChallenge.showDraw = true

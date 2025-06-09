@@ -161,7 +161,7 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
 		if isChallenger then
 			local quitOpt = rootMenu:addOption(getText("ContextMenu_EnclosureChallenge_Quit"), worldobjects, function()
 				context:hideAndChildren()
-				EnclosureChallenge.ConfirmDialog(pl, getText("ContextMenu_EnclosureChallenge_Giveup"), "Enclosure Challenge",  true, false)
+				EnclosureChallenge.ConfirmDialog(pl, "Forfeit Challenge", "Enclosure Challenge",  true, false)
 			end)
 
 			local quitTip = ISWorldObjectContextMenu.addToolTip()
@@ -181,8 +181,7 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
 	EnclosureChallenge.addCategorySubmenu(context, rootMenu, worldobjects)
 	-----------------------    dbg        ---------------------------
 	if getCore():getDebug() then
-		local dbgOpt = rootMenu:addOption(getText("ContextMenu_EnclosureChallenge_ChooseCategory"))
-		dbgOpt.iconTexture = getTexture("media/ui/EnclosureChallenge_Rewards.png")
+		local dbgOpt = rootMenu:addOption("Debug")
 		local dbgSub = ISContextMenu:getNew(context)
 		context:addSubMenu(dbgOpt, dbgSub)
 

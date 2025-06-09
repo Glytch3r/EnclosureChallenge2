@@ -54,6 +54,13 @@ function EnclosureChallenge.saveCoord()
     ec.PrevCoord = {x= round(pl:getX()), y = round(pl:getY()), z= pl:getZ()}
 end
 
+
+function EnclosureChallenge.isValidSq(sq)
+    sq = sq or getPlayer():getCurrentSquare()
+    return sq and sq:connectedWithFloor() and sq:getFloor() ~= nil
+end
+-----------------------            ---------------------------
+
 function EnclosureChallenge.getRandMidCoord()
     local size = EnclosureChallenge.EnclosureSize or 189
 
@@ -73,12 +80,6 @@ function EnclosureChallenge.getRandMidCoord()
     return midX, midY, encX, encY
 end
 
-
-function EnclosureChallenge.isValidSq(sq)
-    sq = sq or getPlayer():getCurrentSquare()
-    return sq and sq:connectedWithFloor() and sq:getFloor() ~= nil
-end
------------------------            ---------------------------
 function EnclosureChallenge.tpRandMidSq()
     local pl = getPlayer()
     if EnclosureChallenge.isChallenger(pl) then return end
@@ -91,7 +92,7 @@ function EnclosureChallenge.tpRandMidSq()
     local attemptCount = 0
 
     local midX, midY, encX, encY = EnclosureChallenge.getRandMidCoord()
-    EnclosureChallenge.tp(pl, midX, midY, pl:getZ())
+    EnclosureChallenge.tp(pl, midX, midY, 0)
 
     EnclosureChallenge.tpHandler = function()
         rTick = rTick + 1
@@ -108,7 +109,7 @@ function EnclosureChallenge.tpRandMidSq()
             end
 
             midX, midY, encX, encY = EnclosureChallenge.getRandMidCoord()
-            EnclosureChallenge.tp(pl, midX, midY, pl:getZ())
+            EnclosureChallenge.tp(pl, midX, midY, 0)
             rTick = 0
             return
         end
@@ -122,6 +123,7 @@ end
 
 
 -----------------------            ---------------------------
+
 --[[
 function EnclosureChallenge.tpRandMidSq()
     local pl = getPlayer()

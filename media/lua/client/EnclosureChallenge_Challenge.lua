@@ -47,15 +47,21 @@ function EnclosureChallenge.setChallenge(isStart, isRemote)
 		ec.ChallengeTime = 0
 	end
 end
-function EnclosureChallenge.doWin()
+
+
+function EnclosureChallenge.doWin(isRemote)
     local pl = getPlayer(); if not pl then return end
-    EnclosureChallenge.rebound(pl)
-    timer:Simple(3, function()
+    isRemote =  isRemote or EnclosureChallenge.isRemoteMode(pl)
+
+    --EnclosureChallenge.rebound(pl)
+    timer:Simple(1, function()
         EnclosureChallenge.doReward();
-        local isRemote =  EnclosureChallenge.isRemoteMode(pl)
+        EnclosureChallenge.storeConquered(isRemote)
         EnclosureChallenge.setChallenge(false, isRemote)
         EnclosureChallenge.setMarkers(pl, false)
-        EnclosureChallenge.storeConquered(isRemote)
+        EnclosureChallenge.addChallengeSymbols(pl)
+        local rewards = SandboxVars.EnclosureChallenge.UnlockPointsReward
+        local ec = EnclosureChallenge.getData()
         EnclosureChallenge.clearRebound(pl)
         getSoundManager():playUISound("GainExperienceLevel")
     end)
@@ -68,7 +74,7 @@ function EnclosureChallenge.storeConquered(isRemote)
 	local ec = EnclosureChallenge.getData()
 	local x, y = ec.Rebound.x, ec.Rebound.y
 	local z = pl:getZ()
-	local encStr = EnclosureChallenge.getEnclosureStrXY(x, y)
+	local encStr = ec.Stage or EnclosureChallenge.getEnclosureStrXY(x, y) or EnclosureChallenge.getEnclosureStr(pl)
 	isRemote = isRemote or EnclosureChallenge.isRemoteMode(pl)
 
 	if isRemote then
@@ -76,7 +82,8 @@ function EnclosureChallenge.storeConquered(isRemote)
 		ec.RemoteWins = ec.RemoteWins + 1
 		HaloTextHelper.addTextWithArrow(pl, "Remote Wins + 1", true, HaloTextHelper.getColorGreen())
 	else
-		ec.UnlockPoints = ec.UnlockPoints + 1
+        local rewards = SandboxVars.EnclosureChallenge.UnlockPointsReward
+		ec.UnlockPoints = ec.UnlockPoints + rewards
 		HaloTextHelper.addTextWithArrow(pl, "Unlock Points + 1", true, HaloTextHelper.getColorGreen())
 		local sq = getCell():getOrCreateGridSquare(x, y, z)
 		if sq then
@@ -84,6 +91,7 @@ function EnclosureChallenge.storeConquered(isRemote)
 		end
 		ec.Conquered = ec.Conquered or {}
 		ec.Conquered[encStr] = true
+
 	end
 
 	EnclosureChallenge.clearRebound()
@@ -108,9 +116,18 @@ function EnclosureChallenge.isChallenger(pl)
     pl = pl or getPlayer()
     local ec = EnclosureChallenge.getData()
     if not ec then return false end
-    return ec.ChallengeTime and ec.ChallengeTime > 0
+    return ec.ChallengeTime and ec.ChallengeTime > 0 and ((ec.Stage ~= "" and ec.Stage ~= nil) or (ec.RemoteChallenge ~= "" and ec.RemoteChallenge ~= nil))
 end
 
+function EnclosureChallenge.isAdditiveMode(pl)
+    pl = pl or getPlayer()
+    if EnclosureChallenge.isChallenger(pl) then
+        local ec = EnclosureChallenge.getData()
+        if not ec then return false end
+        return ec.Stage ~= nil and ec.Stage ~= ""
+    end
+    return false
+end
 function EnclosureChallenge.isRemoteMode(pl)
     pl = pl or getPlayer()
     if EnclosureChallenge.isChallenger(pl) then
@@ -119,17 +136,6 @@ function EnclosureChallenge.isRemoteMode(pl)
         return ec.RemoteChallenge ~= nil and ec.RemoteChallenge ~= ""
     end
     return false
-end
-function EnclosureChallenge.setRemoteMode(active)
-    local pl = getPlayer()
-    local ec = EnclosureChallenge.getData()
-    if not ec then return end
-
-    if active then
-        ec.RemoteChallenge = EnclosureChallenge.getEnclosureStr(pl)
-    else
-        ec.RemoteChallenge = ""
-    end
 end
 
 function EnclosureChallenge.getChallengeTime(pl)
@@ -242,31 +248,3 @@ function EnclosureChallenge.doUnlock(targ)
 end
 
 -----------------------            ---------------------------
-function EnclosureChallenge.challengeStats()
-    local pl = getPlayer()
-    local str = ""
-
-    local ec = EnclosureChallenge.getdata()
-    if not ec then return end
-
-    str = "\nConquered: " .. tostring(#ec.Conquered)
-    str = "\nRemote Wins: " .. tostring(ec.RemoteWins)
-    str = tostring(str).. "\nUnlocked: " .. tostring(#ec.Challenges)
-    str = tostring(str).. "\nPoints: " .. tostring(ec.UnlockPoints)
-    str = tostring(str).. "\nReward: " .. tostring(ec.RewardChoice)
-
-    if EnclosureChallenge.isChallenger(pl) then
-        if ec.ChallengeTime > 0 then
-            if time == 1 then
-                str = tostring(str).. "\nFinal Hour"
-            else
-                str = tostring(str).. "\nHours Remaining: " .. tostring(ec.ChallengeTime)
-            end
-        end
-    end
-
-    --ec.Rebound
-
-    return str
-
-end

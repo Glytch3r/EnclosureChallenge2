@@ -39,6 +39,8 @@ Sandbox_EN = {
 	Sandbox_EnclosureChallenge_ReturnStaggered = "Return Staggered",
 	Sandbox_EnclosureChallenge_ReturnStaggered_tooltip = "Out-of-bounds players are teleported back and briefly staggered",
 
+	Sandbox_EnclosureChallenge_FontSize = "GUI Font Size",
+
 
 	Sandbox_EnclosureChallenge14 = "Enclosure Challenge Rewards 14",
     Sandbox_EnclosureChallenge13 = "Enclosure Challenge Rewards 13",

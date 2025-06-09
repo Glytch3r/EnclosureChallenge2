@@ -30,8 +30,7 @@ EnclosureChallenge = EnclosureChallenge or {}
 
 function EnclosureChallenge.ChallengeTimer()
     local pl = getPlayer()
-    local data = pl:getModData()
-    local user = tostring(pl:getUsername())
+    local user = pl:getUsername()
 
     local ec =  EnclosureChallenge.getData()
     if ec and ec.ChallengeTime and ec.ChallengeTime > 0 then
@@ -39,7 +38,7 @@ function EnclosureChallenge.ChallengeTimer()
         if ec.ChallengeTime <= 0 then
             if EnclosureChallenge.isShouldAnnounce() then
 
-                local enc = EnclosureChallenge.getEnclosureXY(  pl:getX(),   pl:getY())
+                local enc = EnclosureChallenge.getEnclosureXY( pl:getX(),   pl:getY())
                 if not enc then return end
                 local EnclosureX = enc.x
                 local EnclosureY = enc.y
@@ -55,16 +54,17 @@ function EnclosureChallenge.ChallengeTimer()
                     pl:setHaloNote(msg, 150, 250, 150, 900)
                 end
             end
-            --EnclosureChallenge.countdown() -- win
 
             timer:Simple(2, function()
                 if pl:isAlive() then
                     EnclosureChallenge.doWin()
                 end
             end)
-            if getCore():getDebug()  then
+            if getCore():getDebug() then
                 print("WIN")
+
             end
+
         end
 	end
 

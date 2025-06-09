@@ -15,16 +15,6 @@
 |                       		                                    														 	  |
 |                       	Support:    https://ko-fi.com/glytch3r														    	  |
 |_______________________________________________________________________________________________________________________________-]]
---[[_____________________________________________________________________________________________________________________________
-   ░▒▓██████▓▒░    ░▒▓████████▓▒░    ░▒▓█▓▒░         ░▒▓█▓▒░      ░▒▓██████▓▒░   ░▒▓█▓▒░ ░▒▓█▓▒░  ░▒▓███████▓▒░    ░▒▓█▓▒░  ░▒█▒░
-  ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░           ░▒▓█▓▒░         ░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░ ░▒▓█▓▒░  ▒▓░    ░▒▓█▓▒░   ░▒▓█▓▒░  ░▒█▒░
-  ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░           ░▒▓█▓▒░         ░▒▓█▓▒░     ░▒▓█▓▒░         ░▒▓█▓▒░ ░▒▓█▓▒░         ░▒▓█▓▒░   ░▒▓█▓▒░  ░▒▓▒░
-  ░▒▓█▓▒▒▓███▓▒░   ░▒▓█▓▒░         ░▒▓██████▓▒░      ░▒▓█▓▒░     ░▒▓█▓▒░         ░▒▓█████████▓▒░     ░▒▓███▓▒░     ░▒▓███████▓▒░
-  ░▒▓█▓▒░          ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░     ░▒▓█▓▒░     ░▒▓█▓▒░         ░▒▓█▓▒░ ░▒▓█▓▒░         ░▒▓█▓▒░   ░▒▓█▒░  ░▒▓█▒░
-  ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░     ░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░ ░▒▓█▓▒░  ▒▓░    ░▒▓█▓▒░   ░▒▓█▒░  ░▒▓█▒░
-   ░▒▓█████▓▒░     ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓███████▓▒░   ░▒▓██████▓▒░   ░▒▓█▓▒░ ░▒▓█▓▒░  ░▒▓███████▓▒░    ░▒▓███████▓▒░
-█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████--]]
-
 
 EnclosureChallenge = EnclosureChallenge or {}
 
@@ -70,33 +60,25 @@ end
 function EnclosureChallenge.onYes(isQuit, isRemote)
 	local pl = getPlayer()
 	if not pl then return end
-
-	local isStart = not isQuit
 	EnclosureChallenge.sfx(isStart)
 
 	local encStr = EnclosureChallenge.getEnclosureStr(pl)
 	isRemote = isRemote or EnclosureChallenge.isRemoteMode(pl)
-
 	if isRemote then
 		EnclosureChallenge.setChallenge(isStart, isRemote)
-
 	elseif isQuit then
-		EnclosureChallenge.clearRebound()
-		EnclosureChallenge.setMarkers(pl, false)
-		EnclosureChallenge.setChallenge(false, isRemote)
-		getSoundManager():playUISound("EnclosureChallenge_Out")
-		if isRemote then
-			EnclosureChallenge.goBack()
-		end
+		EnclosureChallenge.endChallenge(isRemote)
 	else
 		EnclosureChallenge.setChallenge(true, isRemote)
 	end
+
 
 	if EnclosureChallenge.isShouldAnnounce() then
 		local user = tostring(pl:getUsername())
 		local posStr = (encStr) and ": [" .. tostring(encStr).. "]" or ""
 		if not SandboxVars.EnclosureChallenge.CoordNotif then posStr = "" end
-		local msg = user .. " " ..
+		local msg = nil
+		msg = user .. " " ..
 		(isQuit and getText("ContextMenu_EnclosureChallenge_ChallengeWithdrawn") or getText("ContextMenu_EnclosureChallenge_ChallengeAccepted")) .. posStr
 		if isClient() then
 			processGeneralMessage(msg)
@@ -107,14 +89,17 @@ function EnclosureChallenge.onYes(isQuit, isRemote)
 end
 
 function EnclosureChallenge.onNo(isRemote, isQuit, pl)
-	pl = pl or getPlayer()
 	if not isQuit then
 		if isRemote then
 			EnclosureChallenge.goBack()
 		end
-		EnclosureChallenge.sfx(not isQuit)
+		--EnclosureChallenge.setMarkers(pl, false)
+		EnclosureChallenge.sfx(isQuit)
+
 	end
 end
+
+
 
 function EnclosureChallenge.ConfirmDialog(pl, text, title, isQuit, isRemote, unlockTarg)
 	pl = pl or getPlayer()
@@ -135,31 +120,46 @@ function EnclosureChallenge.ConfirmDialog(pl, text, title, isQuit, isRemote, unl
 
 	local dialog
 
-	local function cleanup()
-		if dialog then
-			dialog:setVisible(false)
-			dialog:removeFromUIManager()
+    local function cleanup()
+        if dialog then
+            dialog:setVisible(false)
+            dialog:removeFromUIManager()
 			EnclosureChallenge.disabler(false)
-		end
-	end
 
-	local function onClick(button)
+        end
+    end
+
+
+	local function onClick(target, button)
 		EnclosureChallenge.disabler(false)
 		if button.internal == "YES" then
 			if unlockTarg then
 				EnclosureChallenge.doUnlock(unlockTarg)
 			else
-				EnclosureChallenge.onYes(isQuit, isRemote)
+				EnclosureChallenge.onYes(isQuit)
 			end
 		elseif button.internal == "NO" then
 			EnclosureChallenge.onNo(isRemote, isQuit, pl)
 		end
-		cleanup()
+		dialog:setVisible(false)
+		dialog:removeFromUIManager()
 	end
-
 	dialog = ISModalDialog:new(x, y, width, height, text, true, nil, onClick, plNum, 0, title)
 	dialog.backgroundColor = { r = 0.6, g = 0.1, b = 0.1, a = 0.6 }
 	dialog.borderColor = { r = 0, g = 0, b = 0, a = 1 }
 	dialog:initialise()
 	dialog:addToUIManager()
+
+
 end
+
+--[[_____________________________________________________________________________________________________________________________
+   ░▒▓██████▓▒░    ░▒▓████████▓▒░    ░▒▓█▓▒░         ░▒▓█▓▒░      ░▒▓██████▓▒░   ░▒▓█▓▒░ ░▒▓█▓▒░  ░▒▓███████▓▒░    ░▒▓█▓▒░  ░▒█▒░
+  ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░           ░▒▓█▓▒░         ░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░ ░▒▓█▓▒░  ▒▓░    ░▒▓█▓▒░   ░▒▓█▓▒░  ░▒█▒░
+  ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░           ░▒▓█▓▒░         ░▒▓█▓▒░     ░▒▓█▓▒░         ░▒▓█▓▒░ ░▒▓█▓▒░         ░▒▓█▓▒░   ░▒▓█▓▒░  ░▒▓▒░
+  ░▒▓█▓▒▒▓███▓▒░   ░▒▓█▓▒░         ░▒▓██████▓▒░      ░▒▓█▓▒░     ░▒▓█▓▒░         ░▒▓█████████▓▒░     ░▒▓███▓▒░     ░▒▓███████▓▒░
+  ░▒▓█▓▒░          ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░     ░▒▓█▓▒░     ░▒▓█▓▒░         ░▒▓█▓▒░ ░▒▓█▓▒░         ░▒▓█▓▒░   ░▒▓█▒░  ░▒▓█▒░
+  ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░     ░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░ ░▒▓█▓▒░  ▒▓░    ░▒▓█▓▒░   ░▒▓█▒░  ░▒▓█▒░
+   ░▒▓█████▓▒░     ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓███████▓▒░   ░▒▓██████▓▒░   ░▒▓█▓▒░ ░▒▓█▓▒░  ░▒▓███████▓▒░    ░▒▓███████▓▒░
+█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████--]]
+

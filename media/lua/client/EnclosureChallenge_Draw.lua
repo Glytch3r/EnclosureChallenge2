@@ -62,9 +62,19 @@ function EnclosureChallenge.DrawMouseTip(x, y, z, str, r, g, b)
             EnclosureChallenge.checkMark = nil
         end
         if EnclosureChallenge.checkMark == nil then
+            local markerSize = 0.3
             local sq = getCell():getOrCreateGridSquare(x, y, z)
             if sq then
-                EnclosureChallenge.checkMark = getWorldMarkers():addGridSquareMarker("circle_only_highlight", "", sq, r, g, b, false, 0.3)
+                local stamp = "EnclosureChallenge_Bounds"
+                if EnclosureChallenge.isReboundSq(sq) then
+                    stamp = "EnclosureChallenge_Return"
+                elseif EnclosureChallenge.isConquered(sq) then
+                    stamp = "EnclosureChallenge_Conquered"
+                elseif EnclosureChallenge.isOutOfBounds(sq) then
+                    stamp = "EnclosureChallenge_Challenger"
+                end
+
+                EnclosureChallenge.checkMark = getWorldMarkers():addGridSquareMarker(stamp, stamp, sq, r, g, b, false, markerSize)
             end
         end
         Events.OnPostRender.Add(drawFunc)
@@ -75,7 +85,6 @@ function EnclosureChallenge.DrawMouseTip(x, y, z, str, r, g, b)
         end)
     end
 end
-
 function EnclosureChallenge.MouseTip()
     if not isIngameState() then return end
     if not EnclosureChallenge.showMouseTip then return end
@@ -83,40 +92,43 @@ function EnclosureChallenge.MouseTip()
     local sq = EnclosureChallenge.getPointer()
     if not sq then return end
 
-    local col = EnclosureChallenge.getEnclosureColor(sq)
-    local status = EnclosureChallenge.getEnclosureStatus(sq)
-    if not status then return end
-
-    local encStr = EnclosureChallenge.getEnclosureStr(sq)
-
     local x, y, z = sq:getX(), sq:getY(), sq:getZ()
     if not (x and y and z) then return end
 
-    local info = "Enclosure: " .. tostring(encStr) .. "\n" .. tostring(status)
-    info = tostring(x).." : "..tostring(y) .. "\n".. tostring(info)
+    local status = EnclosureChallenge.getEnclosureStatus(sq)
+    if not status then return end
 
-    if EnclosureChallenge.isRebound(sq) then
-        info = "RETURN POINT\n"..info
+    local col = EnclosureChallenge.getEnclosureColor(sq)
+    local encStr = EnclosureChallenge.getEnclosureStr(sq)
+
+    local info = string.format("%d : %d\nEnclosure: %s\n%s", x, y, tostring(encStr), tostring(status))
+
+    local reboundSq = EnclosureChallenge.getReboundSq()
+    if reboundSq and reboundSq == sq then
+        info = "RETURN POINT\n" .. info
     elseif EnclosureChallenge.isOutOfBounds(sq) then
-        info = "OUT OF BOUNDS!\n"..info
+        info = "OUT OF BOUNDS!\n" .. info
     end
 
     EnclosureChallenge.DrawMouseTip(x, y, z, info, col.r, col.g, col.b)
 end
 
+
 Events.OnPlayerUpdate.Add(EnclosureChallenge.MouseTip)
 
-function EnclosureChallenge.GUI()
-    if not isIngameState() then return end
-    if not EnclosureChallenge.showDraw then return end
 
+
+
+function EnclosureChallenge.GUI()
+    if not isIngameState() or not EnclosureChallenge.showDraw then return end
 
     local pl = getPlayer()
     if not pl then return end
-    local xPos = (getCore():getScreenHeight() / 8)
-    local yPos = (getCore():getScreenHeight()) / 2 - 12
 
-
+    local scrW = getCore():getScreenWidth()
+    local scrH = getCore():getScreenHeight()
+    local xPos = (scrW / 8) - 12
+    local yPos = (scrH / 2) - 12
 
     local sq = pl:getCurrentSquare()
     if not sq then return end
@@ -128,60 +140,63 @@ function EnclosureChallenge.GUI()
     local status = EnclosureChallenge.getEnclosureStatus(pl)
     local isChallenger = EnclosureChallenge.isChallenger(pl)
     local isOutOfBounds = EnclosureChallenge.isOutOfBounds(pl)
-    local isRemoteMode =  EnclosureChallenge.isRemoteMode(pl)
-
-    local encInfo = {}
-    table.insert(encInfo, '')
-
-    local info = "X: " .. tostring(round(x)) .. "   Y: " .. tostring(round(y)) .. "\n" .. tostring(encStr).."\n".. tostring(status)
-
-    if isChallenger then
-        info = "X: " .. tostring(round(x)) .. "   Y: " .. tostring(round(y)) .. "\n" .. tostring(encStr).."\n" .. "Additive Challenge"
-        if isRemoteMode then
-            info = "X: " .. tostring(round(x)) .. "   Y: " .. tostring(round(y)) .. "\n" .. tostring(encStr).."\n" .. "Remote Challenge"
-        end
-    end
-
+    local isRemoteMode = EnclosureChallenge.isRemoteMode(pl)
 
     local col = EnclosureChallenge.getEnclosureColor(pl)
+    local alpha = EnclosureChallenge.showDraw
 
     if isOutOfBounds and isChallenger then
-        info = "OUT OF BOUNDS!\n" .. info
         col = EnclosureChallenge.parseColor(SandboxVars.EnclosureChallengeColor.BadColor)
     end
-
-    table.insert(encInfo, info)
-    table.insert(encInfo, '')
 
     local ec = EnclosureChallenge.getData()
     if not ec then
         EnclosureChallenge.initChallengeData(pl)
+        ec = EnclosureChallenge.getData()
     end
-    if ec then
 
+    local fontSizes = {
+        [1] = UIFont.Small,
+        [2] = UIFont.Medium,
+        [3] = UIFont.Large,
+    }
+    local timeSizes = {
+        [1] = UIFont.Medium,
+        [2] = UIFont.Large,
+        [3] = UIFont.NewLarge,
+    }
+
+    local optSizes = tonumber(SandboxVars.EnclosureChallenge.FontSize) or 1
+    local fSize = fontSizes[optSizes] or UIFont.Small
+    local timeSize = timeSizes[optSizes] or UIFont.Small
+
+    if isChallenger then
+        local modeStr = isRemoteMode and "Remote Mode" or "Additive Mode"
+        local timeStr = EnclosureChallenge.getChallengeTimeStr()
+
+        local headerStr = string.format("%s\n%s", modeStr, timeStr)
+
+        getTextManager():DrawStringCentre(timeSize, xPos + 24, yPos - 32, tostring(encStr).."\n"..tostring(headerStr), col.r, col.g, col.b, alpha)
+    end
+
+    local encInfo = {
+
+        string.format("X: %d   Y: %d", round(x), round(y)),
+        tostring(status),
+    }
+
+    if ec then
+        table.insert(encInfo, "")
         table.insert(encInfo, tostring(#ec.Conquered) .. " : Conquered")
         table.insert(encInfo, tostring(ec.RemoteWins) .. " : RemoteWins")
         table.insert(encInfo, tostring(#ec.Challenges) .. " : Unlocked")
         table.insert(encInfo, tostring(ec.UnlockPoints) .. " : Points")
-        table.insert(encInfo, tostring(ec.RewardChoice) .. " : RewardChoice")
-
-
-
-        if isChallenger and ec.ChallengeTime and ec.ChallengeTime > 0 then
-            local t = tonumber(ec.ChallengeTime) or 0
-            if t == 1 then
-                table.insert(encInfo, "1 : Final Hour")
-            else
-                table.insert(encInfo, tostring(t) .. " : Hours Remaining")
-            end
-        end
+        table.insert(encInfo, "\nRewardChoice:\n" .. tostring(EnclosureChallenge.getRewardTitle(ec.RewardChoice)))
     else
-        table.insert(encInfo, 'No Enclosure Data')
+        table.insert(encInfo, "\nNo Enclosure Data")
     end
-    local alpha = EnclosureChallenge.showDraw
-    getTextManager():DrawStringCentre(UIFont.Medium, xPos, yPos, table.concat(encInfo, '\n'), col.r, col.g, col.b, alpha)
+
+    getTextManager():DrawStringCentre(fSize, xPos-12, yPos + 52, table.concat(encInfo, '\n'), col.r, col.g, col.b, alpha)
 end
 
-
 Events.OnPostUIDraw.Add(EnclosureChallenge.GUI)
-

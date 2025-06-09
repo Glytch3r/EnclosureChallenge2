@@ -170,34 +170,34 @@ end
 
 -----------------------            ---------------------------
 
-function EnclosureChallenge.dirGuide()
+function EnclosureChallenge.setReturnPointMarker()
     local pl = getPlayer()
     if not pl then return end
     local ec = EnclosureChallenge.getData()
-    ec.Rebound.x = ec.Rebound.x or pl:getX()
-    ec.Rebound.y = ec.Rebound.y or pl:getY()
-    ec.Rebound.z = ec.Rebound.z or pl:getZ() or 0
-    local x, y, z =  ec.Rebound.x,   ec.Rebound.y,   ec.Rebound.z or 0
+
+    if ec.Rebound then
+        local x, y, z =  ec.Rebound.x,   ec.Rebound.y,   ec.Rebound.z or 0
 
 
-    if not EnclosureChallenge.isChallenger(pl) then return end
+        if not EnclosureChallenge.isChallenger(pl) then return end
 
-    local col = EnclosureChallenge.parseColor(SandboxVars.EnclosureChallengeColor.MarkerColor)
-    local r, g, b, a = col.r, col.g, col.b, col.a
+        local col = EnclosureChallenge.parseColor(SandboxVars.EnclosureChallengeColor.MarkerColor)
+        local r, g, b, a = col.r, col.g, col.b, col.a
 
-    EnclosureChallenge.delGuide()
+        EnclosureChallenge.delReturnPointMarker()
 
-    local guideSq = getCell():getOrCreateGridSquare(x, y, z)
-    if not guideSq then return end
+        local guideSq = getCell():getOrCreateGridSquare(x, y, z)
+        if not guideSq then return end
 
-    if SandboxVars.EnclosureChallenge.ShowArrowGuide then
-        EnclosureChallenge.guide = getWorldMarkers():addPlayerHomingPoint(pl, x, y, "arrow_triangle", r, g, b, a, true, 5)
+        if SandboxVars.EnclosureChallenge.ShowArrowGuide then
+            EnclosureChallenge.guide = getWorldMarkers():addPlayerHomingPoint(pl, x, y, "arrow_triangle", r, g, b, a, true, 5)
+        end
+        EnclosureChallenge.reboundMark = getWorldMarkers():addGridSquareMarker("EnclosureChallenge_Rebound", "EnclosureChallenge_Rebound", guideSq, r, g, b, true, 2)
     end
-    EnclosureChallenge.reboundMark = getWorldMarkers():addGridSquareMarker("EnclosureChallenge_Rebound", "EnclosureChallenge_Rebound", guideSq, r, g, b, true, 2)
 end
 
 
-function EnclosureChallenge.delGuide()
+function EnclosureChallenge.delReturnPointMarker()
     if EnclosureChallenge.guide then
         EnclosureChallenge.guide:remove()
         EnclosureChallenge.guide = nil

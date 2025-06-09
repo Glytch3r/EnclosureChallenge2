@@ -93,22 +93,50 @@ Events.OnPlayerUpdate.Add(EnclosureChallenge.OutOfBoundHandler)
 -----------------------            ---------------------------
 function EnclosureChallenge.isRebound(sq)
     if not sq then return false end
-    local rebound = EnclosureChallenge.getRebound()
-    if not rebound then return false end
-    if rebound.x and rebound.y then
-        return math.floor(sq:getX()) == math.floor(rebound.x) and math.floor(sq:getY()) == math.floor(rebound.y)
-    end
-    return false
-end
-function EnclosureChallenge.getRebound()
-	local ec = EnclosureChallenge.getData()
-	if not ec or not ec.Rebound then return nil end
 
-	return {
-		x = ec.Rebound.x,
-		y = ec.Rebound.y,
-		z = ec.Rebound.z,
-	}
+    local rebound = EnclosureChallenge.getRebound()
+    if not rebound or not rebound.x or not rebound.y then return false end
+
+    local x = math.floor(sq:getX())
+    local y = math.floor(sq:getY())
+
+    return x == math.floor(rebound.x) and y == math.floor(rebound.y)
+end
+
+function EnclosureChallenge.isReboundSq(sq)
+    return EnclosureChallenge.getReboundSq() == sq
+end
+
+function EnclosureChallenge.getRebound()
+    local ec = EnclosureChallenge.getData()
+    if not ec or not ec.Rebound then return nil end
+
+    return {
+        x = ec.Rebound.x,
+        y = ec.Rebound.y,
+        z = ec.Rebound.z,
+    }
+end
+
+function EnclosureChallenge.getReboundSq()
+    local ec = EnclosureChallenge.getData()
+    if not ec or not ec.Rebound then return nil end
+
+    local x = ec.Rebound.x
+    local y = ec.Rebound.y
+    local z = ec.Rebound.z or 0
+
+    if not x or not y then return nil end
+
+    return getCell():getOrCreateGridSquare(x, y, z)
+end
+
+function EnclosureChallenge.clearRebound()
+    local ec = EnclosureChallenge.getData()
+    if not ec or not ec.Rebound then return end
+
+    ec.Rebound = {}
+    ec.Stage = ""
 end
 
 function EnclosureChallenge.storeRebound(targ)
@@ -123,10 +151,13 @@ function EnclosureChallenge.storeRebound(targ)
     ec.Rebound = {
         x = round(targ:getX()),
         y = round(targ:getY()),
-        z = targ:getZ(),
+        z = targ:getZ() or 0,
     }
 
+    ec.Stage = EnclosureChallenge.getEnclosureStr(targ)
 end
+
+-----------------------            ---------------------------
 function EnclosureChallenge.triggerChallenge(targ)
     targ = targ or getPlayer()
     EnclosureChallenge.storeRebound(targ)
@@ -134,37 +165,29 @@ function EnclosureChallenge.triggerChallenge(targ)
 
     local guideSq = getCell():getOrCreateGridSquare(x, y, z)
     if guideSq then
-        EnclosureChallenge.dirGuide(guideSq, x, y, z)
+        EnclosureChallenge.setReturnPointMarker(guideSq, x, y, z)
     end
 
     EnclosureChallenge.setMarkers(targ, false)
     EnclosureChallenge.addChallengeSymbols(targ)
 end
 
-function EnclosureChallenge.endChallenge(targ, isRemote)
-    targ = targ or getPlayer()
-    EnclosureChallenge.delGuide()
-    EnclosureChallenge.clearRebound()
-    if EnclosureChallenge.isConquered(targ) then
-        EnclosureChallenge.addChallengeSymbols(targ)
+function EnclosureChallenge.endChallenge(isRemote)
+    local pl = getPlayer()
+
+    if EnclosureChallenge.isConquered(pl) then
+        EnclosureChallenge.addChallengeSymbols(pl)
     end
 
-end
-
-
-function EnclosureChallenge.clearRebound()
-	local ec = EnclosureChallenge.getData()
-	if not ec or not ec.Rebound then return end
---[[
-	local enc = {
-		x = ec.Rebound.x,
-		y = ec.Rebound.y,
-		z = ec.Rebound.z,
-	}
+    EnclosureChallenge.setChallenge(false, isRemote)
+    EnclosureChallenge.delReturnPointMarker()
+    EnclosureChallenge.clearRebound()
+    getSoundManager():playUISound("EnclosureChallenge_Out")
+--[[     if isRemote then
+        EnclosureChallenge.goBack()
+    end
  ]]
-	ec.Rebound = nil
 end
-
 
 
 -----------------------            ---------------------------
@@ -191,6 +214,8 @@ function EnclosureChallenge.reboundHandler()
         end
     end
 end
+
+
 function EnclosureChallenge.rebound(pl)
     if EnclosureChallenge.isInTransit then return end
     EnclosureChallenge.isInTransit = true
