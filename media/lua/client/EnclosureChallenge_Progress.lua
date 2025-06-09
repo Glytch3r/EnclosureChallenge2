@@ -61,7 +61,6 @@ end
 
 function EnclosureChallenge.EnclosureChange(pl)
    if not isIngameState() then return end
-   local enc = EnclosureChallenge.getEnclosure(pl)
    local encStr  = EnclosureChallenge.getEnclosureStr(pl)
    EnclosureChallenge.PreviousEnclosure = EnclosureChallenge.PreviousEnclosure or encStr
    if EnclosureChallenge.PreviousEnclosure ~= encStr then

@@ -9,7 +9,6 @@ function EnclosureChallenge.toggle(key)
     if not isIngameState() then return end
     if key == getCore():getKey("Toggle_Enclosure_MouseTip") then
         EnclosureChallenge.showMouseTip = not EnclosureChallenge.showMouseTip
-        EnclosureChallenge.sfx(EnclosureChallenge.showMouseTip)
         if getCore():getDebug()  then
             print("EnclosureChallenge.showMouseTip "..tostring(EnclosureChallenge.showMouseTip))
 
@@ -22,7 +21,6 @@ function EnclosureChallenge.toggle(key)
         if EnclosureChallenge.showDraw > 1 then
             EnclosureChallenge.showDraw = 0
         end
-        EnclosureChallenge.sfx(EnclosureChallenge.showDraw)
         if getCore():getDebug()  then
             print("EnclosureChallenge.showDraw "..tostring(EnclosureChallenge.showDraw))
         end
@@ -161,6 +159,9 @@ function EnclosureChallenge.GUI()
     table.insert(encInfo, '')
 
     local ec = EnclosureChallenge.getData()
+    if not ec then
+        EnclosureChallenge.initChallengeData(pl)
+    end
     if ec then
 
         table.insert(encInfo, tostring(#ec.Conquered) .. " : Conquered")

@@ -88,7 +88,9 @@ Events.OnCreatePlayer.Add(function()
 		--LuaEventManager.AddEvent("OnClockUpdate")
 		--EnclosureChallenge.clock()
 
-
+        local encStr  = EnclosureChallenge.getEnclosureStr(pl)
+        EnclosureChallenge.PreviousEnclosure = encStr
+        triggerEvent("OnEnclosureChange", EnclosureChallenge.PreviousEnclosure,  encStr)
 		EnclosureChallenge.showDraw = true
 	end
 end)

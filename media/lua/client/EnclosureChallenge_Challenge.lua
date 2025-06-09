@@ -39,6 +39,7 @@ function EnclosureChallenge.setChallenge(isStart, isRemote)
         if isRemote then
             EnclosureChallenge.setRemoteMode(true)
         end
+        EnclosureChallenge.storeRebound(pl)
 	else --end
         if isRemote then
             EnclosureChallenge.setRemoteMode(false)
