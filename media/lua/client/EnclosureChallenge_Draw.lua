@@ -7,28 +7,23 @@ EnclosureChallenge.showDraw = 1
 EnclosureChallenge.showMouseTip = true
 function EnclosureChallenge.toggle(key)
     if not isIngameState() then return end
-    if key == getCore():getKey("Toggle_Enclosure_MouseTip") then
+    local core = getCore()
+    if key == core:getKey("Toggle_Enclosure_MouseTip") then
         EnclosureChallenge.showMouseTip = not EnclosureChallenge.showMouseTip
-        if getCore():getDebug()  then
-            print("EnclosureChallenge.showMouseTip "..tostring(EnclosureChallenge.showMouseTip))
-
+        if core:getDebug() then
+            print("EnclosureChallenge.showMouseTip: " .. tostring(EnclosureChallenge.showMouseTip))
         end
+        return true
+    elseif key == core:getKey("Toggle_Enclosure_GUI") then
+        EnclosureChallenge.showDraw = EnclosureChallenge.showDraw == 0 and 1 or 0
+        if core:getDebug() then
+            print("EnclosureChallenge.showDraw: " .. tostring(EnclosureChallenge.showDraw))
+        end
+        return true
     end
-
-    if key == getCore():getKey("Toggle_Enclosure_GUI") then
-
-        EnclosureChallenge.showDraw = EnclosureChallenge.showDraw + 0.1
-        if EnclosureChallenge.showDraw > 1 then
-            EnclosureChallenge.showDraw = 0
-        end
-        if getCore():getDebug()  then
-            print("EnclosureChallenge.showDraw "..tostring(EnclosureChallenge.showDraw))
-        end
-    end
-
-    return key
+    return false
 end
-Events.OnKeyPressed.Add(EnclosureChallenge.toggle)
+
 -----------------------            ---------------------------
 function EnclosureChallenge.getPointer()
     if not isIngameState() then return nil end

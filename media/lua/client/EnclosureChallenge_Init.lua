@@ -26,24 +26,41 @@ EnclosureChallenge.MarkerCache = {}
 function EnclosureChallenge.initChallengeData(pl)
     pl = pl or getPlayer()
     if not pl then return end
+
     local ec = EnclosureChallenge.getData()
-    if ec.EnclosureX ~= nil or ec.enclosureX ~= nil or ec.EnclosureY ~= nil or ec.enclosureY ~= nil then
+
+    if ec.EnclosureX or ec.EnclosureY or ec.enclosureX or ec.enclosureY then
         EnclosureChallenge.resetData()
         return
     end
 
-
-    ec.UnlockPoints = ec.UnlockPoints or SandboxVars.EnclosureChallenge.StartingUnlockPoints or 1
-    ec.RewardChoice = ec.RewardChoice or 0
-    ec.ChallengeTime = ec.ChallengeTime or 0
-    ec.RemoteChallenge = ec.RemoteChallenge or ""
-    ec.RemoteWins = ec.RemoteWins or 0
-    ec.Challenges = ec.Challenges or {}
-    ec.Conquered = ec.Conquered or {}
-    ec.PrevCoord = {}
-    ec.Rebound = ec.Rebound or { x = nil, y = nil, z = nil }
+    ec.UnlockPoints     = ec.UnlockPoints     or SandboxVars.EnclosureChallenge.StartingUnlockPoints or 1
+    ec.RewardChoice     = ec.RewardChoice     or 0
+    ec.ChallengeTime    = ec.ChallengeTime    or 0
+    ec.RemoteChallenge  = ec.RemoteChallenge  or ""
+    ec.RemoteWins       = ec.RemoteWins       or 0
+    ec.Challenges       = ec.Challenges       or {}
+    ec.Conquered        = ec.Conquered        or {}
+    ec.PrevCoord        = {}
+    ec.Rebound          = ec.Rebound          or {}
 end
 
+Events.OnCreatePlayer.Add(function()
+    if not isIngameState() then return end
+
+    local pl = getPlayer()
+    if not pl then return end
+
+    EnclosureChallenge.initChallengeData(pl)
+    EnclosureChallenge.setMarkers(pl)
+
+    local encStr = EnclosureChallenge.getEnclosureStr(pl)
+    EnclosureChallenge.PreviousEnclosure = encStr
+
+    triggerEvent("OnEnclosureChange", encStr, encStr)
+
+    EnclosureChallenge.showDraw = true
+end)
 
 Events.OnPlayerDeath.Add(function()
 	local pl = getPlayer()
@@ -74,19 +91,13 @@ end)
 
 
 
-Events.OnCreatePlayer.Add(function()
+--[[ Events.OnCreatePlayer.Add(function()
     if isIngameState() then
         local pl = getPlayer()
         if not pl then return end
 
         EnclosureChallenge.initChallengeData(pl)
         EnclosureChallenge.setMarkers(pl)
---[[         if EnclosureChallenge.isChallenger(pl) then
-        end
- ]]
-
-		--LuaEventManager.AddEvent("OnClockUpdate")
-		--EnclosureChallenge.clock()
 
         local encStr  = EnclosureChallenge.getEnclosureStr(pl)
         EnclosureChallenge.PreviousEnclosure = encStr
@@ -94,7 +105,7 @@ Events.OnCreatePlayer.Add(function()
 		EnclosureChallenge.showDraw = true
 	end
 end)
-
+ ]]
 -----------------------       ---------------------------
 LuaEventManager.AddEvent("OnEnclosureChange")
 function EnclosureChallenge.updateMarkers()

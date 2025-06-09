@@ -90,8 +90,8 @@ function EnclosureChallenge.tpRandMidSq()
     local rTick = 0
     local attemptCount = 0
 
-    local midX, midY, EnclosureX, EnclosureY = EnclosureChallenge.getRandMidCoord()
-    EnclosureChallenge.tp(pl, midX, midY)
+    local midX, midY, encX, encY = EnclosureChallenge.getRandMidCoord()
+    EnclosureChallenge.tp(pl, midX, midY, pl:getZ())
 
     EnclosureChallenge.tpHandler = function()
         rTick = rTick + 1
@@ -107,14 +107,11 @@ function EnclosureChallenge.tpRandMidSq()
                 return
             end
 
-            midX, midY, EnclosureX, EnclosureY = EnclosureChallenge.getRandMidCoord()
-            EnclosureChallenge.tp(pl, midX, midY)
+            midX, midY, encX, encY = EnclosureChallenge.getRandMidCoord()
+            EnclosureChallenge.tp(pl, midX, midY, pl:getZ())
             rTick = 0
             return
         end
-
-
-
 
         EnclosureChallenge.ConfirmDialog(pl, "Accept Remote Challenge?", "Enclosure Challenge", false, true)
         Events.OnTick.Remove(EnclosureChallenge.tpHandler)
@@ -122,6 +119,7 @@ function EnclosureChallenge.tpRandMidSq()
 
     Events.OnTick.Add(EnclosureChallenge.tpHandler)
 end
+
 
 -----------------------            ---------------------------
 --[[

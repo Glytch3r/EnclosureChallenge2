@@ -179,8 +179,75 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
 	end
 
 	EnclosureChallenge.addCategorySubmenu(context, rootMenu, worldobjects)
+	-----------------------    dbg        ---------------------------
+	if getCore():getDebug() then
+		local dbgOpt = rootMenu:addOption(getText("ContextMenu_EnclosureChallenge_ChooseCategory"))
+		dbgOpt.iconTexture = getTexture("media/ui/EnclosureChallenge_Rewards.png")
+		local dbgSub = ISContextMenu:getNew(context)
+		context:addSubMenu(dbgOpt, dbgSub)
 
-	--end
+		dbgSub:addOption("clipWhereami", worldobjects, function()
+			EnclosureChallenge.clipWhereami()
+
+		end)
+
+		dbgSub:addOption("dbgWin", worldobjects, function()
+			EnclosureChallenge.dbgWin()
+			--EnclosureChallenge.doWin()
+		end)
+
+		dbgSub:addOption("dbgPts", worldobjects, function()
+			EnclosureChallenge.dbgPts()
+
+		end)
+
+		dbgSub:addOption("debugData", worldobjects, function()
+			EnclosureChallenge.debugData()
+
+		end)
+
+		dbgSub:addOption("resetData", worldobjects, function()
+			EnclosureChallenge.resetData()
+		end)
+
+		dbgSub:addOption("setMarkers [keepold]", worldobjects, function()
+			EnclosureChallenge.setMarkers(sq, true)
+		end)
+		dbgSub:addOption("setMarkers [clear old]", worldobjects, function()
+			EnclosureChallenge.setMarkers(sq, false)
+		end)
+
+		dbgSub:addOption("storeRebound", worldobjects, function()
+			EnclosureChallenge.storeRebound(pl)
+		end)
+		dbgSub:addOption("doReward", worldobjects, function()
+			EnclosureChallenge.doReward()
+		end)
+		dbgSub:addOption("addChallengeSymbols", worldobjects, function()
+			EnclosureChallenge.addChallengeSymbols(sq)
+
+		end)
+
+		dbgSub:addOption("storeRebound", worldobjects, function()
+			EnclosureChallenge.storeRebound(sq)
+		end)
+
+
+		dbgSub:addOption("rebound", worldobjects, function()
+			EnclosureChallenge.rebound(pl)
+		end)
+
+		dbgSub:addOption("clearRebound", worldobjects, function()
+			EnclosureChallenge.clearRebound(pl)
+		end)
+		dbgSub:addOption("storeConquered", worldobjects, function()
+			EnclosureChallenge.storeConquered(false)
+		end)
+		dbgSub:addOption("disabler false", worldobjects, function()
+			EnclosureChallenge.disabler(false)
+		end)
+
+	end
 end
 
 Events.OnFillWorldObjectContextMenu.Remove(EnclosureChallenge.Context)

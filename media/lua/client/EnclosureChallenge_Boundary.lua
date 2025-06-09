@@ -152,7 +152,6 @@ function EnclosureChallenge.endChallenge(targ, isRemote)
 end
 
 
-
 function EnclosureChallenge.clearRebound()
 	local ec = EnclosureChallenge.getData()
 	if not ec or not ec.Rebound then return end

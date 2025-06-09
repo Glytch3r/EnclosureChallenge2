@@ -94,12 +94,22 @@ function EnclosureChallenge.getEnclosureStrXY(x, y)
     return tostring(round(enc.x)) .. "_" .. tostring(round(enc.y))
 end
 
+
 function EnclosureChallenge.getEnclosureXY(x, y)
     local size = EnclosureChallenge.EnclosureSize
-    if not size then return nil end
-    local x = math.floor((x - 1) / size)
-    local y = math.floor((y - 1) / size)
-    return { x = x, y = y , z = 0}
+    if not size or not x or not y then return nil end
+    local gridX = math.floor((x - 1) / size)
+    local gridY = math.floor((y - 1) / size)
+    return { x = gridX, y = gridY, z = 0 }
+end
+function EnclosureChallenge.getEnclosureStr(targ)
+    targ = targ or getPlayer()
+    local enc = EnclosureChallenge.getEnclosure(targ)
+    if not enc then return nil end
+    if enc.x and enc.y then
+        return tostring(enc.x).."_"..tostring(enc.y)
+    end
+    return nil
 end
 --[[ function EnclosureChallenge.getEnclosure(targ)
 
@@ -114,16 +124,6 @@ end
     local y = math.floor((y - 1) / size)
     return { x = x, y = y , z = 0}
 end ]]
-
-function EnclosureChallenge.getEnclosureStr(targ)
-    targ = targ or getPlayer()
-    local enc = EnclosureChallenge.getEnclosure(targ)
-    if not enc then return nil end
-    if enc.x and enc.y then
-        return tostring(enc.x).."_"..tostring(enc.y)
-    end
-    return nil
-end
 
 --[[_____________________________________________________________________________________________________________________________
    ░▒▓██████▓▒░    ░▒▓████████▓▒░    ░▒▓█▓▒░         ░▒▓█▓▒░      ░▒▓██████▓▒░   ░▒▓█▓▒░ ░▒▓█▓▒░  ░▒▓███████▓▒░    ░▒▓█▓▒░  ░▒█▒░

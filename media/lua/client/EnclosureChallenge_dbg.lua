@@ -26,9 +26,6 @@
 █████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████--]]
 
 
-
-
-
 EnclosureChallenge = EnclosureChallenge or {}
 --[[
         EnclosureChallenge.resetData()
@@ -40,6 +37,7 @@ function EnclosureChallenge.dbgPts()
     print(ec.UnlockPoints)
 end
 function EnclosureChallenge.dbgWin()
+
     local ec = EnclosureChallenge.getData()
     ec.ChallengeTime = 0
     print(ec.ChallengeTime)
