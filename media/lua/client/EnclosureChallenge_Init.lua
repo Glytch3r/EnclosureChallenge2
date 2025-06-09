@@ -27,7 +27,9 @@ function EnclosureChallenge.initChallengeData(pl)
     pl = pl or getPlayer()
     if not pl then return end
 
-    local ec = EnclosureChallenge.getData()
+    local md = pl:getModData()
+    md.EnclosureChallenge = md.EnclosureChallenge or {}
+    local ec = md.EnclosureChallenge
 
     if ec.EnclosureX or ec.EnclosureY then
         EnclosureChallenge.resetData()
@@ -57,7 +59,10 @@ Events.OnCreatePlayer.Add(function()
 
     local encStr = EnclosureChallenge.getEnclosureStr(pl)
     EnclosureChallenge.PreviousEnclosure = encStr
-    EnclosureChallenge.setReturnPointMarker()
+	if not EnclosureChallenge.isChallenger(pl)  then
+
+        EnclosureChallenge.setReturnPointMarker()
+    end
     triggerEvent("OnEnclosureChange", encStr, encStr)
 
     EnclosureChallenge.showDraw = true
@@ -75,7 +80,7 @@ Events.OnPlayerDeath.Add(function()
         if not enc then return end
 
         local encStr = EnclosureChallenge.getEnclosureStr(pl)
-		local posStr = (EnclosureX and EnclosureY) and ": [" .. tostring(encStr) .. "]" or ""
+		local posStr = (enc.x and enc.y) and ": [" .. tostring(encStr) .. "]" or ""
 		if not SandboxVars.EnclosureChallenge.CoordNotif then
 			posStr = ""
 		end

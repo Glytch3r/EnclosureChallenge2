@@ -14,8 +14,9 @@ function EnclosureChallenge.toggle(key)
             print("EnclosureChallenge.showMouseTip: " .. tostring(EnclosureChallenge.showMouseTip))
         end
         return true
-    elseif key == core:getKey("Toggle_Enclosure_GUI") then
-        EnclosureChallenge.showDraw = EnclosureChallenge.showDraw == 0 and 1 or 0
+    elseif key == core:getKey("Adjust_Enclosure_GUI") then
+        EnclosureChallenge.showDraw = EnclosureChallenge.showDraw + 0.2
+        if EnclosureChallenge.showDraw >= 1 then EnclosureChallenge.showDraw = 0 end
         if core:getDebug() then
             print("EnclosureChallenge.showDraw: " .. tostring(EnclosureChallenge.showDraw))
         end
@@ -24,6 +25,7 @@ function EnclosureChallenge.toggle(key)
     return false
 end
 
+Events.OnKeyKeepPressed.Add(EnclosureChallenge.toggle)
 -----------------------            ---------------------------
 function EnclosureChallenge.getPointer()
     if not isIngameState() then return nil end

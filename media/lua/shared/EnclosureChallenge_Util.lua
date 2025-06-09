@@ -136,11 +136,12 @@ end
 -----------------------            ---------------------------
 
 table.insert(keyBinding, {value = "[Enclosure Challenge]"})
-table.insert(keyBinding, {value = "Toggle_Enclosure_GUI", key = Keyboard.KEY_P})
+table.insert(keyBinding, {value = "Adjust_Enclosure_GUI", key = Keyboard.KEY_P})
 table.insert(keyBinding, {value = "Toggle_Enclosure_MouseTip", key = Keyboard.KEY_N})
 
 
 -----------------------            ---------------------------
+
 
 require "Definitions/MapSymbolDefinitions"
 MapSymbolDefinitions.getInstance():addTexture("Enclosure_Challenge", "media/ui/LootableMaps/Enclosure_Challenge.png")
