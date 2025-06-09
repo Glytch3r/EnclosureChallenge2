@@ -1,6 +1,8 @@
 UI_EN = {
+    UI_optionscreen_binding_Enclosure Challenge = "Enclosure Challenge",
+
+    UI_optionscreen_binding_Adjust Enclosure GUI = "Adjust Enclosure GUI",
+    UI_optionscreen_binding_Toggle Enclosure MouseTip = "Toggle Enclosure MouseTip",
 
 
-    UI_optionscreen_binding_Adjust_Enclosure_GUI = "Adjust Enclosure GUI",
-    UI_optionscreen_binding_Toggle_Enclosure_MouseTip = "Toggle Enclosure MouseTip",
 }

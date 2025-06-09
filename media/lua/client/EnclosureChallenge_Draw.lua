@@ -24,8 +24,8 @@ function EnclosureChallenge.toggle(key)
     end
     return false
 end
+Events.OnKeyPressed.Add(EnclosureChallenge.toggle)
 
-Events.OnKeyKeepPressed.Add(EnclosureChallenge.toggle)
 -----------------------            ---------------------------
 function EnclosureChallenge.getPointer()
     if not isIngameState() then return nil end
@@ -41,7 +41,7 @@ end
 function EnclosureChallenge.DrawMouseTip(x, y, z, str, r, g, b)
     if not isIngameState() then return end
     local tag = TextDrawObject.new()
-    if not EnclosureChallenge.showMouseTip then return end
+
 
     if not EnclosureChallenge.isActive then
         EnclosureChallenge.isActive = true
@@ -54,17 +54,21 @@ function EnclosureChallenge.DrawMouseTip(x, y, z, str, r, g, b)
         local yOffset = 0
         local xOffset = 0
         local function drawFunc()
+            if not EnclosureChallenge.showMouseTip then
+                Events.OnPostRender.Remove(drawFunc)
+                return
+            end
             local zoom = getCore():getZoom(0)
             local screenX = (IsoUtils.XToScreen(x + xOffset, y, z, 0) - IsoCamera.getOffX()) / zoom
             local screenY = (IsoUtils.YToScreen(x + yOffset, y, z, 0) - IsoCamera.getOffY()) / zoom
-            tag:AddBatchedDraw(screenX, screenY-48, r,g,b,1, false)
+            if EnclosureChallenge.showMouseTip then tag:AddBatchedDraw(screenX, screenY-48, r,g,b,1, false) end
         end
         if EnclosureChallenge.checkMark ~= nil then
             EnclosureChallenge.checkMark:remove()
             EnclosureChallenge.checkMark = nil
         end
         if EnclosureChallenge.checkMark == nil then
-            local markerSize = 0.3
+            local markerSize = ZombRand(0.2, 1)
             local sq = getCell():getOrCreateGridSquare(x, y, z)
             if sq then
                 local stamp = "EnclosureChallenge_Bounds"
@@ -75,8 +79,9 @@ function EnclosureChallenge.DrawMouseTip(x, y, z, str, r, g, b)
                 elseif EnclosureChallenge.isOutOfBounds(sq) then
                     stamp = "EnclosureChallenge_Challenger"
                 end
-
-                EnclosureChallenge.checkMark = getWorldMarkers():addGridSquareMarker(stamp, stamp, sq, r, g, b, false, markerSize)
+                if EnclosureChallenge.showMouseTip then
+                    EnclosureChallenge.checkMark = getWorldMarkers():addGridSquareMarker(stamp, stamp, sq, r, g, b, false, markerSize)
+                end
             end
         end
         Events.OnPostRender.Add(drawFunc)
@@ -117,7 +122,6 @@ end
 
 
 Events.OnPlayerUpdate.Add(EnclosureChallenge.MouseTip)
-
 
 
 
@@ -170,25 +174,24 @@ function EnclosureChallenge.GUI()
 
     local optSizes = tonumber(SandboxVars.EnclosureChallenge.FontSize) or 1
     local fSize = fontSizes[optSizes] or UIFont.Small
-    local timeSize = timeSizes[optSizes] or UIFont.Small
+    local timeSize = timeSizes[optSizes] or UIFont.Medium
 
     if isChallenger then
         local modeStr = isRemoteMode and "Remote Mode" or "Additive Mode"
         local timeStr = EnclosureChallenge.getChallengeTimeStr()
-
         local headerStr = string.format("%s\n%s", modeStr, timeStr)
 
-        getTextManager():DrawStringCentre(timeSize, xPos + 24, yPos - 32, tostring(encStr).."\n"..tostring(headerStr), col.r, col.g, col.b, alpha)
+        getTextManager():DrawString(timeSize, xPos - 24, yPos - 32, headerStr, col.r, col.g, col.b, alpha)
     end
 
     local encInfo = {
-
         string.format("X: %d   Y: %d", round(x), round(y)),
+        tostring(encStr),
         tostring(status),
+        "",
     }
 
     if ec then
-        table.insert(encInfo, "")
         table.insert(encInfo, tostring(#ec.Conquered) .. " : Conquered")
         table.insert(encInfo, tostring(ec.RemoteWins) .. " : RemoteWins")
         table.insert(encInfo, tostring(#ec.Challenges) .. " : Unlocked")
@@ -198,7 +201,7 @@ function EnclosureChallenge.GUI()
         table.insert(encInfo, "\nNo Enclosure Data")
     end
 
-    getTextManager():DrawStringCentre(fSize, xPos-12, yPos + 52, table.concat(encInfo, '\n'), col.r, col.g, col.b, alpha)
+    getTextManager():DrawString(fSize, xPos - 24, yPos + 52, table.concat(encInfo, '\n'), col.r, col.g, col.b, alpha)
 end
 
 Events.OnPostUIDraw.Add(EnclosureChallenge.GUI)

@@ -95,8 +95,8 @@ end ]]
 function EnclosureChallenge.countdown()
     local pl = getPlayer()
     if not EnclosureChallenge.isChallenger() then return end
-    EnclosureChallenge.time = EnclosureChallenge.time or SandboxVars.EnclosureChallenge.CountdownSeconds
-
+    --EnclosureChallenge.time = EnclosureChallenge.time or SandboxVars.EnclosureChallenge.CountdownSeconds
+    EnclosureChallenge.time = 30
     if EnclosureChallenge.time <= 0 then
         EnclosureChallenge.time = nil
         if EnclosureChallenge.isOutOfBounds(pl) then

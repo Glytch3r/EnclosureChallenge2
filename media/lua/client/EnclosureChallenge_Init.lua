@@ -63,9 +63,9 @@ Events.OnCreatePlayer.Add(function()
 
         EnclosureChallenge.setReturnPointMarker()
     end
-    triggerEvent("OnEnclosureChange", encStr, encStr)
+    EnclosureChallenge.updateMarkers(encStr)
 
-    EnclosureChallenge.showDraw = true
+
 end)
 
 Events.OnPlayerDeath.Add(function()
@@ -114,17 +114,17 @@ end)
  ]]
 -----------------------       ---------------------------
 LuaEventManager.AddEvent("OnEnclosureChange")
-function EnclosureChallenge.updateMarkers()
-
+function EnclosureChallenge.updateMarkers(encStr)
 
 	if getCore():getDebug() then
-        print('OnEnclosureChange')
+        print('OnEnclosureChange ' .. "encStr")
 	end
 
     local pl = getPlayer()
     if not pl then return end
 
     local enc =  EnclosureChallenge.getEnclosure(pl)
+    --EnclosureChallenge.EnclosureChange(pl)
     EnclosureChallenge.setMarkers(pl, false)
 
     EnclosureChallenge.addChallengeSymbols(pl)

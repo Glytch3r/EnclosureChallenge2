@@ -22,9 +22,11 @@ EnclosureChallenge = EnclosureChallenge or {}
 function EnclosureChallenge.EnclosureChange(pl)
    if not isIngameState() then return end
    local encStr  = EnclosureChallenge.getEnclosureStr(pl)
-   EnclosureChallenge.PreviousEnclosure = EnclosureChallenge.PreviousEnclosure or encStr
+   if EnclosureChallenge.PreviousEnclosure == nil then
+      EnclosureChallenge.PreviousEnclosure = ""
+   end
    if EnclosureChallenge.PreviousEnclosure ~= encStr then
-      triggerEvent("OnEnclosureChange", EnclosureChallenge.PreviousEnclosure,  encStr)
+      triggerEvent("OnEnclosureChange", encStr)
       EnclosureChallenge.PreviousEnclosure = encStr
    end
 end
