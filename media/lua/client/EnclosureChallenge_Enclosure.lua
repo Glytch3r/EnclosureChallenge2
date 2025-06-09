@@ -53,10 +53,6 @@ end
 
 
 
-function EnclosureChallenge.getEnclosurePoint(XorY)
-    return tonumber(XorY) / EnclosureChallenge.EnclosureSize
-end
-
 
 function EnclosureChallenge.getEnclosureMidXY(x, y, targ)
     local size = EnclosureChallenge.EnclosureSize

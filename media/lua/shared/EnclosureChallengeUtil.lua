@@ -25,7 +25,19 @@ function EnclosureChallenge.getCurrentEnclosure(targ, isTab)
     return x, y
 end
 
+function EnclosureChallenge.getEnclosure(targ)
+    local size = EnclosureChallenge.EnclosureSize
+    if not size then return nil end
+    targ = targ or getPlayer()
+    if not targ then return nil end
 
+    local x = round(targ:getX() - 1 ) / size
+    local y = round(targ:getX() - 1 ) / size
+
+    return { x = x, y = y }
+end
+
+--[[
 
 function EnclosureChallenge.getEnclosure(targ)
     local size = EnclosureChallenge.EnclosureSize
@@ -41,27 +53,8 @@ function EnclosureChallenge.getEnclosure(targ)
 
     return { x=x, y=y}
 end
-
-
-function EnclosureChallenge.sfx(isStart)
-    if isStart then
-        getSoundManager():playUISound("EnclosureChallenge_In")
-    else
-        getSoundManager():playUISound("EnclosureChallenge_Out")
-    end
-end
------------------------            ---------------------------
---[[
-local MarkerColor = SandboxVars.EnclosureChallengeColor.MarkerColor
-
-local colorVar = SandboxVars.EnclosureChallengeColor.GoodColor
-local colorVar = SandboxVars.EnclosureChallengeColor.BadColor
-local colorVar = SandboxVars.EnclosureChallengeColor.NeutralColor
-
-local col = EnclosureChallenge.parseColor(colorVar)
-col.r, col.g, col.b, col.a
-
  ]]
+
 function EnclosureChallenge.parseColor(str)
     str = str or SandboxVars.EnclosureChallengeColor.MarkerColor or "0.64;0.13;0.04;0.7"
     local r, g, b, a = str:match("^([^;]+);([^;]+);([^;]+);?([^;]*)$")
@@ -114,6 +107,26 @@ function EnclosureChallenge.getEnclosureStatus(targ)
 end
 
 
+
+function EnclosureChallenge.sfx(isStart)
+    if isStart then
+        getSoundManager():playUISound("EnclosureChallenge_In")
+    else
+        getSoundManager():playUISound("EnclosureChallenge_Out")
+    end
+end
+-----------------------            ---------------------------
+--[[
+local MarkerColor = SandboxVars.EnclosureChallengeColor.MarkerColor
+
+local colorVar = SandboxVars.EnclosureChallengeColor.GoodColor
+local colorVar = SandboxVars.EnclosureChallengeColor.BadColor
+local colorVar = SandboxVars.EnclosureChallengeColor.NeutralColor
+
+local col = EnclosureChallenge.parseColor(colorVar)
+col.r, col.g, col.b, col.a
+
+ ]]
 
 -----------------------            ---------------------------
 

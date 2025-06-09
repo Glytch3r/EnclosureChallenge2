@@ -32,8 +32,7 @@ function EnclosureChallenge.setChallenge(isStart, isRemote)
 
 	local ec = EnclosureChallenge.getData()
 	isRemote = isRemote or EnclosureChallenge.isRemoteMode(pl)
-	EnclosureChallenge.storeEnclosure(pl)
-
+	--EnclosureChallenge.storeEnclosure(pl)
 	if isStart then
 		local hours = SandboxVars.EnclosureChallenge.ChallengeHours or 168
 		ec.ChallengeTime = hours
@@ -57,7 +56,7 @@ function EnclosureChallenge.doWin()
         EnclosureChallenge.setChallenge(false, isRemote)
         EnclosureChallenge.setMarkers(pl, false)
         EnclosureChallenge.storeConquered(isRemote)
-
+        EnclosureChallenge.clearRebound(pl)
         getSoundManager():playUISound("GainExperienceLevel")
     end)
 
