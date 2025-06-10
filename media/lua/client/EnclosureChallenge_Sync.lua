@@ -49,13 +49,17 @@ Commands.EnclosureChallenge.send = function(args)
     local targ = getPlayerByOnlineID(args.id)
 	local pl = getPlayer();
 	if not (targ or pl) then return end
-	local x = args.x
-	local y = args.y
-	local z = args.z or 0
-	if x and y then
-		if targ == pl then
-			EnclosureChallenge.tp(pl, x, y, z)
-		end
+
+	if  pl == targ then
+        local ec = EnclosureChallenge.getData()
+        if not ec or not ec.Rebound then return  end
+
+        local x = ec.Rebound.x
+        local y = ec.Rebound.y
+        local z = ec.Rebound.z or 0
+
+        EnclosureChallenge.tp(targ, x, y, z)
+
 	end
 end
 Commands.EnclosureChallenge.stagger = function(args)

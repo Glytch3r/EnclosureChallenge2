@@ -127,9 +127,12 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
 	local startHereOpt = rootMenu:addOption(getText("ContextMenu_EnclosureChallenge_StartHere"), worldobjects, function()
 		context:hideAndChildren()
 
---[[ 		if isClient() then
+	--legacy sync function i used for mods v1
+	--[[if isClient() then
 			sendClientCommand("EnclosureChallenge", "prompt", { EnclosureX = EnclosureX, EnclosureY = EnclosureY, isRemote = false })
 		end ]]
+
+
 		EnclosureChallenge.ConfirmDialog(pl, "Accept Challenge?", "Enclosure Challenge", false, false)
 
 	end)
@@ -245,6 +248,7 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
 		dbgSub:addOption("disabler false", worldobjects, function()
 			EnclosureChallenge.disabler(false)
 		end)
+
 
 	end
 end

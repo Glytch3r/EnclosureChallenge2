@@ -35,20 +35,21 @@ function EnclosureChallenge.isOutOfBounds(targ)
     if not targ then return false end
     if not EnclosureChallenge.isChallenger() then return false end
 
-    local enc = EnclosureChallenge.getEnclosure(targ)
-    if not enc then return false end
-
     local encStr = EnclosureChallenge.getEnclosureStr(targ)
     if not encStr then return false end
+
 
     local ec = EnclosureChallenge.getData()
 
     if EnclosureChallenge.isRemoteMode(pl) then
-        return ec.RemoteChallenge ~= encStr
+        return ec.RemoteChallenge ~= EnclosureChallenge.getEnclosureStr(pl:getCurrentSquare())
     else
         return not ec.Challenges[encStr]
     end
+
 end
+
+
 
 function EnclosureChallenge.isSameEnclosure(targ)
     local pl = getPlayer()
@@ -65,14 +66,11 @@ function EnclosureChallenge.isSameEnclosure(targ)
     return plEncStr == targEncStr
 end
 
-
 -----------------------            ---------------------------
-local playerTicks = {}
-
+--[[
 function EnclosureChallenge.OutOfBoundHandler(pl)
-    if not pl then return end
+    pl = pl or getPlayer()
     if not EnclosureChallenge.isChallenger(pl) then return end
-
     local id = pl:getOnlineID() or 0
     playerTicks[id] = (playerTicks[id] or 0) + 1
     local tick = playerTicks[id] % 60
@@ -90,7 +88,7 @@ function EnclosureChallenge.OutOfBoundHandler(pl)
 end
 
 Events.OnPlayerUpdate.Add(EnclosureChallenge.OutOfBoundHandler)
-
+ ]]
 -----------------------            ---------------------------
 function EnclosureChallenge.isRebound(sq)
     if not sq then return false end
@@ -137,7 +135,9 @@ function EnclosureChallenge.clearRebound()
     if not ec or not ec.Rebound then return end
 
     ec.Rebound = {}
-    ec.Stage = ""
+
+
+    EnclosureChallenge.delReturnPointMarker()
 end
 
 function EnclosureChallenge.storeRebound(targ)
@@ -148,34 +148,20 @@ function EnclosureChallenge.storeRebound(targ)
 
     local ec = EnclosureChallenge.getData()
     if not ec then return end
+    local encStr =  EnclosureChallenge.getEnclosureStr(targ)
 
     ec.Rebound = {
         x = round(targ:getX()),
         y = round(targ:getY()),
         z = targ:getZ() or 0,
     }
+    EnclosureChallenge.setReturnPointMarker()
 
-    ec.Stage = EnclosureChallenge.getEnclosureStr(targ)
+
+
 end
 
 -----------------------            ---------------------------
-
-function EnclosureChallenge.endChallenge(isRemote)
-    local pl = getPlayer()
-
-    if EnclosureChallenge.isConquered(pl) then
-        EnclosureChallenge.addChallengeSymbols(pl)
-    end
-
-    EnclosureChallenge.setChallenge(false, isRemote)
-    EnclosureChallenge.delReturnPointMarker()
-    EnclosureChallenge.clearRebound()
-    getSoundManager():playUISound("EnclosureChallenge_Out")
---[[     if isRemote then
-        EnclosureChallenge.goBack()
-    end
- ]]
-end
 
 
 -----------------------            ---------------------------
@@ -186,9 +172,11 @@ EnclosureChallenge.reboundState = {
 }
 
 function EnclosureChallenge.reboundHandler()
+
     local state = EnclosureChallenge.reboundState
     state.bTick = state.bTick + 1
-    if state.bTick % 30 == 0 then
+
+    if state.bTick % 4 == 0 or EnclosureChallenge.isReboundSq(getPlayer():getCurrentSquare()) then
         if not state.staggered and state.reboundPl then
             state.staggered = true
             if isClient() then
@@ -214,6 +202,11 @@ function EnclosureChallenge.rebound(pl)
         EnclosureChallenge.isInTransit = false
         return
     end
+    if isClient() then
+        sendClientCommand("EnclosureChallenge", "send", {})
+    else
+        EnclosureChallenge.tp(pl, x, y, z)
+    end
 
     local x, y, z = ec.Rebound.x, ec.Rebound.y, ec.Rebound.z or 0
     if not (x and y) then
@@ -225,19 +218,14 @@ function EnclosureChallenge.rebound(pl)
     state.staggered = false
     state.bTick = 0
     state.reboundPl = pl
-
-    if isClient() then
-        sendClientCommand("EnclosureChallenge", "send", {x = x, y = y, z = z})
-    else
-        EnclosureChallenge.tp(pl, x, y, z)
-    end
-
     if SandboxVars.EnclosureChallenge.ReturnStaggered then
         Events.OnTick.Add(EnclosureChallenge.reboundHandler)
     else
         EnclosureChallenge.isInTransit = false
         state.reboundPl = nil
     end
+
+
 end
 
 -----------------------    tp*        ---------------------------

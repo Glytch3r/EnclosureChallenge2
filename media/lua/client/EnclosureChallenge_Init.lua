@@ -33,21 +33,28 @@ function EnclosureChallenge.initChallengeData(pl)
 
     if ec.EnclosureX or ec.EnclosureY then
         EnclosureChallenge.resetData()
+        EnclosureChallenge.delReturnPointMarker()
         return
     end
 
-    ec.UnlockPoints     = ec.UnlockPoints     or SandboxVars.EnclosureChallenge.StartingUnlockPoints or 1
-    ec.RewardChoice     = ec.RewardChoice     or 0
-    ec.ChallengeTime    = ec.ChallengeTime    or 0
-    ec.RemoteWins       = ec.RemoteWins       or 0
-    ec.Challenges       = ec.Challenges       or {}
-    ec.Conquered        = ec.Conquered        or {}
-    ec.PrevCoord        = {}
-    ec.Rebound          = ec.Rebound          or {}
-    ec.RemoteChallenge  = ec.RemoteChallenge  or ""
-    ec.Stage            = ec.Stage            or ""
+    ec.UnlockPoints      = ec.UnlockPoints      or SandboxVars.EnclosureChallenge.StartingUnlockPoints or 1
+    ec.RewardChoice      = ec.RewardChoice      or 0
+    ec.ChallengeTime     = ec.ChallengeTime     or 0
+    ec.RemoteWins        = ec.RemoteWins        or 0
+    ec.Challenges        = ec.Challenges        or {}
+    ec.Conquered         = ec.Conquered         or {}
+    ec.PrevCoord         = {}
+    ec.Rebound           = ec.Rebound           or {}
+    ec.RemoteChallenge   = ec.RemoteChallenge   or ""
+    ec.AdditiveChallenge = ec.AdditiveChallenge or ""
 end
-
+function EnclosureChallenge.getRemoteChallenge(pl)
+    pl = pl or getPlayer()
+    local ec = EnclosureChallenge.getData()
+    if not ec then return 0 end
+    ec.RemoteChallenge = ec.RemoteChallenge or ""
+    return ec.RemoteChallenge
+end
 Events.OnCreatePlayer.Add(function()
     if not isIngameState() then return end
 
@@ -56,15 +63,11 @@ Events.OnCreatePlayer.Add(function()
 
     EnclosureChallenge.initChallengeData(pl)
     EnclosureChallenge.setMarkers(pl)
-
+    EnclosureChallenge.setReturnPointMarker()
     local encStr = EnclosureChallenge.getEnclosureStr(pl)
     EnclosureChallenge.PreviousEnclosure = encStr
-	if not EnclosureChallenge.isChallenger(pl)  then
 
-        EnclosureChallenge.setReturnPointMarker()
-    end
     EnclosureChallenge.updateMarkers(encStr)
-
 
 end)
 
@@ -134,6 +137,14 @@ function EnclosureChallenge.updateMarkers(encStr)
     local  midX, midY = EnclosureChallenge.getEnclosureMidXY(x, y, pl)
     EnclosureChallenge.drawEnclosureGrid(midX, midY)
     EnclosureChallenge.drawEnclosureGridOverlay(minimap, midX, midY)
+
+    if  EnclosureChallenge.isChallenger(pl) then
+        EnclosureChallenge.setReturnPointMarker()
+        if EnclosureChallenge.isOutOfBounds(pl) and pl:isAlive() then
+            timer:Simple(2, function() EnclosureChallenge.rebound(pl) end)
+            pl:setHaloNote("OUT OF BOUNDS", 255, 50, 50, 150)
+        end
+    end
 end
 Events.OnEnclosureChange.Add(EnclosureChallenge.updateMarkers)
 

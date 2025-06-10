@@ -1,51 +1,57 @@
+
 EnclosureChallenge = EnclosureChallenge or {}
 
 -----------------------    keys*         ---------------------------
+
 EnclosureChallenge.posGUI = 1
 EnclosureChallenge.alphaGUI = 1
 EnclosureChallenge.MouseTip = true
 
 EnclosureChallenge.posTab = {}
-EnclosureChallenge.posTab[6] = "Position: Preset",
-EnclosureChallenge.posTab[5] = "Position: BottomRight",
-EnclosureChallenge.posTab[4] = "Position: Pixel Based",
-EnclosureChallenge.posTab[3] = "Position: Off Center",
-EnclosureChallenge.posTab[2] = "Position: Center Screen",
-EnclosureChallenge.posTab[1] = "Position: Screen Percent",
+EnclosureChallenge.posTab[6] = "Position: Preset"
+EnclosureChallenge.posTab[5] = "Position: BottomRight"
+EnclosureChallenge.posTab[4] = "Position: Pixel Based"
+EnclosureChallenge.posTab[3] = "Position: Off Center"
+EnclosureChallenge.posTab[2] = "Position: Center Screen"
+EnclosureChallenge.posTab[1] = "Position: Screen Percent"
 
-
+function EnclosureChallenge.toPercent(val)
+    return math.floor((val or 0) * 100 + 0.5)
+end
 
 function EnclosureChallenge.toggle(key)
     if not isIngameState() then return end
     local core = getCore()
-    local msg = nil
+    local msg
+
     if key == core:getKey("Toggle_Enclosure_MouseTip") then
         EnclosureChallenge.MouseTip = not EnclosureChallenge.MouseTip
-        msg = "Enclosure Mouse ToolTip: Off"
-        if EnclosureChallenge.MouseTip then msg = "Enclosure Mouse ToolTip: On" end
+        msg = "Enclosure Mouse ToolTip: " .. (EnclosureChallenge.MouseTip and "On" or "Off")
 
     elseif key == core:getKey("Adjust_Enclosure_GUI_Opacity") then
         EnclosureChallenge.alphaGUI = EnclosureChallenge.alphaGUI + 0.2
-        if EnclosureChallenge.alphaGUI >= 1 then
+        if EnclosureChallenge.alphaGUI > 1 then
             EnclosureChallenge.alphaGUI = 0
         end
-        msg = math.floor((EnclosureChallenge.alphaGUI or 0) * 100 + 0.5)
+        msg = "Enclosure GUI Opacity: " .. EnclosureChallenge.toPercent(EnclosureChallenge.alphaGUI)
 
     elseif key == core:getKey("Adjust_Enclosure_GUI_Position") then
         EnclosureChallenge.posGUI = EnclosureChallenge.posGUI + 1
         if EnclosureChallenge.posGUI >= 7 then
             EnclosureChallenge.posGUI = 1
-            msg = tostring(EnclosureChallenge.posTab[EnclosureChallenge.posGUI])
         end
+        msg = EnclosureChallenge.posTab[EnclosureChallenge.posGUI]
     end
 
     if msg then
-        getPlayer():setHaloNote(tostring(opacity),255,250,255,255)
+        getPlayer():setHaloNote(msg, 255, 250, 255, 255)
     end
 
     return key
 end
+
 Events.OnKeyPressed.Add(EnclosureChallenge.toggle)
+
 
 -----------------------            ---------------------------
 function EnclosureChallenge.getPointer()
@@ -72,8 +78,9 @@ function EnclosureChallenge.DrawMouseTip(x, y, z, str, r, g, b)
         tag:setDefaultColors(r, g, b)
         tag:setVisibleRadius(360)
 
-        local yOffset = 0
-        local xOffset = 0
+
+        local yOffset = SandboxVars.EnclosureChallengeGUI.xMouseOffset or 0
+        local xOffset = SandboxVars.EnclosureChallengeGUI.yMouseOffset or 0
         local function drawFunc()
             if not EnclosureChallenge.MouseTip then
                 Events.OnPostRender.Remove(drawFunc)
@@ -89,16 +96,29 @@ function EnclosureChallenge.DrawMouseTip(x, y, z, str, r, g, b)
             EnclosureChallenge.checkMark = nil
         end
         if EnclosureChallenge.checkMark == nil then
-            local markerSize = ZombRand(0.2, 1)
+            local markerSize = 0.3
             local sq = getCell():getOrCreateGridSquare(x, y, z)
             if sq then
                 local stamp = "EnclosureChallenge_Bounds"
                 if EnclosureChallenge.isReboundSq(sq) then
-                    stamp = "EnclosureChallenge_Return"
+                    markerSize = 2.5
+                    stamp = "EnclosureChallenge_Circle"
                 elseif EnclosureChallenge.isConquered(sq) then
+                    markerSize = 0.5
                     stamp = "EnclosureChallenge_Conquered"
+
+                    local col = EnclosureChallenge.parseColor(SandboxVars.EnclosureChallengeGUI.GoodColor)
+                    r = col.r
+                    g = col.g
+                    b = col.b
                 elseif EnclosureChallenge.isOutOfBounds(sq) then
                     stamp = "EnclosureChallenge_Challenger"
+                    markerSize = 1
+
+                    local col = EnclosureChallenge.parseColor(SandboxVars.EnclosureChallengeGUI.BadColor)
+                    r = col.r
+                    g = col.g
+                    b = col.b
                 end
                 if EnclosureChallenge.MouseTip then
                     EnclosureChallenge.checkMark = getWorldMarkers():addGridSquareMarker(stamp, stamp, sq, r, g, b, false, markerSize)
@@ -149,8 +169,8 @@ function EnclosureChallenge.GUI()
 
     local pl = getPlayer()
     if not pl then return end
-    local xOffset = SandboxVars.EnclosureChallengeGUI.xPercentPos or 4
-    local yOffset = SandboxVars.EnclosureChallengeGUI.yPercentPos or 55
+    local xPercentPos = SandboxVars.EnclosureChallengeGUI.xPercentPos or 4
+    local yPercentPos = SandboxVars.EnclosureChallengeGUI.yPercentPos or 55
 
     local xOffset = SandboxVars.EnclosureChallengeGUI.xOffset or 50
     local yOffset = SandboxVars.EnclosureChallengeGUI.yOffset or 50
@@ -161,22 +181,22 @@ function EnclosureChallenge.GUI()
 
     local pos = EnclosureChallenge.posGUI
     local xPos, yPos
-    if pos == 6 then -- preset
+    if pos == 6 then
         xPos = (scrW / 8) + 55
         yPos = (scrH / 2) + 24
-    elseif pos == 5 then -- bot right - offset
+    elseif pos == 5 then
         xPos = scrW - xOffset
         yPos = scrH - yOffset
-    elseif pos == 4 then -- pixel pos
+    elseif pos == 4 then
         xPos = xOffset
         yPos = yOffset
-    elseif pos == 3 then -- center + offset
+    elseif pos == 3 then
         xPos = (scrW / 2) + xOffset
         yPos = (scrH / 2) + yOffset
-    elseif pos == 2 then -- center no offset
+    elseif pos == 2 then
         xPos = scrW / 2
         yPos = scrH / 2
-    else -- percent position
+    else
         xPos = math.floor((xPercentPos / 100) * scrW)
         yPos = math.floor((yPercentPos / 100) * scrH)
     end
@@ -225,7 +245,7 @@ function EnclosureChallenge.GUI()
         local modeStr = isRemoteMode and "Remote Mode" or "Additive Mode"
         local timeStr = EnclosureChallenge.getChallengeTimeStr()
         local headerStr = string.format("%s\n%s", modeStr, timeStr)
-        getTextManager():DrawString(timeSize, xPos, yPos - textGap, headerStr, col.r, col.g, col.b, alpha)
+        getTextManager():DrawString(timeSize, xPos, yPos - textGap, headerStr, 1, 0, 0, alpha)
     end
 
     local encInfo = {

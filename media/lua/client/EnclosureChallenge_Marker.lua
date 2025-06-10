@@ -192,7 +192,7 @@ function EnclosureChallenge.setReturnPointMarker()
         if SandboxVars.EnclosureChallenge.ShowArrowGuide then
             EnclosureChallenge.guide = getWorldMarkers():addPlayerHomingPoint(pl, x, y, "arrow_triangle", r, g, b, a, true, 5)
         end
-        EnclosureChallenge.reboundMark = getWorldMarkers():addGridSquareMarker("EnclosureChallenge_Rebound", "EnclosureChallenge_Rebound", guideSq, r, g, b, true, 2)
+        EnclosureChallenge.reboundMark = getWorldMarkers():addGridSquareMarker("EnclosureChallenge_Return", "EnclosureChallenge_Return", guideSq, r, g, b, true, 2)
     end
 end
 

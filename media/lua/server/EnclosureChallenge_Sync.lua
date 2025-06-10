@@ -46,7 +46,7 @@ end
 
 Commands.EnclosureChallenge.send = function(player, args)
     local playerId = player:getOnlineID();
-    sendServerCommand("EnclosureChallenge", "send", {id = playerId,  x = args.x, y = args.y, z = args.z,})
+    sendServerCommand("EnclosureChallenge", "send", {id = playerId})
 end
 
 Events.OnClientCommand.Add(function(module, command, player, args)

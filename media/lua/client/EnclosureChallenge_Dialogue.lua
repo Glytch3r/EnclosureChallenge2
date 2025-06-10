@@ -56,30 +56,41 @@ function EnclosureChallenge.disabler(bool)
 	ISBackButtonWheel.disableZoomIn = bool
 end
 
-
 function EnclosureChallenge.onYes(isQuit, isRemote)
 	local pl = getPlayer()
 	if not pl then return end
+	local isStart = not isQuit
 	EnclosureChallenge.sfx(isStart)
 
 	local encStr = EnclosureChallenge.getEnclosureStr(pl)
 	isRemote = isRemote or EnclosureChallenge.isRemoteMode(pl)
-	if isRemote then
-		EnclosureChallenge.setChallenge(isStart, isRemote)
-	elseif isQuit then
-		EnclosureChallenge.endChallenge(isRemote)
-	else
-		EnclosureChallenge.setChallenge(true, isRemote)
-	end
 
+	EnclosureChallenge.clearCoord()
+    local ec = EnclosureChallenge.getData()
+	--EnclosureChallenge.clearRebound()
+	if not encStr or not ec then return end
+
+	if isQuit then
+		EnclosureChallenge.setChallenge(false, isRemote)
+		EnclosureChallenge.delReturnPointMarker()
+		EnclosureChallenge.clearRebound()
+	else
+		EnclosureChallenge.storeRebound(pl)
+		EnclosureChallenge.setChallenge(true, isRemote)
+		if isRemote then
+			ec.RemoteChallenge = encStr
+			ec.AdditiveChallenge = ""
+		else
+			ec.RemoteChallenge =  ""
+			ec.AdditiveChallenge = encStr
+		end
+		EnclosureChallenge.setReturnPointMarker()
+	end
 
 	if EnclosureChallenge.isShouldAnnounce() then
 		local user = tostring(pl:getUsername())
-		local posStr = (encStr) and ": [" .. tostring(encStr).. "]" or ""
-		if not SandboxVars.EnclosureChallenge.CoordNotif then posStr = "" end
-		local msg = nil
-		msg = user .. " " ..
-		(isQuit and getText("ContextMenu_EnclosureChallenge_ChallengeWithdrawn") or getText("ContextMenu_EnclosureChallenge_ChallengeAccepted")) .. posStr
+		local posStr = (encStr and SandboxVars.EnclosureChallenge.CoordNotif) and ": [" .. tostring(encStr).. "]" or ""
+		local msg = user .. " " .. (isQuit and getText("ContextMenu_EnclosureChallenge_ChallengeWithdrawn") or getText("ContextMenu_EnclosureChallenge_ChallengeAccepted")) .. posStr
 		if isClient() then
 			processGeneralMessage(msg)
 		else
@@ -89,16 +100,17 @@ function EnclosureChallenge.onYes(isQuit, isRemote)
 end
 
 function EnclosureChallenge.onNo(isRemote, isQuit, pl)
-	if not isQuit then
+    if isQuit then
+
+        EnclosureChallenge.sfx(isQuit)
+	else
 		if isRemote then
 			EnclosureChallenge.goBack()
+			EnclosureChallenge.clearCoord()
 		end
-		--EnclosureChallenge.setMarkers(pl, false)
-		EnclosureChallenge.sfx(isQuit)
+    end
 
-	end
 end
-
 
 
 function EnclosureChallenge.ConfirmDialog(pl, text, title, isQuit, isRemote, unlockTarg)
@@ -125,7 +137,6 @@ function EnclosureChallenge.ConfirmDialog(pl, text, title, isQuit, isRemote, unl
             dialog:setVisible(false)
             dialog:removeFromUIManager()
 			EnclosureChallenge.disabler(false)
-
         end
     end
 
@@ -136,7 +147,8 @@ function EnclosureChallenge.ConfirmDialog(pl, text, title, isQuit, isRemote, unl
 			if unlockTarg then
 				EnclosureChallenge.doUnlock(unlockTarg)
 			else
-				EnclosureChallenge.onYes(isQuit)
+				EnclosureChallenge.onYes(isQuit, isRemote)
+
 			end
 		elseif button.internal == "NO" then
 			EnclosureChallenge.onNo(isRemote, isQuit, pl)

@@ -87,6 +87,18 @@ option EnclosureChallengeGUI.yOffset
 	page = EnclosureChallengeGUI, translation = EnclosureChallengeGUI_yOffset,
 }
 
+option EnclosureChallengeGUI.xMouseOffset
+{
+	type = double, min = -9999, max = 9999, default = 0,
+	page = EnclosureChallengeGUI, translation = EnclosureChallengeGUI_xMouseOffset,
+}
+
+option EnclosureChallengeGUI.yMouseOffset
+{
+	type = double, min = -9999, max = 9999, default = 0,
+	page = EnclosureChallengeGUI, translation = EnclosureChallengeGUI_yMouseOffset,
+}
+
 option EnclosureChallengeGUI.textGap
 {
 	type = double, min = -9999, max = 9999, default = 42,
@@ -103,6 +115,12 @@ option EnclosureChallengeGUI.yPercentPos
 	page = EnclosureChallengeGUI, translation = EnclosureChallengeGUI_yPercentPos,
 }
 
+
+option EnclosureChallengeGUI.GUIHeaderColor
+{
+	type = string, default = 1;0.05;0.05;1,
+	page = EnclosureChallengeGUI, translation = EnclosureChallengeGUI_GUIHeaderColor,
+}
 option EnclosureChallengeGUI.MarkerColor
 {
 	type = string, default = 0.64;0.13;0.04;0.9,

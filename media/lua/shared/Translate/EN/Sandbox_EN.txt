@@ -64,12 +64,14 @@ Sandbox_EN = {
 	Sandbox_EnclosureChallengeGUI_GoodColor = "Good Color",
 	Sandbox_EnclosureChallengeGUI_GoodColor_tooltip = "Red;Green;Blue;Alpha",
 
-	Sandbox_EnclosureChallengeGUI_BadColor = "Good Color",
+	Sandbox_EnclosureChallengeGUI_BadColor = "Bad Color",
 	Sandbox_EnclosureChallengeGUI_BadColor_tooltip = "Red;Green;Blue;Alpha",
 
 	Sandbox_EnclosureChallengeGUI_NeutralColor = "Neutral Color",
 	Sandbox_EnclosureChallengeGUI_NeutralColor_tooltip = "Red;Green;Blue;Alpha",
 
+	Sandbox_EnclosureChallengeGUI_GUIHeaderColor = "GUI Header Color",
+	Sandbox_EnclosureChallengeGUI_GUIHeaderColor_tooltip = "Red;Green;Blue;Alpha",
 
 	Sandbox_EnclosureChallengeGUI_FontSize = "GUI Font Size",
 
@@ -83,6 +85,8 @@ Sandbox_EN = {
 	Sandbox_EnclosureChallengeGUI_textGap = "GUI Text Space"
 	Sandbox_EnclosureChallengeGUI_textGap_tooltip = "The Space between the two GUI sections"
 
+	Sandbox_EnclosureChallengeGUI_xMouseOffset = "Mouse ToolTip X Offset"
+	Sandbox_EnclosureChallengeGUI_yMouseOffset = "Mouse ToolTip Y Offset"
 
 	Sandbox_EnclosureChallenge1_RewardTitle = "Rewards 1 Category Title",
 	Sandbox_EnclosureChallenge1_RewardTitle_tooltip = "Leave the title blank to disable the category",
