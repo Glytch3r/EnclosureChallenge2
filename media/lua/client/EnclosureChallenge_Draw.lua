@@ -208,7 +208,6 @@ function EnclosureChallenge.GUI()
 
     local x, y, z = sq:getX(), sq:getY(), sq:getZ()
     if not (x and y and z) then return end
-
     local encStr = EnclosureChallenge.getEnclosureStr(sq)
     local status = EnclosureChallenge.getEnclosureStatus(pl)
     local isChallenger = EnclosureChallenge.isChallenger(pl)
