@@ -80,6 +80,29 @@ function EnclosureChallenge.getRandMidCoord()
     return midX, midY, encX, encY
 end
  ]]
+
+
+function EnclosureChallenge.getEnclosureMidXY(x, y, targ)
+    local size = EnclosureChallenge.EnclosureSize
+    local pl = getPlayer()
+    if pl then
+        x = x or pl:getX()
+        y = y or pl:getY()
+    end
+    if targ and targ ~= pl then
+        x = targ:getX()
+        y = targ:getY()
+    end
+    if not x or not y then return nil end
+    local encX = math.floor(x / size)
+    local midX = encX * size + (math.floor(size / 2))
+
+    local encY = math.floor(y / size)
+    local midY = ( encY * size) + (math.floor(size / 2))
+    return midX , midY
+
+end
+
 function EnclosureChallenge.getRandMidCoord()
     local size = EnclosureChallenge.EnclosureSize or 189
     if not ISWorldMap_instance then

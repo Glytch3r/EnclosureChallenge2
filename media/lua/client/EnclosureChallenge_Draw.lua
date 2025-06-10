@@ -3,24 +3,28 @@ EnclosureChallenge = EnclosureChallenge or {}
 
 -----------------------    keys*         ---------------------------
 
-EnclosureChallenge.posGUI = 1
-EnclosureChallenge.alphaGUI = 1
-EnclosureChallenge.MouseTip = true
+EnclosureChallenge.posGUI = EnclosureChallenge.posGUI or 1
+EnclosureChallenge.alphaGUI = EnclosureChallenge.alphaGUI or 1
+EnclosureChallenge.MouseTip = EnclosureChallenge.MouseTip or true
 
-EnclosureChallenge.posTab = {}
-EnclosureChallenge.posTab[6] = "Position: Preset"
-EnclosureChallenge.posTab[5] = "Position: BottomRight"
-EnclosureChallenge.posTab[4] = "Position: Pixel Based"
-EnclosureChallenge.posTab[3] = "Position: Off Center"
-EnclosureChallenge.posTab[2] = "Position: Center Screen"
-EnclosureChallenge.posTab[1] = "Position: Screen Percent"
+EnclosureChallenge.posTab = {
+    "Position: Screen Percent",
+    "Position: Center Screen",
+    "Position: Off Center",
+    "Position: Pixel Based",
+    "Position: BottomRight",
+    "Position: Preset",
+}
+
 
 function EnclosureChallenge.toPercent(val)
     return math.floor((val or 0) * 100 + 0.5)
 end
 
+
 function EnclosureChallenge.toggle(key)
     if not isIngameState() then return end
+
     local core = getCore()
     local msg
 
@@ -36,11 +40,8 @@ function EnclosureChallenge.toggle(key)
         msg = "Enclosure GUI Opacity: " .. EnclosureChallenge.toPercent(EnclosureChallenge.alphaGUI)
 
     elseif key == core:getKey("Adjust_Enclosure_GUI_Position") then
-        EnclosureChallenge.posGUI = EnclosureChallenge.posGUI + 1
-        if EnclosureChallenge.posGUI >= 7 then
-            EnclosureChallenge.posGUI = 1
-        end
-        msg = EnclosureChallenge.posTab[EnclosureChallenge.posGUI]
+        EnclosureChallenge.posGUI = (EnclosureChallenge.posGUI % #EnclosureChallenge.posTab) + 1
+        msg = EnclosureChallenge.posTab[EnclosureChallenge.posGUI] or "Invalid GUI Position"
     end
 
     if msg then
@@ -51,7 +52,6 @@ function EnclosureChallenge.toggle(key)
 end
 
 Events.OnKeyPressed.Add(EnclosureChallenge.toggle)
-
 
 -----------------------            ---------------------------
 function EnclosureChallenge.getPointer()
@@ -133,7 +133,8 @@ function EnclosureChallenge.DrawMouseTip(x, y, z, str, r, g, b)
         end)
     end
 end
-function EnclosureChallenge.MouseTip()
+
+function EnclosureChallenge.MouseTipHandler()
     if not isIngameState() then return end
     if not EnclosureChallenge.MouseTip then return end
 
@@ -154,15 +155,15 @@ function EnclosureChallenge.MouseTip()
     local reboundSq = EnclosureChallenge.getReboundSq()
     if reboundSq and reboundSq == sq then
         info = "RETURN POINT\n" .. info
-    elseif EnclosureChallenge.isOutOfBounds(sq) then
+    elseif EnclosureChallenge.isOutOfBounds(sq) then--error
         info = "OUT OF BOUNDS!\n" .. info
     end
 
     EnclosureChallenge.DrawMouseTip(x, y, z, info, col.r, col.g, col.b)
 end
+Events.OnPlayerUpdate.Add(EnclosureChallenge.MouseTipHandler)
 
 
-Events.OnPlayerUpdate.Add(EnclosureChallenge.MouseTip)
 
 function EnclosureChallenge.GUI()
     if not isIngameState() then return end

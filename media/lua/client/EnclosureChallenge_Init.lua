@@ -116,6 +116,7 @@ end)
 end)
  ]]
 -----------------------       ---------------------------
+
 LuaEventManager.AddEvent("OnEnclosureChange")
 function EnclosureChallenge.updateMarkers(encStr)
 
@@ -141,7 +142,9 @@ function EnclosureChallenge.updateMarkers(encStr)
     if  EnclosureChallenge.isChallenger(pl) then
         EnclosureChallenge.setReturnPointMarker()
         if EnclosureChallenge.isOutOfBounds(pl) and pl:isAlive() then
-            timer:Simple(2, function() EnclosureChallenge.rebound(pl) end)
+            timer:Simple(2, function()
+                EnclosureChallenge.rebound(pl)
+            end)
             pl:setHaloNote("OUT OF BOUNDS", 255, 50, 50, 150)
         end
     end

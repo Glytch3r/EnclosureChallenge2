@@ -37,6 +37,7 @@ function EnclosureChallenge.tp(pl, x, y, z)
 	pl:setLz(z)
 end
 -----------------------            ---------------------------
+--[[
 function EnclosureChallenge.resolveEnclosure(targ)
     if not targ then
         return getPlayer():getCurrentSquare()
@@ -50,7 +51,7 @@ function EnclosureChallenge.resolveEnclosure(targ)
     end
     return nil
 end
-
+ ]]
 
 
 function EnclosureChallenge.getEnclosurePoint(XorY)
@@ -58,40 +59,30 @@ function EnclosureChallenge.getEnclosurePoint(XorY)
 end
 
 
-function EnclosureChallenge.getEnclosureMidXY(x, y, targ)
+function EnclosureChallenge.getEnclosureXY(x, y)
     local size = EnclosureChallenge.EnclosureSize
-    local pl = getPlayer()
-    if pl then
-        x = x or pl:getX()
-        y = y or pl:getY()
-    end
-    if targ and targ ~= pl then
-        x = targ:getX()
-        y = targ:getY()
-    end
-    if not x or not y then return nil end
-    local encX = math.floor(x / size)
-    local midX = encX * size + (math.floor(size / 2))
+    if not size or not x or not y then return nil end
 
-    local encY = math.floor(y / size)
-    local midY = ( encY * size) + (math.floor(size / 2))
-    return midX , midY
+    x = math.floor((x - 1) / size)
+    y = math.floor((y - 1) / size)
 
+    return { x = x, y = y, z = 0 }
 end
-
 
 function EnclosureChallenge.getEnclosureStrXY(x, y)
     local enc = EnclosureChallenge.getEnclosureXY(x, y)
-    return tostring(round(enc.x)) .. "_" .. tostring(round(enc.y))
+    if not enc then return nil end
+    return tostring(enc.x) .. "_" .. tostring(enc.y)
 end
 
+--[[
 function EnclosureChallenge.getEnclosureXY(x, y)
     local size = EnclosureChallenge.EnclosureSize
     if not size then return nil end
     local x = math.floor((x - 1) / size)
     local y = math.floor((y - 1) / size)
     return { x = x, y = y , z = 0}
-end
+end ]]
 --[[ function EnclosureChallenge.getEnclosure(targ)
 
     targ = targ or getPlayer()

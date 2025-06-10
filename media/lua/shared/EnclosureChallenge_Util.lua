@@ -26,21 +26,31 @@ function EnclosureChallenge.getCurrentEnclosure(targ, isTab)
 end
 
 
-
 function EnclosureChallenge.getEnclosure(targ)
     local size = EnclosureChallenge.EnclosureSize
     if not size then return nil end
     targ = targ or getPlayer()
 
-    local x = targ:getX()
-    x = math.floor((x - 1) / size)
+    local x, y
 
-    local y = targ:getY()
-    y = math.floor((y - 1) / size)
+    if instanceof(targ, "IsoSquare") then
+        x = targ:getX()
+        y = targ:getY()
+    elseif targ.getX and targ.getY then
+        x = targ:getX()
+        y = targ:getY()
+    else
+        return nil
+    end
+
     if not x or not y then return nil end
 
-    return { x=x, y=y}
+    x = math.floor((x - 1) / size)
+    y = math.floor((y - 1) / size)
+
+    return { x = x, y = y }
 end
+
 
 
 function EnclosureChallenge.sfx(isStart)

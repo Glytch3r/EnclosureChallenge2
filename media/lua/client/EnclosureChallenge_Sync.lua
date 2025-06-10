@@ -37,13 +37,21 @@ Commands.EnclosureChallenge = {}
 
 function EnclosureChallenge.stag(targ)
 	if SandboxVars.EnclosureChallenge.ReturnStaggered  then
-		timer:Simple(1.5, function()
-			targ:setBumpType("pushedFront");
-			targ:setVariable("BumpFall", true);
-			targ:setVariable("BumpFallType", "pushedFront");
-		end)
+	if not EnclosureChallenge.waitStag then
+        EnclosureChallenge.waitStag= true
+            timer:Simple(0.5, function()
+                targ:setBumpType("pushedFront");
+                targ:setVariable("BumpFall", true);
+                targ:setVariable("BumpFallType", "pushedFront");
+            end)
+            timer:Simple(2, function()
+                EnclosureChallenge.waitStag = true
+
+            end)
+        end
 	end
 end
+
 
 Commands.EnclosureChallenge.send = function(args)
     local targ = getPlayerByOnlineID(args.id)

@@ -69,7 +69,6 @@ function EnclosureChallenge.doWin(isRemote)
     local pl = getPlayer(); if not pl then return end
     isRemote =  isRemote or EnclosureChallenge.isRemoteMode(pl)
 
-
     --EnclosureChallenge.rebound(pl)
     timer:Simple(1, function()
         EnclosureChallenge.doReward();
