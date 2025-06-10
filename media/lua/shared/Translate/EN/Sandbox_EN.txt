@@ -39,7 +39,6 @@ Sandbox_EN = {
 	Sandbox_EnclosureChallenge_ReturnStaggered = "Return Staggered",
 	Sandbox_EnclosureChallenge_ReturnStaggered_tooltip = "Out-of-bounds players are teleported back and briefly staggered",
 
-	Sandbox_EnclosureChallenge_FontSize = "GUI Font Size",
 
 
 	Sandbox_EnclosureChallenge14 = "Enclosure Challenge Rewards 14",
@@ -57,19 +56,33 @@ Sandbox_EN = {
 	Sandbox_EnclosureChallenge2 = "Enclosure Challenge Rewards 2",
 	Sandbox_EnclosureChallenge1 = "Enclosure Challenge Rewards 1",
 
-	Sandbox_EnclosureChallengeColor = "Enclosure Challenge Colors"
+	Sandbox_EnclosureChallengeGUI = "Enclosure Challenge GUI"
 
-	Sandbox_EnclosureChallengeColor_MarkerColor = "Marker Color",
-	Sandbox_EnclosureChallengeColor_MarkerColor_tooltip = "Red;Green;Blue;Alpha",
+	Sandbox_EnclosureChallengeGUI_MarkerColor = "Marker Color",
+	Sandbox_EnclosureChallengeGUI_MarkerColor_tooltip = "Red;Green;Blue;Alpha",
 
-	Sandbox_EnclosureChallengeColor_GoodColor = "Good Color",
-	Sandbox_EnclosureChallengeColor_GoodColor_tooltip = "Red;Green;Blue;Alpha",
+	Sandbox_EnclosureChallengeGUI_GoodColor = "Good Color",
+	Sandbox_EnclosureChallengeGUI_GoodColor_tooltip = "Red;Green;Blue;Alpha",
 
-	Sandbox_EnclosureChallengeColor_BadColor = "Good Color",
-	Sandbox_EnclosureChallengeColor_BadColor_tooltip = "Red;Green;Blue;Alpha",
+	Sandbox_EnclosureChallengeGUI_BadColor = "Good Color",
+	Sandbox_EnclosureChallengeGUI_BadColor_tooltip = "Red;Green;Blue;Alpha",
 
-	Sandbox_EnclosureChallengeColor_NeutralColor = "Neutral Color",
-	Sandbox_EnclosureChallengeColor_NeutralColor_tooltip = "Red;Green;Blue;Alpha",
+	Sandbox_EnclosureChallengeGUI_NeutralColor = "Neutral Color",
+	Sandbox_EnclosureChallengeGUI_NeutralColor_tooltip = "Red;Green;Blue;Alpha",
+
+
+	Sandbox_EnclosureChallengeGUI_FontSize = "GUI Font Size",
+
+	Sandbox_EnclosureChallengeGUI_xPercentPos = "GUI X Percent Position"
+	Sandbox_EnclosureChallengeGUI_yPercentPos = "GUI Y Percent Position"
+
+
+	Sandbox_EnclosureChallengeGUI_xOffset = "GUI X Offset"
+	Sandbox_EnclosureChallengeGUI_yOffset = "GUI Y Offset"
+
+	Sandbox_EnclosureChallengeGUI_textGap = "GUI Text Space"
+	Sandbox_EnclosureChallengeGUI_textGap_tooltip = "The Space between the two GUI sections"
+
 
 	Sandbox_EnclosureChallenge1_RewardTitle = "Rewards 1 Category Title",
 	Sandbox_EnclosureChallenge1_RewardTitle_tooltip = "Leave the title blank to disable the category",

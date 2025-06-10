@@ -43,9 +43,9 @@ function EnclosureChallenge.addMapSymbol(x, y, tex)
 
 
     sym:setAnchor(0.5, 0.5)
-    local colStr = SandboxVars.EnclosureChallengeColor.BadColor
+    local colStr = SandboxVars.EnclosureChallengeGUI.BadColor
     if isConquered and colStr then
-        colStr = SandboxVars.EnclosureChallengeColor.GoodColor
+        colStr = SandboxVars.EnclosureChallengeGUI.GoodColor
     end
 
     local col = EnclosureChallenge.parseColor(colStr)

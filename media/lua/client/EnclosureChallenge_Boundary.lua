@@ -30,7 +30,8 @@ EnclosureChallenge = EnclosureChallenge or {}
 -----------------------  challenge out of bound  tp* bounds*      ---------------------------
 
 function EnclosureChallenge.isOutOfBounds(targ)
-    targ = targ or getPlayer()
+    local pl = getPlayer()
+    targ = targ or pl
     if not targ then return false end
     if not EnclosureChallenge.isChallenger() then return false end
 
@@ -42,7 +43,7 @@ function EnclosureChallenge.isOutOfBounds(targ)
 
     local ec = EnclosureChallenge.getData()
 
-    if EnclosureChallenge.isRemoteMode(getPlayer()) then
+    if EnclosureChallenge.isRemoteMode(pl) then
         return ec.RemoteChallenge ~= encStr
     else
         return not ec.Challenges[encStr]
@@ -158,19 +159,6 @@ function EnclosureChallenge.storeRebound(targ)
 end
 
 -----------------------            ---------------------------
-function EnclosureChallenge.triggerChallenge(targ)
-    targ = targ or getPlayer()
-    EnclosureChallenge.storeRebound(targ)
-    local x, y, z = round(targ:getX()),  round(targ:getY()),  targ:getZ() or 0
-
-    local guideSq = getCell():getOrCreateGridSquare(x, y, z)
-    if guideSq then
-        EnclosureChallenge.setReturnPointMarker(guideSq, x, y, z)
-    end
-
-    EnclosureChallenge.setMarkers(targ, false)
-    EnclosureChallenge.addChallengeSymbols(targ)
-end
 
 function EnclosureChallenge.endChallenge(isRemote)
     local pl = getPlayer()
@@ -200,7 +188,7 @@ EnclosureChallenge.reboundState = {
 function EnclosureChallenge.reboundHandler()
     local state = EnclosureChallenge.reboundState
     state.bTick = state.bTick + 1
-    if state.bTick % 60 == 0 then
+    if state.bTick % 30 == 0 then
         if not state.staggered and state.reboundPl then
             state.staggered = true
             if isClient() then

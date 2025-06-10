@@ -181,7 +181,7 @@ function EnclosureChallenge.setReturnPointMarker()
 
         if not EnclosureChallenge.isChallenger(pl) then return end
 
-        local col = EnclosureChallenge.parseColor(SandboxVars.EnclosureChallengeColor.MarkerColor)
+        local col = EnclosureChallenge.parseColor(SandboxVars.EnclosureChallengeGUI.MarkerColor)
         local r, g, b, a = col.r, col.g, col.b, col.a
 
         EnclosureChallenge.delReturnPointMarker()

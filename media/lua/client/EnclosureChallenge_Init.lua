@@ -108,7 +108,7 @@ end)
         local encStr  = EnclosureChallenge.getEnclosureStr(pl)
         EnclosureChallenge.PreviousEnclosure = encStr
         triggerEvent("OnEnclosureChange", EnclosureChallenge.PreviousEnclosure,  encStr)
-		EnclosureChallenge.showDraw = true
+
 	end
 end)
  ]]

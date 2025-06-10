@@ -26,26 +26,45 @@
 █████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████--]]
 
 EnclosureChallenge = EnclosureChallenge or {}
-function EnclosureChallenge.setChallenge(isStart, isRemote)
-	local pl = getPlayer()
-	if not pl then return end
+EnclosureChallenge = EnclosureChallenge or {}
 
-	local ec = EnclosureChallenge.getData()
-	isRemote = isRemote or EnclosureChallenge.isRemoteMode(pl)
-	--EnclosureChallenge.storeEnclosure(pl)
-	if isStart then
-		local hours = SandboxVars.EnclosureChallenge.ChallengeHours or 168
-		ec.ChallengeTime = hours
-		if isRemote then
-			EnclosureChallenge.setRemoteMode(true)
-		end
-		EnclosureChallenge.storeRebound(pl)
-	else
-		if isRemote then
-			EnclosureChallenge.setRemoteMode(false)
-		end
-		ec.ChallengeTime = 0
-	end
+function EnclosureChallenge.setChallenge(isStart, isRemote)
+    local pl = getPlayer()
+    if not pl then return end
+
+    local ec = EnclosureChallenge.getData()
+    if not ec then return end
+
+    isRemote = isRemote or EnclosureChallenge.isRemoteMode(pl)
+
+    if isStart then
+        ec.ChallengeTime = SandboxVars.EnclosureChallenge.ChallengeHours or 168
+
+        if isRemote then
+            EnclosureChallenge.setRemoteMode(true)
+        end
+
+        EnclosureChallenge.storeRebound(pl)
+
+        local x = round(pl:getX())
+        local y = round(pl:getY())
+        local z = pl:getZ() or 0
+
+        local guideSq = getCell():getOrCreateGridSquare(x, y, z)
+        if guideSq then
+            EnclosureChallenge.setReturnPointMarker(guideSq, x, y, z)
+        end
+
+        EnclosureChallenge.setMarkers(pl, false)
+        EnclosureChallenge.addChallengeSymbols(pl)
+    else
+        if isRemote then
+            EnclosureChallenge.setRemoteMode(false)
+        end
+        EnclosureChallenge.clearRebound(pl)
+
+        ec.ChallengeTime = 0
+    end
 end
 
 

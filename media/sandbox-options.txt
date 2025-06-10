@@ -1,12 +1,6 @@
 VERSION = 1,
 
 
-option EnclosureChallenge.CountdownSeconds
-{
-	type = integer, min = 0, max = 16128, default = 30,
-	page = EnclosureChallenge, translation = EnclosureChallenge_CountdownSeconds,
-}
-
 option EnclosureChallenge.StartingUnlockPoints
 {
 	type = integer, min = 0, max = 100, default = 5,
@@ -61,11 +55,6 @@ option EnclosureChallenge.ChallengeHours
 	type = integer, min = 0, max = 16128, default = 168,
 	page = EnclosureChallenge, translation = EnclosureChallenge_ChallengeHours,
 }
-option EnclosureChallenge.FontSize
-{
-	type = integer, min = 1, max = 3, default = 1,
-	page = EnclosureChallenge, translation = EnclosureChallenge_FontSize,
-}
 
 option EnclosureChallenge.StopCar
 {
@@ -79,30 +68,62 @@ option EnclosureChallenge.LeakBattery
 }
 
 
+option EnclosureChallengeGUI.FontSize
+{
+	type = integer, min = 1, max = 3, default = 1,
+	page = EnclosureChallengeGUI, translation = EnclosureChallengeGUI_FontSize,
+}
 
 
+option EnclosureChallengeGUI.xOffset
+{
+	type = double, min = -9999, max = 9999, default = 12,
+	page = EnclosureChallengeGUI, translation = EnclosureChallengeGUI_xOffset,
+}
 
+option EnclosureChallengeGUI.yOffset
+{
+	type = double, min = -9999, max = 9999, default = 12,
+	page = EnclosureChallengeGUI, translation = EnclosureChallengeGUI_yOffset,
+}
 
-option EnclosureChallengeColor.MarkerColor
+option EnclosureChallengeGUI.textGap
+{
+	type = double, min = -9999, max = 9999, default = 42,
+	page = EnclosureChallengeGUI, translation = EnclosureChallengeGUI_textGap,
+}
+option EnclosureChallengeGUI.xPercentPos
+{
+	type = double, min = 0, max = 100, default = 4,
+	page = EnclosureChallengeGUI, translation = EnclosureChallengeGUI_xPercentPos,
+}
+option EnclosureChallengeGUI.yPercentPos
+{
+	type = double, min = 0, max = 100, default = 66,
+	page = EnclosureChallengeGUI, translation = EnclosureChallengeGUI_yPercentPos,
+}
+
+option EnclosureChallengeGUI.MarkerColor
 {
 	type = string, default = 0.64;0.13;0.04;0.9,
-	page = EnclosureChallengeColor, translation = EnclosureChallengeColor_MarkerColor,
+	page = EnclosureChallengeGUI, translation = EnclosureChallengeGUI_MarkerColor,
 }
-option EnclosureChallengeColor.GoodColor
+option EnclosureChallengeGUI.GoodColor
 {
 	type = string, default = 0.21;0.64;0.94;1,
-	page = EnclosureChallengeColor, translation = EnclosureChallengeColor_GoodColor,
+	page = EnclosureChallengeGUI, translation = EnclosureChallengeGUI_GoodColor,
 }
-option EnclosureChallengeColor.BadColor
+option EnclosureChallengeGUI.BadColor
 {
 	type = string, default = 0.94;0.54;0.28;1,
-	page = EnclosureChallengeColor, translation = EnclosureChallengeColor_BadColor,
+	page = EnclosureChallengeGUI, translation = EnclosureChallengeGUI_BadColor,
 }
-option EnclosureChallengeColor.NeutralColor
+option EnclosureChallengeGUI.NeutralColor
 {
 	type = string, default = 1;1;1;0.8,
-	page = EnclosureChallengeColor, translation = EnclosureChallengeColor_NeutralColor,
+	page = EnclosureChallengeGUI, translation = EnclosureChallengeGUI_NeutralColor,
 }
+
 
 
 option EnclosureChallenge1.RewardTitle   { type = string, default = Food, page = EnclosureChallenge1, translation = EnclosureChallenge1_RewardTitle, }

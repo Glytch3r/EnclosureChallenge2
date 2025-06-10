@@ -50,20 +50,9 @@ function EnclosureChallenge.sfx(isStart)
         getSoundManager():playUISound("EnclosureChallenge_Out")
     end
 end
------------------------            ---------------------------
---[[
-local MarkerColor = SandboxVars.EnclosureChallengeColor.MarkerColor
 
-local colorVar = SandboxVars.EnclosureChallengeColor.GoodColor
-local colorVar = SandboxVars.EnclosureChallengeColor.BadColor
-local colorVar = SandboxVars.EnclosureChallengeColor.NeutralColor
-
-local col = EnclosureChallenge.parseColor(colorVar)
-col.r, col.g, col.b, col.a
-
- ]]
 function EnclosureChallenge.parseColor(str)
-    str = str or SandboxVars.EnclosureChallengeColor.MarkerColor or "0.64;0.13;0.04;0.7"
+    str = str or SandboxVars.EnclosureChallengeGUI.MarkerColor or "0.64;0.13;0.04;0.7"
     local r, g, b, a = str:match("^([^;]+);([^;]+);([^;]+);?([^;]*)$")
     return {
         r = tonumber(r) or 1,
@@ -78,19 +67,17 @@ end
 function EnclosureChallenge.getEnclosureColor(targ)
     if not isIngameState() then return end
 
-    local colStr = SandboxVars.EnclosureChallengeColor.BadColor
+    local colStr = SandboxVars.EnclosureChallengeGUI.BadColor
 
     targ = targ or getPlayer()
     if not targ then return EnclosureChallenge.parseColor(colStr) end
     local status = EnclosureChallenge.getEnclosureStatus(targ)
     if not status then return EnclosureChallenge.parseColor(colStr) end
     if status == "Neutral" then
-        colStr = SandboxVars.EnclosureChallengeColor.NeutralColor
+        colStr = SandboxVars.EnclosureChallengeGUI.NeutralColor
     elseif status == "Conquered" then
-        colStr = SandboxVars.EnclosureChallengeColor.GoodColor
+        colStr = SandboxVars.EnclosureChallengeGUI.GoodColor
     end
-
-
 
     return EnclosureChallenge.parseColor(colStr) or {  r = 1,  g = 1,   b = 1,  a = 1}
 end
@@ -101,8 +88,7 @@ function EnclosureChallenge.getEnclosureStatus(targ)
     local str = "Neutral"
     local targ = targ or getPlayer()
     if not targ then return str end
-    local enc = EnclosureChallenge.getEnclosure(targ)
-    if not enc then return str end
+
 
     if EnclosureChallenge.isConquered(targ) then
         str = "Conquered"
@@ -136,7 +122,9 @@ end
 -----------------------            ---------------------------
 
 table.insert(keyBinding, {value = "[Enclosure Challenge]"})
-table.insert(keyBinding, {value = "Adjust_Enclosure_GUI", key = Keyboard.KEY_P})
+table.insert(keyBinding, {value = "Adjust_Enclosure_GUI_Opacity", key = Keyboard.KEY_O})
+table.insert(keyBinding, {value = "Adjust_Enclosure_GUI_Position", key = Keyboard.KEY_P})
+
 table.insert(keyBinding, {value = "Toggle_Enclosure_MouseTip", key = Keyboard.KEY_N})
 
 

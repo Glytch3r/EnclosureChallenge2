@@ -77,15 +77,6 @@ function EnclosureChallenge.getEnclosureMidXY(x, y, targ)
     local midY = ( encY * size) + (math.floor(size / 2))
     return midX , midY
 
---[[
-    if x == nil or y == nil then
-        local pl = getPlayer()
-        if not pl then return nil end
-        x = pl:getX()
-        y = pl:getY()
-    end
-
-    return (x / size * size) + (size / 2), (y / size * size) + (size / 2) ]]
 end
 
 
