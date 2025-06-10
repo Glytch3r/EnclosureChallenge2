@@ -56,11 +56,12 @@ function EnclosureChallenge.isOutOfBounds(targ)
     local ec = EnclosureChallenge.getData()
     if not ec then return end
     if EnclosureChallenge.isRemoteMode(pl) then
-        return ec.RemoteChallenge ~= plEncStr
+        return tostring(ec.RemoteChallenge) ~= tostring(plEncStr)
     else
         return not ec.Challenges[encStr]
     end
 end
+
 function EnclosureChallenge.isSameEnclosure(targ)
     local pl = getPlayer()
     targ = targ or EnclosureChallenge.getPointer()
@@ -151,7 +152,8 @@ function EnclosureChallenge.clearRebound()
 end
 
 function EnclosureChallenge.storeRebound(targ)
-    targ = targ or getPlayer()
+    local pl = getPlayer()
+    targ = targ or pl
     if not targ then return end
 
     EnclosureChallenge.clearRebound()
@@ -167,8 +169,17 @@ function EnclosureChallenge.storeRebound(targ)
     }
     EnclosureChallenge.setReturnPointMarker()
 
+    local isChallenger = EnclosureChallenge.isChallenger(pl)
+    if isChallenger then
+        if isRemoteMode then
 
-
+            ec.RemoteChallenge = tostring(encStr)
+            ec.AdditiveChallenge = ""
+        else
+            ec.RemoteChallenge = ""
+            ec.AdditiveChallenge = tostring(encStr)
+        end
+    end
 end
 
 -----------------------            ---------------------------

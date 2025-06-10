@@ -65,6 +65,7 @@ function EnclosureChallenge.getPointer()
     return getCell():getOrCreateGridSquare(math.floor(x), math.floor(y), z)
 end
 -----------------------     mouse*       ---------------------------
+
 function EnclosureChallenge.DrawMouseTip(x, y, z, str, r, g, b)
     if not isIngameState() then return end
     local tag = TextDrawObject.new()

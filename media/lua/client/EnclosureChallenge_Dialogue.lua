@@ -71,15 +71,16 @@ function EnclosureChallenge.onYes(isQuit, isRemote)
 	if not encStr or not ec then return end
 
 	if isQuit then
-		EnclosureChallenge.setChallenge(false, isRemote)
 		EnclosureChallenge.delReturnPointMarker()
+		EnclosureChallenge.setChallenge(false, isRemote)
 		EnclosureChallenge.clearRebound()
 	else
-		EnclosureChallenge.storeRebound(pl)
 		EnclosureChallenge.setChallenge(true, isRemote)
+		EnclosureChallenge.storeRebound(pl)
 		if isRemote then
 			ec.RemoteChallenge = encStr
 			ec.AdditiveChallenge = ""
+
 		else
 			ec.RemoteChallenge =  ""
 			ec.AdditiveChallenge = encStr

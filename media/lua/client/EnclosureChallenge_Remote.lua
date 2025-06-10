@@ -173,7 +173,7 @@ function EnclosureChallenge.tpRandMidSq()
                 rTick = 0
                 return
             end
-            EnclosureChallenge.storeRebound(pl)
+
 
 
             EnclosureChallenge.ConfirmDialog(pl, "Accept Remote Challenge?", "Enclosure Challenge", false, true)
