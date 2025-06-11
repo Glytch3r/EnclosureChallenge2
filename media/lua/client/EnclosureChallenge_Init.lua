@@ -15,6 +15,7 @@
 |                       		                                    														 	  |
 |                       	Support:    https://ko-fi.com/glytch3r														    	  |
 |_______________________________________________________________________________________________________________________________-]]
+require "lua_timers"
 
 EnclosureChallenge = EnclosureChallenge or {}
 

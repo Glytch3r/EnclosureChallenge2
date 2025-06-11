@@ -24,6 +24,7 @@
   ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░     ░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░ ░▒▓█▓▒░  ▒▓░    ░▒▓█▓▒░   ░▒▓█▒░  ░▒▓█▒░
    ░▒▓█████▓▒░     ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓███████▓▒░   ░▒▓██████▓▒░   ░▒▓█▓▒░ ░▒▓█▓▒░  ░▒▓███████▓▒░    ░▒▓███████▓▒░
 █████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████--]]
+require "lua_timers"
 
 EnclosureChallenge = EnclosureChallenge or {}
 
@@ -69,54 +70,62 @@ function EnclosureChallenge.doWin(isRemote)
     local pl = getPlayer(); if not pl then return end
     isRemote =  isRemote or EnclosureChallenge.isRemoteMode(pl)
 
-    --EnclosureChallenge.rebound(pl)
-    timer:Simple(1, function()
-        EnclosureChallenge.doReward();
-        EnclosureChallenge.storeConquered(isRemote)
-        EnclosureChallenge.delReturnPointMarker()
+--EnclosureChallenge.rebound(pl)
+    EnclosureChallenge.doReward();
+    EnclosureChallenge.storeConquered(isRemote)
+    EnclosureChallenge.delReturnPointMarker()
 
-        EnclosureChallenge.setChallenge(false, isRemote)
-        EnclosureChallenge.setMarkers(pl, false)
-        EnclosureChallenge.addChallengeSymbols(pl)
+    EnclosureChallenge.setChallenge(false, isRemote)
+    EnclosureChallenge.setMarkers(pl, false)
+    EnclosureChallenge.addChallengeSymbols(pl)
 
-      --  local rewards = SandboxVars.EnclosureChallenge.UnlockPointsReward
+    --  local rewards = SandboxVars.EnclosureChallenge.UnlockPointsReward
 
 
-        local ec = EnclosureChallenge.getData()
-        EnclosureChallenge.clearRebound(pl)
-        getSoundManager():playUISound("GainExperienceLevel")
-    end)
+    local ec = EnclosureChallenge.getData()
+    EnclosureChallenge.clearRebound(pl)
+    getSoundManager():playUISound("GainExperienceLevel")
 
 
 end
 
 function EnclosureChallenge.storeConquered(isRemote)
-	local pl = getPlayer()
-	local ec = EnclosureChallenge.getData()
-	local x, y = ec.Rebound.x, ec.Rebound.y
-	local z = pl:getZ()
-	local encStr = ec.AdditiveChallenge or EnclosureChallenge.getEnclosureStrXY(x, y) or EnclosureChallenge.getEnclosureStr(pl)
-	isRemote = isRemote or EnclosureChallenge.isRemoteMode(pl)
+    local pl = getPlayer()
+    local ec = EnclosureChallenge.getData()
+    if not ec then return false end
 
-	if isRemote then
+    local rebound = ec.Rebound
+    if not rebound or not rebound.x or not rebound.y then return false end
+
+    local x, y = rebound.x, rebound.y
+    local z = pl:getZ()
+
+    local encStr = ec.AdditiveChallenge or EnclosureChallenge.getEnclosureStrXY(x, y)
+    if not encStr then encStr = EnclosureChallenge.getEnclosureStr(pl) end
+    if not encStr then return false end
+
+    isRemote = isRemote or EnclosureChallenge.isRemoteMode(pl)
+
+    if isRemote then
         ec.RemoteChallenge = ""
-		ec.RemoteWins = ec.RemoteWins + 1
-		HaloTextHelper.addTextWithArrow(pl, "Remote Wins + 1", true, HaloTextHelper.getColorGreen())
+        ec.RemoteWins = (ec.RemoteWins or 0) + 1
+        HaloTextHelper.addTextWithArrow(pl, "Remote Wins + 1", true, HaloTextHelper.getColorGreen())
+    else
+        local rewards = SandboxVars.EnclosureChallenge.UnlockPointsReward or 1
+        ec.UnlockPoints = (ec.UnlockPoints or 0) + rewards
+        HaloTextHelper.addTextWithArrow(pl, "Unlock Points + " .. tostring(rewards), true, HaloTextHelper.getColorGreen())
 
-	else
-        local rewards = SandboxVars.EnclosureChallenge.UnlockPointsReward
-		ec.UnlockPoints = ec.UnlockPoints + rewards
-		HaloTextHelper.addTextWithArrow(pl, "Unlock Points + 1", true, HaloTextHelper.getColorGreen())
-		local sq = getCell():getOrCreateGridSquare(x, y, z)
-		if sq then
-			EnclosureChallenge.addChallengeSymbols(sq)
-		end
-		ec.Conquered = ec.Conquered or {}
-		ec.Conquered[encStr] = true
-	end
+        local sq = getCell():getOrCreateGridSquare(x, y, z)
+        if sq then
+            EnclosureChallenge.addChallengeSymbols(sq)
+        end
 
-	EnclosureChallenge.clearRebound()
-	return true
+        ec.Conquered = ec.Conquered or {}
+        ec.Conquered[encStr] = true
+    end
+
+    EnclosureChallenge.clearRebound()
+    return true
 end
 
 
