@@ -176,21 +176,21 @@ function EnclosureChallenge.setReturnPointMarker()
     local ec = EnclosureChallenge.getData()
 
     if ec.Rebound then
-        local x, y, z =  ec.Rebound.x,   ec.Rebound.y,   ec.Rebound.z or 0
+       -- local x, y, z =  ec.Rebound.x,   ec.Rebound.y,   ec.Rebound.z or 0
 
 
-        if not EnclosureChallenge.isChallenger() then
+--[[         if not EnclosureChallenge.isChallenger() then
             EnclosureChallenge.clearRebound()
-
             return
         end
+ ]]
+
+        EnclosureChallenge.delReturnPointMarker()
 
         local col = EnclosureChallenge.parseColor(SandboxVars.EnclosureChallengeGUI.MarkerColor)
         local r, g, b, a = col.r, col.g, col.b, col.a
 
-        EnclosureChallenge.delReturnPointMarker()
-
-        local guideSq = getCell():getOrCreateGridSquare(x, y, z)
+        local guideSq =  EnclosureChallenge.getReboundSq()
         if not guideSq then return end
 
         if SandboxVars.EnclosureChallenge.ShowArrowGuide then

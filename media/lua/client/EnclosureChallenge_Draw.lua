@@ -82,6 +82,7 @@ end
 Events.OnKeyPressed.Add(EnclosureChallenge.toggle)
 
 -----------------------            ---------------------------
+
 function EnclosureChallenge.getPointer()
     if not isIngameState() then return nil end
     local pl = getPlayer()
@@ -146,7 +147,7 @@ function EnclosureChallenge.DrawMouseTip(x, y, z, str, r, g, b)
                     markerSize = 2
                     stamp = "EnclosureChallenge_Circle"
                 elseif EnclosureChallenge.isConquered(sq) then
-                    markerSize = 0.5
+                    markerSize = 1
                     stamp = "EnclosureChallenge_Conquered"
 
                     local col = EnclosureChallenge.parseColor(SandboxVars.EnclosureChallengeGUI.GoodColor)
@@ -169,11 +170,10 @@ function EnclosureChallenge.DrawMouseTip(x, y, z, str, r, g, b)
     end
 end
 
-function EnclosureChallenge.MouseTipHandler()
+function EnclosureChallenge.MouseTipHandler(pl)
     if not isIngameState() then return end
     if not EnclosureChallenge.MouseTip then return end
-
-    local sq = EnclosureChallenge.getPointer() or  getPlayer():getSquare()
+    local sq = EnclosureChallenge.getPointer() or pl:getCurrentSquare()
     if not sq then return end
     local x, y, z = sq:getX(), sq:getY(), sq:getZ()
     if not (x and y and z) then return end

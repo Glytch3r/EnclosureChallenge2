@@ -41,7 +41,9 @@ end
 function EnclosureChallenge.getPoints()
     local ec = EnclosureChallenge.getData()
     if not ec then return nil end
-    return ec.UnlockPoints or 0
+    ec.UnlockPoints      = ec.UnlockPoints      or SandboxVars.EnclosureChallenge.StartingUnlockPoints or 1
+
+    return ec.UnlockPoints
 end
 
 function EnclosureChallenge.whereami()

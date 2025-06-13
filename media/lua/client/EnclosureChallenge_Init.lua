@@ -33,11 +33,6 @@ function EnclosureChallenge.initChallengeData(pl)
     md.EnclosureChallenge = md.EnclosureChallenge or {}
     local ec = md.EnclosureChallenge
 
-    if ec.EnclosureX or ec.EnclosureY then
-        EnclosureChallenge.resetData()
-        EnclosureChallenge.delReturnPointMarker()
-        return
-    end
 
     ec.UnlockPoints      = ec.UnlockPoints      or SandboxVars.EnclosureChallenge.StartingUnlockPoints or 1
     ec.RewardChoice      = ec.RewardChoice      or 0
@@ -60,16 +55,16 @@ Events.OnCreatePlayer.Add(function()
     if not pl then return end
 
     EnclosureChallenge.initChallengeData(pl)
-    EnclosureChallenge.setMarkers(pl)
-    EnclosureChallenge.setReturnPointMarker()
+    --EnclosureChallenge.setMarkers(pl)
+    --EnclosureChallenge.setReturnPointMarker()
     local encStr = EnclosureChallenge.getEnclosureStr(pl)
     EnclosureChallenge.PreviousEnclosure = encStr
 
     EnclosureChallenge.updateMarkers(encStr)
-    local  ec = EnclosureChallenge.getData()
-    EnclosureChallenge.addChallengeSymbols(pl)
 
+    local  ec = EnclosureChallenge.getData()
     if EnclosureChallenge.isChallenger() and ec.ChallengeTime <= 0 then
+        --EnclosureChallenge.addChallengeSymbols(pl)
         local isRemote = EnclosureChallenge.isRemoteMode()
         EnclosureChallenge.doWin(isRemote)
     end

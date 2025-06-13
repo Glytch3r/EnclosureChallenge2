@@ -54,6 +54,62 @@ function EnclosureChallenge.saveCoord()
 end
 
 -----------------------            ---------------------------
+function EnclosureChallenge.isValidSq(sq)
+    sq = sq or getPlayer():getCurrentSquare()
+    return sq and sq:connectedWithFloor() and sq:getFloor() ~= nil
+end
+
+function EnclosureChallenge.getEnclosureMidXY(x, y, targ)
+    local size = EnclosureChallenge.EnclosureSize
+    local pl = getPlayer()
+    if pl then
+        x = x or pl:getX()
+        y = y or pl:getY()
+    end
+    if targ and targ ~= pl then
+        x = targ:getX()
+        y = targ:getY()
+    end
+    if not x or not y then return nil end
+
+    local encX = math.floor(x / size)
+    local midX = encX * size + math.floor(size / 2)
+
+    local encY = math.floor(y / size)
+    local midY = encY * size + math.floor(size / 2)
+
+    return midX, midY
+end
+
+function EnclosureChallenge.getRandMidCoord()
+    local size = EnclosureChallenge.EnclosureSize or 189
+
+    if not ISWorldMap_instance then
+        ISWorldMap.ShowWorldMap(0)
+        if not ISWorldMap_instance then return nil, nil, nil, nil end
+        ISWorldMap_instance:close()
+    end
+
+    local mapAPI = ISWorldMap_instance.javaObject and ISWorldMap_instance.javaObject:getAPIv1()
+    if not mapAPI then return nil, nil, nil, nil end
+
+    local maxX = mapAPI:getWidthInSquares() - 1
+    local maxY = mapAPI:getHeightInSquares() - 1
+
+    local boundLimitX = math.max(0, maxX - size)
+    local boundLimitY = math.max(0, maxY - size)
+
+    if boundLimitX == 0 or boundLimitY == 0 then
+        return nil, nil, nil, nil
+    end
+
+    local EnclosureX = ZombRand(0, boundLimitX + 1)
+    local EnclosureY = ZombRand(0, boundLimitY + 1)
+
+    local midX, midY = EnclosureChallenge.getEnclosureMidXY(EnclosureX, EnclosureY)
+    return midX, midY, EnclosureX, EnclosureY
+end
+
 function EnclosureChallenge.tpRandMidSq()
     local pl = getPlayer()
     if EnclosureChallenge.isChallenger() then return end
@@ -102,62 +158,3 @@ function EnclosureChallenge.tpRandMidSq()
 
     Events.OnTick.Add(tpHandler)
 end
------------------------            ---------------------------
-
-
-function EnclosureChallenge.isValidSq(sq)
-    sq = sq or getPlayer():getCurrentSquare()
-    return sq and sq:connectedWithFloor() and sq:getFloor() ~= nil
-end
-
-
-function EnclosureChallenge.getEnclosureMidXY(x, y, targ)
-    local size = EnclosureChallenge.EnclosureSize
-    local pl = getPlayer()
-    if pl then
-        x = x or pl:getX()
-        y = y or pl:getY()
-    end
-    if targ and targ ~= pl then
-        x = targ:getX()
-        y = targ:getY()
-    end
-    if not x or not y then return nil end
-    local encX = math.floor(x / size)
-    local midX = encX * size + (math.floor(size / 2))
-
-    local encY = math.floor(y / size)
-    local midY = ( encY * size) + (math.floor(size / 2))
-    return midX , midY
-
-end
-
-function EnclosureChallenge.getRandMidCoord()
-    local size = EnclosureChallenge.EnclosureSize or 189
-    if not ISWorldMap_instance then
-        ISWorldMap.ShowWorldMap(0)
-        ISWorldMap_instance:close()
-    end
-
-    local mapAPI = ISWorldMap_instance.javaObject:getAPIv1()
-    if not mapAPI then return nil, nil, nil, nil end
-
-    local maxX = mapAPI:getWidthInSquares() - 1
-    local maxY = mapAPI:getHeightInSquares() - 1
-
-    local boundLimitX = maxX - size
-    local boundLimitY = maxY - size
-
-    if boundLimitX <= 0 or boundLimitY <= 0 then
-        return nil, nil, nil, nil
-    end
-
-    local EnclosureX = ZombRand(0, boundLimitX + 1)
-    local EnclosureY = ZombRand(0, boundLimitY + 1)
-
-    local midX, midY = EnclosureChallenge.getEnclosureMidXY(EnclosureX, EnclosureY)
-
-    return midX, midY, EnclosureX, EnclosureY
-end
-
-

@@ -118,7 +118,7 @@ end
 
 
 function EnclosureChallenge.clearChallengeData()
-   ocal ec = EnclosureChallenge.getData ();
+   local ec = EnclosureChallenge.getData();
        local ec = EnclosureChallenge.getData()
    if not ec then return end
    ec.ChallengeTime = 0

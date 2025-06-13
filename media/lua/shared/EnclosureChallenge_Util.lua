@@ -91,15 +91,11 @@ function EnclosureChallenge.getEnclosureColor(targ)
 
     return EnclosureChallenge.parseColor(colStr) or {  r = 1,  g = 1,   b = 1,  a = 1}
 end
-
 function EnclosureChallenge.getEnclosureStatus(targ)
-    if not isIngameState() then return end
+    if not isIngameState() then return "Neutral" end
+    if not targ then return "Neutral" end
 
     local str = "Neutral"
-    local targ = targ or getPlayer()
-    local isChallenger =  EnclosureChallenge.isChallenger()
-    if not targ then return str end
-
 
     if EnclosureChallenge.isConquered(targ) then
         str = "Conquered"
@@ -111,20 +107,16 @@ function EnclosureChallenge.getEnclosureStatus(targ)
 end
 
 function EnclosureChallenge.getChallengeStatus(targ)
-    if not isIngameState() then return end
-    local str = "Neutral"
-    local targ = targ or getPlayer()
-    local isChallenger =  EnclosureChallenge.isChallenger()
-    if not targ then return str end
+    if not isIngameState() then return "Neutral" end
+    targ = targ or getPlayer()
+    if not targ then return "Neutral" end
 
-    if isChallenger then
-        str = EnclosureChallenge.getModeStr()
-    else
-        str = EnclosureChallenge.getEnclosureStatus(targ)
+    if EnclosureChallenge.isChallenger() and EnclosureChallenge.isSameEnclosure(targ) then
+        return EnclosureChallenge.getModeStr()
     end
-    return str
-end
 
+    return EnclosureChallenge.getEnclosureStatus(targ)
+end
 
 -----------------------            ---------------------------
 function EnclosureChallenge.checkDist(pl, sq)
