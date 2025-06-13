@@ -59,13 +59,14 @@ function EnclosureChallenge.ChallengeTimer()
 
         if pl:isAlive() then
             EnclosureChallenge.doWin(isRemote)
+            ec.AdditiveChallenge = ""
+            ec.RemoteChallenge = ""
         end
 
         if getCore():getDebug() then print("WIN") end
     end
 end
-
-
+Events.EveryHours.Add(EnclosureChallenge.ChallengeTimer)
 --[[
 function EnclosureChallenge.ChallengeTimer()
     local pl = getPlayer()

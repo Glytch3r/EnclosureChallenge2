@@ -83,17 +83,33 @@ end
 
 function EnclosureChallenge.setChallenge(isStart, isRemote)
    local pl = getPlayer(); if not pl then return end
-   local ec = EnclosureChallenge.getEnclosure();
-   if not ec then return end
+
+   local ec = EnclosureChallenge.getData()
+
 
    if isStart then
-         ec.ChallengeTime = SandboxVars.EnclosureChallenge.ChallengeHours or 168
-         local encStr = EnclosureChallenge.getEnclosureStr(pl)
-         ec.RemoteChallenge   = isRemote and encStr or ""
-         ec.AdditiveChallenge = isRemote and "" or encStr
-         EnclosureChallenge.addChallengeSymbols(pl)
-         EnclosureChallenge.storeRebound(pl)
-         EnclosureChallenge.setReturnPointMarker()
+      ec.ChallengeTime = SandboxVars.EnclosureChallenge.ChallengeHours or 168
+
+
+      local encStr = EnclosureChallenge.getEnclosureStr(pl)
+      if encStr then
+         if isRemote then
+            ec.RemoteChallenge = tostring(encStr)
+            ec.AdditiveChallenge = ""
+         else
+            ec.RemoteChallenge = ""
+            ec.AdditiveChallenge = tostring(encStr)
+         end
+      end
+
+      EnclosureChallenge.addChallengeSymbols(pl)
+      EnclosureChallenge.storeRebound(pl)
+      EnclosureChallenge.setReturnPointMarker()
+
+
+
+
+
    else
       ec.ChallengeTime = 0
    end
@@ -101,29 +117,9 @@ end
 
 
 
-
---[[
-function EnclosureChallenge.setChallenge(isStart, isRemote)
-    local pl = getPlayer(); if not pl then return end
-    local ec = EnclosureChallenge.getEnclosure(); if not ec then return end
-
-    --isRemote = isRemote or EnclosureChallenge.isRemoteMode()
-
-    if isStart then
-        ec.ChallengeTime = SandboxVars.EnclosureChallenge.ChallengeHours or 168
-        local encStr = EnclosureChallenge.getEnclosureStr(pl)
-
-        ec.RemoteChallenge   = isRemote and encStr or ""
-        ec.AdditiveChallenge = isRemote and "" or encStr
-
-        EnclosureChallenge.addChallengeSymbols(pl)
-    else
-        EnclosureChallenge.clearChallengeData()
-    end
-end
- ]]
 function EnclosureChallenge.clearChallengeData()
-   local ec = EnclosureChallenge.getEnclosure();
+   ocal ec = EnclosureChallenge.getData ();
+       local ec = EnclosureChallenge.getData()
    if not ec then return end
    ec.ChallengeTime = 0
    ec.RemoteChallenge = ""
@@ -173,16 +169,7 @@ function EnclosureChallenge.storeRebound(targ) -- also sets markers
     }
     EnclosureChallenge.setReturnPointMarker()
 
-    local isChallenger = EnclosureChallenge.isChallenger()
-    if isChallenger then
-        if isRemoteMode then
-            ec.RemoteChallenge = tostring(encStr)
-            ec.AdditiveChallenge = ""
-        else
-            ec.RemoteChallenge = ""
-            ec.AdditiveChallenge = tostring(encStr)
-        end
-    end
+
 end
 -----------------------            ---------------------------
 --[[

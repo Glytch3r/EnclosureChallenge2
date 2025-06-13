@@ -190,7 +190,7 @@ end
 
 function EnclosureChallenge.storeConquered(isRemote)
     local pl = getPlayer(); if not pl then return false end
-    local ec = EnclosureChallenge.getEnclosure(); if not ec then return false end
+    ocal ec = EnclosureChallenge.getData (); if not ec then return false end
     local rebound = ec.Rebound
     if not rebound or not rebound.x or not rebound.y then return false end
     local x, y, z = rebound.x, rebound.y,  rebound.z

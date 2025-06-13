@@ -38,7 +38,7 @@ function EnclosureChallenge.onYes(isQuit, isRemote)
 	local encStr = EnclosureChallenge.getEnclosureStr(pl)
 	if not encStr then return end
 
-	isRemote = isRemote or EnclosureChallenge.isRemoteMode()
+	--isRemote = isRemote or EnclosureChallenge.isRemoteMode()
 	EnclosureChallenge.sfx(not isQuit)
 	EnclosureChallenge.clearCoord()
 
@@ -46,8 +46,8 @@ function EnclosureChallenge.onYes(isQuit, isRemote)
 		EnclosureChallenge.doQuit(isRemote)
 	else
 		EnclosureChallenge.setChallenge(true, isRemote)
-
 	end
+
 
 	if EnclosureChallenge.isShouldAnnounce() then
 		local user = tostring(pl:getUsername())
