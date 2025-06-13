@@ -40,7 +40,7 @@ end
 function EnclosureChallenge.ContinueDialog(pl, text, title, onClickCallback)
     pl = pl or getPlayer()
     if not pl or not text then return end
-    local isChallenger = EnclosureChallenge.isChallenger(pl)
+    local isChallenger = EnclosureChallenge.isChallenger()
     if not isChallenger then return end
     EnclosureChallenge.disabler(true)
     title = title or "Confirm"

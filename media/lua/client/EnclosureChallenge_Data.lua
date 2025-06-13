@@ -18,6 +18,16 @@
 
 EnclosureChallenge = EnclosureChallenge or {}
 
+function EnclosureChallenge.getData()
+    local pl = getPlayer()
+    if not pl then return nil end
+    local data = pl:getModData()
+    if not data.EnclosureChallenge then
+        return EnclosureChallenge.initChallengeData(pl)
+    end
+    return data.EnclosureChallenge
+end
+-----------------------            ---------------------------
 function EnclosureChallenge.resetData()
 	local pl = getPlayer()
 	if not pl then return end
@@ -26,14 +36,7 @@ function EnclosureChallenge.resetData()
 	pl:getModData().EnclosureChallenge = nil
 	EnclosureChallenge.initChallengeData(pl)
 end
-
-function EnclosureChallenge.getData()
-    local pl = getPlayer()
-    if not pl then return nil end
-    local data = pl:getModData()
-    data.EnclosureChallenge = data.EnclosureChallenge or {}
-    return data.EnclosureChallenge
-end
+-----------------------            ---------------------------
 
 function EnclosureChallenge.getPoints()
     local ec = EnclosureChallenge.getData()

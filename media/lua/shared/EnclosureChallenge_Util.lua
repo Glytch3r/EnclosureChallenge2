@@ -97,6 +97,7 @@ function EnclosureChallenge.getEnclosureStatus(targ)
 
     local str = "Neutral"
     local targ = targ or getPlayer()
+    local isChallenger =  EnclosureChallenge.isChallenger()
     if not targ then return str end
 
 
@@ -109,6 +110,20 @@ function EnclosureChallenge.getEnclosureStatus(targ)
     return str
 end
 
+function EnclosureChallenge.getChallengeStatus(targ)
+    if not isIngameState() then return end
+    local str = "Neutral"
+    local targ = targ or getPlayer()
+    local isChallenger =  EnclosureChallenge.isChallenger()
+    if not targ then return str end
+
+    if isChallenger then
+        str = EnclosureChallenge.getModeStr()
+    else
+        str = EnclosureChallenge.getEnclosureStatus(targ)
+    end
+    return str
+end
 
 
 -----------------------            ---------------------------

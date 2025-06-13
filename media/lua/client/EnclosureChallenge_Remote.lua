@@ -37,8 +37,6 @@ function EnclosureChallenge.goBack()
 	if p and p.x and p.y and p.z then
 		EnclosureChallenge.tp(pl, p.x, p.y, p.z)
 	end
-
-	--ec.PrevCoord = nil
 end
 function EnclosureChallenge.clearCoord()
 	local pl = getPlayer()
@@ -46,6 +44,7 @@ function EnclosureChallenge.clearCoord()
 	local ec = pl:getModData().EnclosureChallenge
 	ec.PrevCoord = nil
 end
+
 function EnclosureChallenge.saveCoord()
     local pl = getPlayer()
     if not pl then return end
@@ -54,32 +53,62 @@ function EnclosureChallenge.saveCoord()
     ec.PrevCoord = {x= round(pl:getX()), y = round(pl:getY()), z= pl:getZ()}
 end
 
+-----------------------            ---------------------------
+function EnclosureChallenge.tpRandMidSq()
+    local pl = getPlayer()
+    if EnclosureChallenge.isChallenger() then return end
+
+    local rTick = 0
+    local waitTicks = 60
+    local maxTicks = 300
+    local maxAttempts = math.floor(maxTicks / waitTicks)
+    local attemptCount = 0
+
+    local midX, midY, enclosureX, enclosureY = EnclosureChallenge.getRandMidCoord()
+    if not midX then
+        pl:Say("Map API failed.")
+        return
+    end
+
+    EnclosureChallenge.tp(pl, midX, midY)
+
+    local function tpHandler()
+        rTick = rTick + 1
+        if rTick % waitTicks == 0 then
+            local sq = pl:getSquare()
+            if not EnclosureChallenge.isValidSq(sq) then
+                attemptCount = attemptCount + 1
+                if attemptCount >= maxAttempts then
+                    pl:Say("Unable to find valid location.")
+                    EnclosureChallenge.goBack()
+                    Events.OnTick.Remove(tpHandler)
+                    return
+                end
+                midX, midY, enclosureX, enclosureY = EnclosureChallenge.getRandMidCoord()
+                if not midX then
+                    pl:Say("Retry failed.")
+                    Events.OnTick.Remove(tpHandler)
+                    return
+                end
+                EnclosureChallenge.tp(pl, midX, midY)
+                rTick = 0
+                return
+            end
+
+            EnclosureChallenge.ConfirmDialog(pl, "Accept Remote Challenge?", "Enclosure Challenge", false, true)
+            Events.OnTick.Remove(tpHandler)
+        end
+    end
+
+    Events.OnTick.Add(tpHandler)
+end
+-----------------------            ---------------------------
+
 
 function EnclosureChallenge.isValidSq(sq)
     sq = sq or getPlayer():getCurrentSquare()
     return sq and sq:connectedWithFloor() and sq:getFloor() ~= nil
 end
------------------------            ---------------------------
---[[
-function EnclosureChallenge.getRandMidCoord()
-    local size = EnclosureChallenge.EnclosureSize or 189
-
-    local mapAPI = ISWorldMap_instance.javaObject:getAPIv1()
-    local width = mapAPI:getWidthInSquares() - 1
-    local height = mapAPI:getHeightInSquares() - 1
-
-    local maxEncX = math.floor(width / size)
-    local maxEncY = math.floor(height / size)
-
-    local encX = ZombRand(0, maxEncX + 1)
-    local encY = ZombRand(0, maxEncY + 1)
-
-    local midX = (encX * size) + math.floor(size / 2)
-    local midY = (encY * size) + math.floor(size / 2)
-
-    return midX, midY, encX, encY
-end
- ]]
 
 
 function EnclosureChallenge.getEnclosureMidXY(x, y, targ)
@@ -132,54 +161,3 @@ function EnclosureChallenge.getRandMidCoord()
 end
 
 
-
-function EnclosureChallenge.tpRandMidSq()
-    local pl = getPlayer()
-    if EnclosureChallenge.isChallenger(pl) then return end
-
-    local rTick = 0
-    local waitTicks = 60
-    local maxTicks = 300
-    local maxAttempts = math.floor(maxTicks / waitTicks)
-    local attemptCount = 0
-
-    local midX, midY, enclosureX, enclosureY = EnclosureChallenge.getRandMidCoord()
-    if not midX then
-        pl:Say("Map API failed.")
-        return
-    end
-
-    EnclosureChallenge.tp(pl, midX, midY)
-
-    local function tpHandler()
-        rTick = rTick + 1
-        if rTick % waitTicks == 0 then
-            local sq = pl:getSquare()
-            if not EnclosureChallenge.isValidSq(sq) then
-                attemptCount = attemptCount + 1
-                if attemptCount >= maxAttempts then
-                    pl:Say("Unable to find valid location.")
-                    EnclosureChallenge.goBack()
-                    Events.OnTick.Remove(tpHandler)
-                    return
-                end
-                midX, midY, enclosureX, enclosureY = EnclosureChallenge.getRandMidCoord()
-                if not midX then
-                    pl:Say("Retry failed.")
-                    Events.OnTick.Remove(tpHandler)
-                    return
-                end
-                EnclosureChallenge.tp(pl, midX, midY)
-                rTick = 0
-                return
-            end
-
-
-
-            EnclosureChallenge.ConfirmDialog(pl, "Accept Remote Challenge?", "Enclosure Challenge", false, true)
-            Events.OnTick.Remove(tpHandler)
-        end
-    end
-
-    Events.OnTick.Add(tpHandler)
-end

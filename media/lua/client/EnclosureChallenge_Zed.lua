@@ -46,7 +46,7 @@ end
 
 
 function EnclosureChallenge.OutsideZedHandler(zed, pl, bp, wpn)
-    if EnclosureChallenge.isOutOfBounds(zed) and EnclosureChallenge.isChallenger(pl) then
+    if EnclosureChallenge.isOutOfBounds(zed) and EnclosureChallenge.isChallenger() then
         if not zed:avoidDamage() then zed:setAvoidDamage(true);  zed:getModData()['EnclosureChallenge_AvoidDamage'] = true end
     else
         if zed:avoidDamage() and zed:getModData()['EnclosureChallenge_AvoidDamage'] ~= nil then

@@ -100,7 +100,7 @@ Commands.EnclosureChallenge.prompt = function(args)
             if isRemote then
                 str =   "Accept Remote Challenge?"
             end
-            if not EnclosureChallenge.isChallenger(pl) then
+            if not EnclosureChallenge.isChallenger() then
                 EnclosureChallenge.ConfirmDialog(pl, str, "Enclosure Challenge", false, isRemote)
             end
         end

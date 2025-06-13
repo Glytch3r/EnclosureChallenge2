@@ -129,8 +129,21 @@ function EnclosureChallenge.DrawMouseTip(x, y, z, str, r, g, b)
             local sq = getCell():getOrCreateGridSquare(x, y, z)
             if sq then
                 local stamp = "EnclosureChallenge_Bounds"
-                if EnclosureChallenge.isReboundSq(sq) then
-                    markerSize = 2.5
+
+
+
+                if EnclosureChallenge.isOutOfBounds(sq) then
+                    stamp = "EnclosureChallenge_Challenger"
+                    markerSize = 2
+
+                    local col = EnclosureChallenge.parseColor(SandboxVars.EnclosureChallengeGUI.BadColor)
+                    r = col.r
+                    g = col.g
+                    b = col.b
+
+
+                elseif EnclosureChallenge.isReboundSq(sq) then
+                    markerSize = 2
                     stamp = "EnclosureChallenge_Circle"
                 elseif EnclosureChallenge.isConquered(sq) then
                     markerSize = 0.5
@@ -140,15 +153,8 @@ function EnclosureChallenge.DrawMouseTip(x, y, z, str, r, g, b)
                     r = col.r
                     g = col.g
                     b = col.b
-                elseif EnclosureChallenge.isOutOfBounds(sq) then
-                    stamp = "EnclosureChallenge_Challenger"
-                    markerSize = 1
-
-                    local col = EnclosureChallenge.parseColor(SandboxVars.EnclosureChallengeGUI.BadColor)
-                    r = col.r
-                    g = col.g
-                    b = col.b
                 end
+
                 if EnclosureChallenge.MouseTip then
                     EnclosureChallenge.checkMark = getWorldMarkers():addGridSquareMarker(stamp, stamp, sq, r, g, b, false, markerSize)
                 end
@@ -167,14 +173,17 @@ function EnclosureChallenge.MouseTipHandler()
     if not isIngameState() then return end
     if not EnclosureChallenge.MouseTip then return end
 
-    local sq = EnclosureChallenge.getPointer()
+    local sq = EnclosureChallenge.getPointer() or  getPlayer():getSquare()
     if not sq then return end
-
     local x, y, z = sq:getX(), sq:getY(), sq:getZ()
     if not (x and y and z) then return end
 
-    local status = EnclosureChallenge.getEnclosureStatus(sq)
-    if not status then return end
+
+    local status = EnclosureChallenge.getChallengeStatus(sq) or ""
+
+    if not EnclosureChallenge.isSameEnclosure(sq) then
+        status = EnclosureChallenge.getEnclosureStatus(sq) or ""
+    end
 
     local col = EnclosureChallenge.getEnclosureColor(sq)
     local encStr = EnclosureChallenge.getEnclosureStr(sq)
@@ -182,9 +191,10 @@ function EnclosureChallenge.MouseTipHandler()
     local info = string.format("%d : %d\nEnclosure: %s\n%s", x, y, tostring(encStr), tostring(status))
 
     local reboundSq = EnclosureChallenge.getReboundSq()
+
     if reboundSq and reboundSq == sq then
         info = "RETURN POINT\n" .. info
-    elseif EnclosureChallenge.isOutOfBounds(sq) then--error
+    elseif EnclosureChallenge.isOutOfBounds(sq) then
         info = "OUT OF BOUNDS!\n" .. info
     end
 
@@ -238,9 +248,9 @@ function EnclosureChallenge.GUI()
     if not (x and y and z) then return end
     local encStr = EnclosureChallenge.getEnclosureStr(sq)
     local status = EnclosureChallenge.getEnclosureStatus(pl)
-    local isChallenger = EnclosureChallenge.isChallenger(pl)
+    local isChallenger = EnclosureChallenge.isChallenger()
     local isOutOfBounds = EnclosureChallenge.isOutOfBounds(pl)
-    local isRemoteMode = EnclosureChallenge.isRemoteMode(pl)
+    local isRemoteMode = EnclosureChallenge.isRemoteMode()
 
     local col = EnclosureChallenge.getEnclosureColor(pl)
     local alpha = EnclosureChallenge.alphaGUI
@@ -275,11 +285,12 @@ function EnclosureChallenge.GUI()
         local timeStr = EnclosureChallenge.getChallengeTimeStr()
         local headerStr = string.format("%s\n%s", modeStr, timeStr)
         getTextManager():DrawString(timeSize, xPos, yPos - textGap, headerStr, 1, 0, 0, alpha)
+        status = ""
     end
 
     local encInfo = {
         string.format("X: %d   Y: %d", round(x), round(y)),
-        tostring(encStr),
+        "Enclosure: "..tostring(encStr),
         tostring(status),
         "",
     }

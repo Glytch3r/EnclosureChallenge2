@@ -117,7 +117,7 @@ function EnclosureChallenge.setMarkers(targ, keepOld)
     }
     local stamp = stampMarkers[status] or "EnclosureChallenge_Neutral"
 
-    local isChallenger = EnclosureChallenge.isChallenger(pl)
+    local isChallenger = EnclosureChallenge.isChallenger()
     if isChallenger then
         stamp = "EnclosureChallenge_Challenger"
     end
@@ -179,7 +179,7 @@ function EnclosureChallenge.setReturnPointMarker()
         local x, y, z =  ec.Rebound.x,   ec.Rebound.y,   ec.Rebound.z or 0
 
 
-        if not EnclosureChallenge.isChallenger(pl) then return end
+        if not EnclosureChallenge.isChallenger() then return end
 
         local col = EnclosureChallenge.parseColor(SandboxVars.EnclosureChallengeGUI.MarkerColor)
         local r, g, b, a = col.r, col.g, col.b, col.a

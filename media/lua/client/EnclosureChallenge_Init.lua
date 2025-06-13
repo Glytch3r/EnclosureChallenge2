@@ -23,6 +23,7 @@ EnclosureChallenge = EnclosureChallenge or {}
 EnclosureChallenge.EnclosureSize = 189
 EnclosureChallenge.MarkerCache = {}
 -----------------------    init*        ---------------------------
+--local  ec = EnclosureChallenge.getData()
 
 function EnclosureChallenge.initChallengeData(pl)
     pl = pl or getPlayer()
@@ -40,22 +41,18 @@ function EnclosureChallenge.initChallengeData(pl)
 
     ec.UnlockPoints      = ec.UnlockPoints      or SandboxVars.EnclosureChallenge.StartingUnlockPoints or 1
     ec.RewardChoice      = ec.RewardChoice      or 0
-    ec.ChallengeTime     = ec.ChallengeTime     or 0
     ec.RemoteWins        = ec.RemoteWins        or 0
     ec.Challenges        = ec.Challenges        or {}
     ec.Conquered         = ec.Conquered         or {}
     ec.PrevCoord         = {}
     ec.Rebound           = ec.Rebound           or {}
+
+    ec.ChallengeTime     = ec.ChallengeTime     or 0
     ec.RemoteChallenge   = ec.RemoteChallenge   or ""
     ec.AdditiveChallenge = ec.AdditiveChallenge or ""
+    return ec
 end
-function EnclosureChallenge.getRemoteChallenge(pl)
-    pl = pl or getPlayer()
-    local ec = EnclosureChallenge.getData()
-    if not ec then return 0 end
-    ec.RemoteChallenge = ec.RemoteChallenge or ""
-    return ec.RemoteChallenge
-end
+
 Events.OnCreatePlayer.Add(function()
     if not isIngameState() then return end
 
@@ -69,13 +66,19 @@ Events.OnCreatePlayer.Add(function()
     EnclosureChallenge.PreviousEnclosure = encStr
 
     EnclosureChallenge.updateMarkers(encStr)
+    local  ec = EnclosureChallenge.getData()
+    EnclosureChallenge.addChallengeSymbols(pl)
 
+    if EnclosureChallenge.isChallenger() and ec.ChallengeTime <= 0 then
+        local isRemote = EnclosureChallenge.isRemoteMode()
+        EnclosureChallenge.doWin(isRemote)
+    end
 end)
 
 Events.OnPlayerDeath.Add(function()
 	local pl = getPlayer()
 	local user = pl:getUsername()
-	if not EnclosureChallenge.isChallenger(pl)  then return end
+	if not EnclosureChallenge.isChallenger()  then return end
 	if EnclosureChallenge.isShouldAnnounce() then
 
 
@@ -118,39 +121,7 @@ end)
  ]]
 -----------------------       ---------------------------
 
-LuaEventManager.AddEvent("OnEnclosureChange")
-function EnclosureChallenge.updateMarkers(encStr)
 
-	if getCore():getDebug() then
-        print('OnEnclosureChange ' .. "encStr")
-	end
-
-    local pl = getPlayer()
-    if not pl then return end
-
-    local enc =  EnclosureChallenge.getEnclosure(pl)
-    --EnclosureChallenge.EnclosureChange(pl)
-    EnclosureChallenge.setMarkers(pl, false)
-
-    EnclosureChallenge.addChallengeSymbols(pl)
-
-    local x = pl:getX()
-    local y = pl:getY()
-    local  midX, midY = EnclosureChallenge.getEnclosureMidXY(x, y, pl)
-    EnclosureChallenge.drawEnclosureGrid(midX, midY)
-    EnclosureChallenge.drawEnclosureGridOverlay(minimap, midX, midY)
-
-    if  EnclosureChallenge.isChallenger(pl) then
-        EnclosureChallenge.setReturnPointMarker()
-        if EnclosureChallenge.isOutOfBounds(pl) and pl:isAlive() then
-            timer:Simple(2, function()
-                EnclosureChallenge.rebound(pl)
-            end)
-            pl:setHaloNote("OUT OF BOUNDS", 255, 50, 50, 150)
-        end
-    end
-end
-Events.OnEnclosureChange.Add(EnclosureChallenge.updateMarkers)
 
 --[[_____________________________________________________________________________________________________________________________
    ░▒▓██████▓▒░    ░▒▓████████▓▒░    ░▒▓█▓▒░         ░▒▓█▓▒░      ░▒▓██████▓▒░   ░▒▓█▓▒░ ░▒▓█▓▒░  ░▒▓███████▓▒░    ░▒▓█▓▒░  ░▒█▒░

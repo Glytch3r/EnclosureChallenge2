@@ -28,156 +28,68 @@ require "lua_timers"
 
 EnclosureChallenge = EnclosureChallenge or {}
 
-function EnclosureChallenge.setChallenge(isStart, isRemote)
-    local pl = getPlayer()
-    if not pl then return end
-
-    local ec = EnclosureChallenge.getData()
-    if not ec then return end
-
-    isRemote = isRemote or EnclosureChallenge.isRemoteMode(pl)
-
-    if isStart then
-        ec.ChallengeTime = SandboxVars.EnclosureChallenge.ChallengeHours or 168
-
-
-        local x = round(pl:getX())
-        local y = round(pl:getY())
-        local z = pl:getZ() or 0
-
-
-        EnclosureChallenge.setMarkers(pl, false)
-        EnclosureChallenge.addChallengeSymbols(pl)
-
-    else
-
-        ec.AdditiveChallenge = ""
-        ec.RemoteChallenge =  ""
-        EnclosureChallenge.setMarkers(pl, false)
-
-        EnclosureChallenge.delReturnPointMarker()
-        ec.ChallengeTime = 0
-    end
-end
-
-        --EnclosureChallenge.clearRebound(pl)
---[[
-        if EnclosureChallenge.isConquered(pl) then
-            EnclosureChallenge.addChallengeSymbols(pl)
-        end
- ]]
-function EnclosureChallenge.doWin(isRemote)
-    local pl = getPlayer(); if not pl then return end
-    isRemote =  isRemote or EnclosureChallenge.isRemoteMode(pl)
-
---EnclosureChallenge.rebound(pl)
-    EnclosureChallenge.doReward();
-    EnclosureChallenge.storeConquered(isRemote)
-    EnclosureChallenge.delReturnPointMarker()
-
-    EnclosureChallenge.setChallenge(false, isRemote)
-    EnclosureChallenge.setMarkers(pl, false)
-    EnclosureChallenge.addChallengeSymbols(pl)
-
-    --  local rewards = SandboxVars.EnclosureChallenge.UnlockPointsReward
-
-
-    local ec = EnclosureChallenge.getData()
-    EnclosureChallenge.clearRebound(pl)
-    getSoundManager():playUISound("GainExperienceLevel")
-
-
-end
-
-function EnclosureChallenge.storeConquered(isRemote)
-    local pl = getPlayer()
-    local ec = EnclosureChallenge.getData()
-    if not ec then return false end
-
-    local rebound = ec.Rebound
-    if not rebound or not rebound.x or not rebound.y then return false end
-
-    local x, y = rebound.x, rebound.y
-    local z = pl:getZ()
-
-    local encStr = ec.AdditiveChallenge or EnclosureChallenge.getEnclosureStrXY(x, y)
-    if not encStr then encStr = EnclosureChallenge.getEnclosureStr(pl) end
-    if not encStr then return false end
-
-    isRemote = isRemote or EnclosureChallenge.isRemoteMode(pl)
-
-    if isRemote then
-        ec.RemoteChallenge = ""
-        ec.RemoteWins = (ec.RemoteWins or 0) + 1
-        HaloTextHelper.addTextWithArrow(pl, "Remote Wins + 1", true, HaloTextHelper.getColorGreen())
-    else
-        local rewards = SandboxVars.EnclosureChallenge.UnlockPointsReward or 1
-        ec.UnlockPoints = (ec.UnlockPoints or 0) + rewards
-        HaloTextHelper.addTextWithArrow(pl, "Unlock Points + " .. tostring(rewards), true, HaloTextHelper.getColorGreen())
-
-        local sq = getCell():getOrCreateGridSquare(x, y, z)
-        if sq then
-            EnclosureChallenge.addChallengeSymbols(sq)
-        end
-
-        ec.Conquered = ec.Conquered or {}
-        ec.Conquered[encStr] = true
-    end
-
-    EnclosureChallenge.clearRebound()
-    return true
-end
+-----------------------            ---------------------------
 
 
 -----------------------            ---------------------------
 
 
-function EnclosureChallenge.isChallenger(pl)
-    pl = pl or getPlayer()
-    local ec = EnclosureChallenge.getData()
-    if not ec then return false end
-    return ec.ChallengeTime and ec.ChallengeTime > 0 and ((ec.AdditiveChallenge ~= "" and ec.AdditiveChallenge ~= nil) or (ec.RemoteChallenge ~= "" and ec.RemoteChallenge ~= nil))
+function EnclosureChallenge.isChallenger()
+    return (EnclosureChallenge.isRemoteMode() or EnclosureChallenge.isAdditiveMode())
 end
 
-function EnclosureChallenge.isAdditiveMode(pl)
-    pl = pl or getPlayer()
-    if EnclosureChallenge.isChallenger(pl) then
-        local ec = EnclosureChallenge.getData()
-        if not ec then return false end
-        return ec.AdditiveChallenge ~= nil and ec.AdditiveChallenge ~= ""
-    end
-    return false
-end
-function EnclosureChallenge.isRemoteMode(pl)
-    pl = pl or getPlayer()
-    if EnclosureChallenge.isChallenger(pl) then
-        local ec = EnclosureChallenge.getData()
-        if not ec then return false end
-        return ec.RemoteChallenge ~= nil and ec.RemoteChallenge ~= ""
-    end
-    return false
-end
 
-function EnclosureChallenge.getChallengeTime(pl)
-    pl = pl or getPlayer()
+function EnclosureChallenge.getChallengeTime()
     local ec = EnclosureChallenge.getData()
     if not ec then return 0 end
     ec.ChallengeTime = ec.ChallengeTime or 0
     return ec.ChallengeTime
 end
 
+function EnclosureChallenge.isAdditiveMode()
+    local ec = EnclosureChallenge.getData()
+    if not ec then return false end
+    return (ec.AdditiveChallenge ~= nil and ec.AdditiveChallenge ~= "") or false
+end
+function EnclosureChallenge.isRemoteMode()
+    local ec = EnclosureChallenge.getData()
+    if not ec then return false end
+    return (ec.RemoteChallenge ~= nil and ec.RemoteChallenge ~= "") or false
+end
+
+function EnclosureChallenge.getModeStr()
+    if EnclosureChallenge.isChallenger() then
+        if EnclosureChallenge.isAdditiveMode() then return "Additive Mode" end
+        if EnclosureChallenge.isRemoteMode() then return "Remote Mode" end
+    end
+    return ""
+end
 
 
 
+function EnclosureChallenge.getAdditiveChallenge()
+    local ec = EnclosureChallenge.getData()
+    if not ec then return 0 end
+    ec.RemoteChallenge = ec.RemoteChallenge or ""
+    return ec.RemoteChallenge
+end
+
+function EnclosureChallenge.getRemoteChallenge()
+    local ec = EnclosureChallenge.getData()
+    if not ec then return 0 end
+    ec.RemoteChallenge = ec.RemoteChallenge or ""
+    return ec.RemoteChallenge
+end
 
 
 
+-----------------------            ---------------------------
 
 function EnclosureChallenge.getChallengeTimeStr()
     local pl = getPlayer()
     local str = ""
-    if EnclosureChallenge.isChallenger(pl) then
-        local time = EnclosureChallenge.getChallengeTime(pl)
+    if EnclosureChallenge.isChallenger() then
+        local time = EnclosureChallenge.getChallengeTime()
         if time and time > 0 then
             if time == 1 then
                 str = "Final Hour"
@@ -221,7 +133,7 @@ end
 -----------------------            ---------------------------
 function EnclosureChallenge.isCanUnlock(targ)
     local pl = getPlayer()
-    if EnclosureChallenge.isChallenger(pl) then return false end
+    if EnclosureChallenge.isChallenger() then return false end
     if not EnclosureChallenge.isUnlocked(targ) and not EnclosureChallenge.isConquered(targ) then
         local ec = EnclosureChallenge.getData()
         if not ec or not ec.UnlockPoints then return false end
@@ -229,7 +141,7 @@ function EnclosureChallenge.isCanUnlock(targ)
     end
     return false
 end
-
+-----------------------            ---------------------------
 -----------------------            ---------------------------
 function EnclosureChallenge.storeEnclosure(targ)
 
@@ -273,3 +185,32 @@ function EnclosureChallenge.doUnlock(targ)
 end
 
 -----------------------            ---------------------------
+
+
+
+function EnclosureChallenge.storeConquered(isRemote)
+    local pl = getPlayer(); if not pl then return false end
+    local ec = EnclosureChallenge.getEnclosure(); if not ec then return false end
+    local rebound = ec.Rebound
+    if not rebound or not rebound.x or not rebound.y then return false end
+    local x, y, z = rebound.x, rebound.y,  rebound.z
+
+    if isRemote then
+        ec.RemoteWins = (ec.RemoteWins or 0) + 1
+        HaloTextHelper.addTextWithArrow(pl, "Remote Wins + 1", true, HaloTextHelper.getColorGreen())
+    else
+        local encStr = ec.AdditiveChallenge or EnclosureChallenge.getEnclosureStrXY(x, y) or EnclosureChallenge.getEnclosureStr(pl)
+
+        local reward = SandboxVars.EnclosureChallenge.UnlockPointsReward or 1
+        ec.UnlockPoints = (ec.UnlockPoints or 0) + reward
+
+        local sq = getCell():getOrCreateGridSquare(x, y, z)
+        if sq then EnclosureChallenge.addChallengeSymbols(sq) end
+
+        ec.Conquered = ec.Conquered or {}
+        ec.Conquered[encStr] = true
+
+    end
+
+    return true
+end

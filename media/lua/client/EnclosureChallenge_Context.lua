@@ -80,7 +80,7 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
     --if (sq == pl:getCurrentSquare()) or  getCore():getDebug() then
 	local ec = EnclosureChallenge.getData()
 	local remaining = ec.ChallengeTime or 0
-	local isChallenger = EnclosureChallenge.isChallenger(pl)
+	local isChallenger = EnclosureChallenge.isChallenger()
 	EnclosureChallenge.getEnclosureStatus(sq)
 	local mainOptStr = getText("ContextMenu_EnclosureChallenge")
 	if isChallenger then
@@ -107,7 +107,7 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
 	local unlockTitle = getText("ContextMenu_EnclosureChallenge_Unlock")..pts
 	local isConquered = status == "Conquered"
 	local isUnlocked = status == "Unlocked"
-
+	local clickedOutside = not EnclosureChallenge.isSameEnclosure(sq)
 
 
 	if isConquered then
@@ -140,10 +140,13 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
 	local startHereTip = ISWorldObjectContextMenu.addToolTip()
 	if isChallenger then
 		startHereTip.description = getText("ContextMenu_EnclosureChallenge_Time")  .. tostring(remaining)
+	elseif clickedOutside then
+		startHereTip.description =  getText("ContextMenu_EnclosureChallenge_ClickedOutside")
 	else
 		startHereTip.description = getText("ContextMenu_EnclosureChallenge_Confirm")..'['.. tostring(encStr).."]"
 	end
-	startHereOpt.notAvailable = not isUnlocked or isChallenger or not  EnclosureChallenge.isSameEnclosure(sq) or isConquered
+
+	startHereOpt.notAvailable =  clickedOutside or not isUnlocked or isChallenger or not  EnclosureChallenge.isSameEnclosure(sq) or isConquered
 	startHereOpt.toolTip = startHereTip
 
 	-----------------------  remote*          ---------------------------
@@ -240,7 +243,7 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
 		end)
 
 		dbgSub:addOption("clearRebound", worldobjects, function()
-			EnclosureChallenge.clearRebound(pl)
+			EnclosureChallenge.clearRebound()
 		end)
 		dbgSub:addOption("storeConquered", worldobjects, function()
 			EnclosureChallenge.storeConquered(false)

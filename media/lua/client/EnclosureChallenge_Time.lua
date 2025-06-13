@@ -29,15 +29,55 @@ require "lua_timers"
 EnclosureChallenge = EnclosureChallenge or {}
 
 function EnclosureChallenge.ChallengeTimer()
+    local pl = getPlayer(); if not pl then return end
+    local user = pl:getUsername()
+    local ec = EnclosureChallenge.getData()
+    if not ec then return false end
+    if not EnclosureChallenge.isChallenger() then return false end
+
+    if ec.ChallengeTime and ec.ChallengeTime > 0 then
+        ec.ChallengeTime = ec.ChallengeTime - 1
+    end
+
+    local isRemote = EnclosureChallenge.isRemoteMode()
+    local encStr = isRemote and ec.RemoteChallenge or ec.AdditiveChallenge
+
+    if ec.ChallengeTime == 0 and encStr ~= "" then
+        if EnclosureChallenge.isShouldAnnounce() then
+            local enc = EnclosureChallenge.getEnclosureXY(pl:getX(), pl:getY())
+            local posStr = ""
+            if enc and SandboxVars.EnclosureChallenge.CoordNotif then
+                posStr = string.format(": [%d, %d]", enc.x, enc.y)
+            end
+            local msg = string.format("%s %s  %s", user, getText("ContextMenu_EnclosureChallenge_Conquer"), posStr)
+            if isClient() then
+                processGeneralMessage(msg)
+            else
+                pl:setHaloNote(msg, 150, 250, 150, 900)
+            end
+        end
+
+        if pl:isAlive() then
+            EnclosureChallenge.doWin(isRemote)
+        end
+
+        if getCore():getDebug() then print("WIN") end
+    end
+end
+
+
+--[[
+function EnclosureChallenge.ChallengeTimer()
     local pl = getPlayer()
     local user = pl:getUsername()
 
     local ec =  EnclosureChallenge.getData()
+    if not EnclosureChallenge.isChallenger() then return false end
     if ec and ec.ChallengeTime and ec.ChallengeTime > 0 then
         ec.ChallengeTime = ec.ChallengeTime - 1
         if ec.ChallengeTime <= 0 then
-            if EnclosureChallenge.isShouldAnnounce() then
 
+            if EnclosureChallenge.isShouldAnnounce() then
                 local enc = EnclosureChallenge.getEnclosureXY( pl:getX(),   pl:getY())
                 if not enc then return end
                 local EnclosureX = enc.x
@@ -55,22 +95,21 @@ function EnclosureChallenge.ChallengeTimer()
                 end
             end
 
-            timer:Simple(2, function()
-                if pl:isAlive() then
-                    EnclosureChallenge.doWin()
-                end
-            end)
+
+            if pl:isAlive() then
+                EnclosureChallenge.doWin()
+            end
+
             if getCore():getDebug() then
                 print("WIN")
 
             end
-
         end
 	end
 
             --EnclosureChallenge.setChallenge(false, false)
 end
-Events.EveryHours.Add(EnclosureChallenge.ChallengeTimer)
+Events.EveryHours.Add(EnclosureChallenge.ChallengeTimer) ]]
 -----------------------            ---------------------------
 function EnclosureChallenge.getSec()
     local cal = PZCalendar and PZCalendar.getInstance and PZCalendar.getInstance()

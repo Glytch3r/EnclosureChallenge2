@@ -28,6 +28,34 @@
 
 EnclosureChallenge = EnclosureChallenge or {}
 -----------------------  challenge out of bound  tp* bounds*      ---------------------------
+
+function EnclosureChallenge.isOutOfBounds(targ)
+    if not isIngameState() then return false end
+    if not targ then return false end
+
+    local pl = getPlayer()
+    if not EnclosureChallenge.isChallenger(pl) then return false end
+
+    local encStr = EnclosureChallenge.getEnclosureStr(targ)
+    if not encStr then return false end
+
+    local ec = EnclosureChallenge.getData()
+    if not ec then return false end
+
+    if EnclosureChallenge.isRemoteMode() then
+        return tostring(encStr) ~= tostring(ec.RemoteChallenge)
+    else
+        return not ec.Challenges or not ec.Challenges[encStr]
+    end
+end
+
+
+
+
+
+
+
+
 --[[ function EnclosureChallenge.isOutOfBounds(targ)
     local pl = getPlayer()
     targ = targ or pl
@@ -39,28 +67,33 @@ EnclosureChallenge = EnclosureChallenge or {}
 
     local ec = EnclosureChallenge.getData()
 
-    if EnclosureChallenge.isRemoteMode(pl) then
+    if EnclosureChallenge.isRemoteMode() then
         local currStr = EnclosureChallenge.getEnclosureStr(targ:getCurrentSquare()) -- error
         return ec.RemoteChallenge ~= currStr
     else
         return not ec.Challenges[encStr]
     end
 end ]]
+--[[
 function EnclosureChallenge.isOutOfBounds(targ)
-    local pl = getPlayer()
-    if not EnclosureChallenge.isChallenger() then return end
-    local targEncStr = EnclosureChallenge.getEnclosureStr(targ)
-    local plEncStr = EnclosureChallenge.getEnclosureStr(pl)
-    if not targEncStr or not plEncStr then return end
+	local pl = getPlayer()
+	if not pl or not EnclosureChallenge.isChallenger() then return false end
 
-    local ec = EnclosureChallenge.getData()
-    if not ec then return end
-    if EnclosureChallenge.isRemoteMode(pl) then
-        return tostring(ec.RemoteChallenge) ~= tostring(plEncStr)
-    else
-        return not ec.Challenges[encStr]
-    end
+	local targEncStr = EnclosureChallenge.getEnclosureStr(targ)
+	local plEncStr = EnclosureChallenge.getEnclosureStr(pl)
+	if not targEncStr or not plEncStr then return false end
+
+	local ec = EnclosureChallenge.getData()
+	if not ec then return false end
+
+	if EnclosureChallenge.isRemoteMode() then
+		return ec.RemoteChallenge ~= plEncStr
+	else
+		return not ec.Challenges[plEncStr]
+	end
 end
+
+ ]]
 
 function EnclosureChallenge.isSameEnclosure(targ)
     local pl = getPlayer()
@@ -81,7 +114,7 @@ end
 --[[
 function EnclosureChallenge.OutOfBoundHandler(pl)
     pl = pl or getPlayer()
-    if not EnclosureChallenge.isChallenger(pl) then return end
+    if not EnclosureChallenge.isChallenger() then return end
     local id = pl:getOnlineID() or 0
     playerTicks[id] = (playerTicks[id] or 0) + 1
     local tick = playerTicks[id] % 60
@@ -101,6 +134,7 @@ end
 Events.OnPlayerUpdate.Add(EnclosureChallenge.OutOfBoundHandler)
  ]]
 -----------------------            ---------------------------
+
 function EnclosureChallenge.isRebound(sq)
     if not sq then return false end
 
@@ -141,47 +175,6 @@ function EnclosureChallenge.getReboundSq()
     return getCell():getOrCreateGridSquare(x, y, z)
 end
 
-function EnclosureChallenge.clearRebound()
-    local ec = EnclosureChallenge.getData()
-    if not ec or not ec.Rebound then return end
-
-    ec.Rebound = {}
-
-
-    EnclosureChallenge.delReturnPointMarker()
-end
-
-function EnclosureChallenge.storeRebound(targ)
-    local pl = getPlayer()
-    targ = targ or pl
-    if not targ then return end
-
-    EnclosureChallenge.clearRebound()
-
-    local ec = EnclosureChallenge.getData()
-    if not ec then return end
-    local encStr =  EnclosureChallenge.getEnclosureStr(targ)
-
-    ec.Rebound = {
-        x = round(targ:getX()),
-        y = round(targ:getY()),
-        z = targ:getZ() or 0,
-    }
-    EnclosureChallenge.setReturnPointMarker()
-
-    local isChallenger = EnclosureChallenge.isChallenger(pl)
-    if isChallenger then
-        if isRemoteMode then
-
-            ec.RemoteChallenge = tostring(encStr)
-            ec.AdditiveChallenge = ""
-        else
-            ec.RemoteChallenge = ""
-            ec.AdditiveChallenge = tostring(encStr)
-        end
-    end
-end
-
 -----------------------            ---------------------------
 
 
@@ -212,6 +205,8 @@ function EnclosureChallenge.reboundHandler()
         end
     end
 end
+
+
 function EnclosureChallenge.rebound(pl)
     if EnclosureChallenge.isInTransit then return end
     EnclosureChallenge.isInTransit = true

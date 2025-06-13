@@ -45,7 +45,7 @@ function EnclosureChallenge.getCar(sq)
 end
 
 function EnclosureChallenge.carHandler(pl)
-	if not EnclosureChallenge.isChallenger(pl) then return end
+	if not EnclosureChallenge.isChallenger() then return end
 	local sq = pl:getSquare()
 	local car = EnclosureChallenge.getCar(sq)
 	if car then

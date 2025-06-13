@@ -107,6 +107,7 @@ function EnclosureChallenge.addChallengeSymbols(targ)
     local y = targ:getY()
     local  midX, midY = EnclosureChallenge.getEnclosureMidXY(x, y, targ)
 
+    EnclosureChallenge.delSym(midX, midY)
     EnclosureChallenge.addMapSymbol(midX, midY, stamp)
 
 end

@@ -26,6 +26,9 @@ ContextMenu_EN = {
 	ContextMenu_EnclosureChallenge_ChooseCategory = "Choose Reward Category",
 	ContextMenu_EnclosureChallenge_Next = "Proceed to next level",
 
+	ContextMenu_EnclosureChallenge_ClickedOutside = "Must be inside the enclosure you wish to challenge",
+
+
 
 
 }

@@ -116,5 +116,28 @@ end
   ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░     ░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░ ░▒▓█▓▒░  ▒▓░    ░▒▓█▓▒░   ░▒▓█▒░  ░▒▓█▒░
    ░▒▓█████▓▒░     ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓███████▓▒░   ░▒▓██████▓▒░   ░▒▓█▓▒░ ░▒▓█▓▒░  ░▒▓███████▓▒░    ░▒▓███████▓▒░
 █████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████--]]
+--[[
+AdditiveChallenge: can only challenge enclosure that are inside ec.Challenges {}
+dialog yes = store rebound, add "return" markers and symbol, add ChallengeTime , store data ec.AdditiveChallenge = encStr
+dialog no = cancels challenge
+quit= clear data: ec.AdditiveChallenge = "", ec.ChallengeTime = 0 ec.Rebound = {}
+out of bounds during challenge = check using ec.Challenges[encStr]
+if out of bounds, teleport to return point using ec.Rebound
+win when ChallengeTime hits 0, clear rebound data,  Conquered[ec.AdditiveChallenge]=true, ec.AdditiveChallenge = ""
+win reward item based on RewardChoice, RemoteWins + 1
+win ec.UnlockPoints = ec.UnlockPoints + SandboxVars.EnclosureChallenge.UnlockPointsReward
 
 
+RemoteChallenge:
+store prevcoords data
+teleport random mid sq
+dialog yes = clear prevcoords, store rebound, add "return" markers and symbol, set ChallengeTime,  store data ec.RemoteChallenge = encStr
+dialog no = cancels challenge, goback prevcoords function
+quit= clear rebound, ec.RemoteChallenge = "", ChallengeTime = 0
+out of bounds during challenge = check using ec.RemoteChallenge ~= encStr
+if out of bounds, teleport to return point using ec.Rebound
+win when ChallengeTime hits 0, clear rebound data, ec.RemoteChallenge = ""
+win reward item based on RewardChoice, RemoteWins + 1
+
+
+ ]]
