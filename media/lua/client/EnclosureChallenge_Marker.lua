@@ -179,7 +179,11 @@ function EnclosureChallenge.setReturnPointMarker()
         local x, y, z =  ec.Rebound.x,   ec.Rebound.y,   ec.Rebound.z or 0
 
 
-        if not EnclosureChallenge.isChallenger() then return end
+        if not EnclosureChallenge.isChallenger() then
+            EnclosureChallenge.clearRebound()
+
+            return
+        end
 
         local col = EnclosureChallenge.parseColor(SandboxVars.EnclosureChallengeGUI.MarkerColor)
         local r, g, b, a = col.r, col.g, col.b, col.a
