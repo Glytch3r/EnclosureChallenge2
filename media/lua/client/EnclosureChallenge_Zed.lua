@@ -46,13 +46,19 @@ end
 
 
 function EnclosureChallenge.OutsideZedHandler(zed, pl, bp, wpn)
-    if EnclosureChallenge.isOutOfBounds(zed) and EnclosureChallenge.isChallenger() then
-        if not zed:avoidDamage() then zed:setAvoidDamage(true);  zed:getModData()['EnclosureChallenge_AvoidDamage'] = true end
+    local zSq = zed:getSquare()
+    if  (not zSq and EnclosureChallenge.isSameEnclosure(zSq) or EnclosureChallenge.isOutOfBounds(zed)) and EnclosureChallenge.isChallenger() then
+        if not zed:avoidDamage() then
+            zed:setAvoidDamage(true);
+            zed:getModData()['EnclosureChallenge_AvoidDamage'] = true
+            zed:addLineChatElement('OUT OF BOUNDS')
+        end
     else
         if zed:avoidDamage() and zed:getModData()['EnclosureChallenge_AvoidDamage'] ~= nil then
             zed:setAvoidDamage(false);
             zed:getModData()['EnclosureChallenge_AvoidDamage'] = nil
         end
+
     end
 end
 

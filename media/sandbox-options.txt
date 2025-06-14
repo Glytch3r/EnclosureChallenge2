@@ -145,7 +145,7 @@ option EnclosureChallengeGUI.NeutralColor
 
 
 option EnclosureChallenge1.RewardTitle   { type = string, default = Food, page = EnclosureChallenge1, translation = EnclosureChallenge1_RewardTitle, }
-option EnclosureChallenge1.Rewards       { type = string, default = Base.CannedSoup;Base.Dogfood, page = EnclosureChallenge1, translation = EnclosureChallenge1_Rewards, }
+option EnclosureChallenge1.Rewards       { type = string, default = Base.TinnedSoupOpen;Base.TunaTin, page = EnclosureChallenge1, translation = EnclosureChallenge1_Rewards, }
 option EnclosureChallenge1.RewardChance  { type = double, min = 0, max = 100, default = 100, page = EnclosureChallenge1, translation = EnclosureChallenge1_RewardChance, }
 
 option EnclosureChallenge2.RewardTitle   { type = string, default = Medical, page = EnclosureChallenge2, translation = EnclosureChallenge2_RewardTitle, }
@@ -173,7 +173,7 @@ option EnclosureChallenge7.Rewards       { type = string, default = Base.WalkieT
 option EnclosureChallenge7.RewardChance  { type = double, min = 0, max = 100, default = 100, page = EnclosureChallenge7, translation = EnclosureChallenge7_RewardChance, }
 
 option EnclosureChallenge8.RewardTitle   { type = string, default = Farming, page = EnclosureChallenge8, translation = EnclosureChallenge8_RewardTitle, }
-option EnclosureChallenge8.Rewards       { type = string, default = Base.Seeds;Base.Trowel;Base.Fertilizer, page = EnclosureChallenge8, translation = EnclosureChallenge8_Rewards, }
+option EnclosureChallenge8.Rewards       { type = string, default = farming.RedRadish;farming.CarrotSeed;farming.BroccoliSeed;farming.RedRadishSeed, page = EnclosureChallenge8, translation = EnclosureChallenge8_Rewards, }
 option EnclosureChallenge8.RewardChance  { type = double, min = 0, max = 100, default = 100, page = EnclosureChallenge8, translation = EnclosureChallenge8_RewardChance, }
 
 option EnclosureChallenge9.RewardTitle   { type = string, default = Survival, page = EnclosureChallenge9, translation = EnclosureChallenge9_RewardTitle, }

@@ -36,7 +36,7 @@ function EnclosureChallenge.resetData()
 	pl:getModData().EnclosureChallenge = nil
 	EnclosureChallenge.initChallengeData(pl)
 end
------------------------            ---------------------------
+-----------------------            --------fffff-------------------
 
 function EnclosureChallenge.getPoints()
     local ec = EnclosureChallenge.getData()

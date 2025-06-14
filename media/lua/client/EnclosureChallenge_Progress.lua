@@ -50,30 +50,30 @@ function EnclosureChallenge.updateMarkers(encStr)
         print('OnEnclosureChange ' .. tostring(encStr))
 	end
 
-    local pl = getPlayer()
-    if not pl then return end
+   local pl = getPlayer()
+   if not pl then return end
 
-    local enc =  EnclosureChallenge.getEnclosure(pl)
-    --EnclosureChallenge.EnclosureChange(pl)
-    EnclosureChallenge.setMarkers(pl, false)
+   --local enc =  EnclosureChallenge.getEnclosure(pl)
+   --EnclosureChallenge.EnclosureChange(pl)
+   EnclosureChallenge.setMarkers(pl, false)
 
-    EnclosureChallenge.addChallengeSymbols(pl)
+   EnclosureChallenge.addChallengeSymbols(pl)
 
-    local x = pl:getX()
-    local y = pl:getY()
-    local  midX, midY = EnclosureChallenge.getEnclosureMidXY(x, y, pl)
-    EnclosureChallenge.drawEnclosureGrid(midX, midY)
-    EnclosureChallenge.drawEnclosureGridOverlay(minimap, midX, midY)
+   local x = pl:getX()
+   local y = pl:getY()
+   local  midX, midY = EnclosureChallenge.getEnclosureMidXY(x, y, pl)
+   EnclosureChallenge.drawEnclosureGrid(midX, midY)
+   EnclosureChallenge.drawEnclosureGridOverlay(minimap, midX, midY)
 
-    if  EnclosureChallenge.isChallenger() then
-        EnclosureChallenge.setReturnPointMarker()
-        if EnclosureChallenge.isOutOfBounds(pl) and pl:isAlive() then
-            timer:Simple(2, function()
-                EnclosureChallenge.rebound(pl)
-            end)
-            pl:setHaloNote("OUT OF BOUNDS", 255, 50, 50, 150)
-        end
-    end
+   if  EnclosureChallenge.isChallenger() then
+      EnclosureChallenge.setReturnPointMarker()
+      if EnclosureChallenge.isOutOfBounds(pl) and pl:isAlive() then
+         timer:Simple(2, function()
+               EnclosureChallenge.rebound(pl)
+         end)
+         pl:setHaloNote("OUT OF BOUNDS", 255, 50, 50, 150)
+      end
+   end
 end
 Events.OnEnclosureChange.Add(EnclosureChallenge.updateMarkers)
 

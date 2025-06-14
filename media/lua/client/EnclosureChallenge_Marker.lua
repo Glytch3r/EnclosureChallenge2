@@ -118,6 +118,7 @@ function EnclosureChallenge.setMarkers(targ, keepOld)
     local stamp = stampMarkers[status] or "EnclosureChallenge_Neutral"
 
     local isChallenger = EnclosureChallenge.isChallenger()
+
     if isChallenger then
         stamp = "EnclosureChallenge_Challenger"
     end
@@ -134,7 +135,6 @@ function EnclosureChallenge.setMarkers(targ, keepOld)
         end
     end
 end
-
 
 -----------------------            ---------------------------
 -----------------------            ---------------------------
