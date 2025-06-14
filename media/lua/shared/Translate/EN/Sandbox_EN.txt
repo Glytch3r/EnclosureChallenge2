@@ -3,8 +3,12 @@ Sandbox_EN = {
 
 
     Sandbox_EnclosureChallenge = "Enclosure Challenge",
-	Sandbox_EnclosureChallenge_TempMapSymbol = "Temp Map Symbols",
-	Sandbox_EnclosureChallenge_TempMapSymbol_tooltip = "Enclosure Map Symbols Deleted after every challenges. May delete symbols that you personally added",
+
+
+
+
+	Sandbox_EnclosureChallenge_KeepMarkers = "Keep Markers",
+	Sandbox_EnclosureChallenge_KeepMarkers_tooltip = "Markers remains visible even after crossing enclosure bounds. May Cause buffer overun",
 
 	Sandbox_EnclosureChallenge_AllowQuitChallenge = "Allow Quit Challenge",
 	Sandbox_EnclosureChallenge_StatusChat = "Announce Challenge Status",

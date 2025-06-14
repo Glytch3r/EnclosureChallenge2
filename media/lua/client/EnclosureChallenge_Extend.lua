@@ -1,43 +1,6 @@
 
 EnclosureChallenge = EnclosureChallenge or {}
 
---[[
-function EnclosureChallenge.isExtended()
-    local data = EnclosureChallenge.getData()
-    if data and data.Challenges then
-        return #EnclosureChallenge.getData().Challenges > 1
-    end
-    return false
-end
- ]]
-
-
---[[
-function EnclosureChallenge.ExtendedChallenge()
-    if isStart == nil then isStart = false end
-    if isQuit == nil then isQuit = false end
-
-    local pl = getPlayer()
-    if not pl then return end
-
-    local ec = EnclosureChallenge.getData()
-    if not ec then return end
-
-    if not isStart then
-        --EnclosureChallenge.delSideSymbols()
-    else
-        --EnclosureChallenge.storeRebound()
-    end
-
-
-    if not isStart and not isQuit and pl:isAlive() then
-
-    else
-        EnclosureChallenge.sfx(isStart)
-    end
-end
- ]]
-
 function EnclosureChallenge.ContinueDialog(pl, text, title, onClickCallback)
     pl = pl or getPlayer()
     if not pl or not text then return end

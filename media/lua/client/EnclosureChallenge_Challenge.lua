@@ -114,27 +114,29 @@ function EnclosureChallenge.isConquered(targ)
 	local ec = EnclosureChallenge.getData()
 	ec.Conquered = ec.Conquered or {}
 
+	local encStr = EnclosureChallenge.getEnclosureStr(targ)
+	if not encStr then return false end
 
-	local str = EnclosureChallenge.getEnclosureStr(targ)
-	if not str then return false end
-
-	return ec.Conquered[str] == true
+	return ec.Conquered[encStr] == true
 end
------------------------            ---------------------------
-
 
 function EnclosureChallenge.isUnlocked(targ)
     local ec = EnclosureChallenge.getData()
     ec.Challenges = ec.Challenges or {}
 
-    local str = EnclosureChallenge.getEnclosureStr(targ)
-    return str and ec.Challenges[str] == true or false
+    local encStr = EnclosureChallenge.getEnclosureStr(targ)
+    if not encStr then return false end
+
+    return ec.Challenges[encStr] == true
 end
+
 -----------------------            ---------------------------
 function EnclosureChallenge.isCanUnlock(targ)
     local pl = getPlayer()
-    if EnclosureChallenge.isChallenger() then return false end
-    if not EnclosureChallenge.isUnlocked(targ) and not EnclosureChallenge.isConquered(targ) then
+    if EnclosureChallenge.isRemoteMode() then return false end
+    --if EnclosureChallenge.isChallenger() then return false end
+    --if not EnclosureChallenge.isUnlocked(targ) and not EnclosureChallenge.isConquered(targ) then
+    if not EnclosureChallenge.isUnlocked(targ) then
         local ec = EnclosureChallenge.getData()
         if not ec or not ec.UnlockPoints then return false end
         return ec.UnlockPoints > 0
@@ -143,21 +145,14 @@ function EnclosureChallenge.isCanUnlock(targ)
 end
 -----------------------            ---------------------------
 -----------------------            ---------------------------
-function EnclosureChallenge.storeEnclosure(targ)
-
-    local ec = EnclosureChallenge.getData()
-    local str = EnclosureChallenge.getEnclosureStr(targ)
-    local isRemote =  EnclosureChallenge.isRemoteMode(targ)
-
-    if isRemote then
-        return
-    else
+function EnclosureChallenge.storeEnclosure(encStr)
+    if ec then
         ec.Challenges = ec.Challenges or {}
-        ec.Challenges[str] = true
+        ec.Challenges[encStr] = true
         print("Enclosure stored successfully")
     end
-    return true
 end
+
 function EnclosureChallenge.getChallengeCount()
     local ec = EnclosureChallenge.getData()
     local tab = ec and ec.Challenges
@@ -188,7 +183,7 @@ function EnclosureChallenge.doUnlock(targ)
     HaloTextHelper.addTextWithArrow(pl, "Unlock Points - 1", false, HaloTextHelper.getColorRed())
     pl:playSound("GarageDoorUnlock")
 
-    EnclosureChallenge.storeEnclosure(targ)
+    EnclosureChallenge.storeEnclosure(encStr)
 
     EnclosureChallenge.addChallengeSymbols(targ)
     return true
@@ -196,35 +191,35 @@ end
 
 -----------------------            ---------------------------
 
-function EnclosureChallenge.storeConquered(isRemote)
+function EnclosureChallenge.storeConquered(encStr)
     local pl = getPlayer(); if not pl then return false end
     local ec = EnclosureChallenge.getData()
     if not ec then return false end
-    local rebound = ec.Rebound
-    if not rebound or not rebound.x or not rebound.y then return false end
+    if encStr then
+        local rebound = ec.Rebound
+        --ec.RemoteWins = (ec.RemoteWins or 0) + 1
 
-    local x, y, z = rebound.x, rebound.y, rebound.z
+        if  rebound  then
+            local x, y, z = rebound.x, rebound.y, rebound.z
+            encStr = tostring(ec.RemoteChallenge) or EnclosureChallenge.getEnclosureStrXY(x, y) or EnclosureChallenge.getEnclosureStr(pl)
 
-    if isRemote or (ec.RemoteChallenge and ec.RemoteChallenge ~= "") then
-        ec.RemoteWins = (ec.RemoteWins or 0) + 1
-        HaloTextHelper.addTextWithArrow(pl, "Remote Wins + 1", true, HaloTextHelper.getColorGreen())
+
+            local sq = getCell():getOrCreateGridSquare(x, y, z)
+            if sq then EnclosureChallenge.addChallengeSymbols(sq) end
+            HaloTextHelper.addTextWithArrow(pl, "Remote Wins + 1", true, HaloTextHelper.getColorGreen())
+
+            ec.Conquered = ec.Conquered or {}
+            ec.Conquered[encStr] = true
+
+
+        end
+
+
     end
 
-    if (not isRemote) or (ec.AdditiveChallenge and ec.AdditiveChallenge ~= "") then
-        local encStr = tostring(ec.AdditiveChallenge) or EnclosureChallenge.getEnclosureStrXY(x, y) or EnclosureChallenge.getEnclosureStr(pl)
-        if not encStr then return false end
 
-        local reward = SandboxVars.EnclosureChallenge.UnlockPointsReward or 1
-        ec.UnlockPoints = (ec.UnlockPoints or 0) + reward
 
-        HaloTextHelper.addTextWithArrow(pl, "Unlock Points + " .. tostring(reward), true, HaloTextHelper.getColorGreen())
 
-        local sq = getCell():getOrCreateGridSquare(x, y, z)
-        if sq then EnclosureChallenge.addChallengeSymbols(sq) end
-
-        ec.Conquered = ec.Conquered or {}
-        ec.Conquered[encStr] = true
-    end
 
     return true
 end

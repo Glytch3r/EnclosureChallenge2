@@ -45,7 +45,8 @@ function EnclosureChallenge.isOutOfBounds(targ)
     if EnclosureChallenge.isRemoteMode() then
         return tostring(encStr) ~= tostring(ec.RemoteChallenge)
     else
-        return not ec.Challenges or not ec.Challenges[encStr]
+        ec.Challenges = ec.Challenges or {}
+        return not ec.Challenges[encStr]
     end
 end
 
@@ -128,8 +129,8 @@ function EnclosureChallenge.getReboundSq()
     local z = ec.Rebound.z or 0
 
     if not x or not y then return nil end
-
-    return getCell():getOrCreateGridSquare(x, y, z)
+    local returnSq = getCell():getOrCreateGridSquare(x, y, z)
+    return returnSq
 end
 
 -----------------------            ---------------------------
@@ -151,7 +152,8 @@ function EnclosureChallenge.reboundHandler()
     if not pl or not state then
         Events.OnTick.Remove(EnclosureChallenge.reboundHandler)
     end
-    if state.bTick % 4 == 0 or EnclosureChallenge.isReboundSq(pl:getCurrentSquare()) then
+    local csq = pl:getCurrentSquare()
+    if state.bTick % 4 == 0 or ( csq and EnclosureChallenge.isReboundSq(csq) ) then
         if not state.staggered and state.reboundPl then
             state.staggered = true
             if isClient() then

@@ -55,7 +55,7 @@ function EnclosureChallenge.updateMarkers(encStr)
 
    --local enc =  EnclosureChallenge.getEnclosure(pl)
    --EnclosureChallenge.EnclosureChange(pl)
-   EnclosureChallenge.setMarkers(pl, false)
+   EnclosureChallenge.setMarkers(pl, SandboxVars.EnclosureChallenge.KeepMarkers)
 
    EnclosureChallenge.addChallengeSymbols(pl)
 
@@ -86,13 +86,14 @@ function EnclosureChallenge.doQuit(isRemote)
 end
 
 
+
 function EnclosureChallenge.setChallenge(isStart, isRemote)
    local pl = getPlayer(); if not pl then return end
 
    local ec = EnclosureChallenge.getData()
 
 
-   if isStart then
+   if isStart and ec then
       ec.ChallengeTime = SandboxVars.EnclosureChallenge.ChallengeHours or 168
 
 
@@ -111,10 +112,6 @@ function EnclosureChallenge.setChallenge(isStart, isRemote)
       EnclosureChallenge.storeRebound(pl)
       EnclosureChallenge.setReturnPointMarker()
 
-
-
-
-
    else
       ec.ChallengeTime = 0
    end
@@ -132,20 +129,36 @@ function EnclosureChallenge.clearChallengeData()
    EnclosureChallenge.delReturnPointMarker()
    EnclosureChallenge.clearRebound()
 end
-function EnclosureChallenge.doWin(isRemote)
+function EnclosureChallenge.doWin()
    local pl = getPlayer(); if not pl then return end
    local ec = EnclosureChallenge.getData()
-   isRemote = isRemote or EnclosureChallenge.isRemoteMode()
-
+   --isRemote = isRemote or EnclosureChallenge.isRemoteMode()
+   if not ec then return end
    EnclosureChallenge.doReward()
-   EnclosureChallenge.storeConquered(isRemote)
+   if ec.RemoteChallenge then
+      EnclosureChallenge.storeConquered(ec.RemoteChallenge)
+      EnclosureChallenge.clearChallengeData()
+      EnclosureChallenge.setMarkers(pl, false)
+   end
 
-   EnclosureChallenge.delReturnPointMarker()
-   EnclosureChallenge.setMarkers(pl, false)
+   if (ec.AdditiveChallenge and ec.AdditiveChallenge ~= "") then
+      local reward = SandboxVars.EnclosureChallenge.UnlockPointsReward or 1
+      HaloTextHelper.addTextWithArrow(pl, "Unlock Points + " .. tostring(reward), true, HaloTextHelper.getColorGreen())
+      ec.UnlockPoints = ec.UnlockPoints or 0
+      local reward = ec.UnlockPoints + reward
+      ec.UnlockPoints = reward
+      getSoundManager():playUISound("GainExperienceLevel")
 
-   EnclosureChallenge.clearChallengeData()
+      timer:Simple(1, function()
+            local hrs = SandboxVars.EnclosureChallenge.ChallengeHours or 168
+            ec.ChallengeTime = hrs
+            pl:Say(tostring("Survive for "..tostring(hrs).." Hours"))
+      end)
 
-   getSoundManager():playUISound("GainExperienceLevel")
+   end
+
+
+
 end
 
 -----------------------            ---------------------------
@@ -157,23 +170,22 @@ function EnclosureChallenge.clearRebound() -- also removes markers
 end
 
 function EnclosureChallenge.storeRebound(targ) -- also sets markers
-    local pl = getPlayer()
-    targ = targ or pl
-    if not targ then return end
+   local pl = getPlayer()
+   targ = targ or pl
+   if not targ then return end
 
-    EnclosureChallenge.clearRebound()
+   EnclosureChallenge.clearRebound()
 
-    local ec = EnclosureChallenge.getData()
-    if not ec then return end
-    local encStr =  EnclosureChallenge.getEnclosureStr(targ)
+   local ec = EnclosureChallenge.getData()
+   if not ec then return end
+   local encStr =  EnclosureChallenge.getEnclosureStr(targ)
 
-    ec.Rebound = {
-        x = round(targ:getX()),
-        y = round(targ:getY()),
-        z = targ:getZ() or 0,
-    }
-    EnclosureChallenge.setReturnPointMarker()
-
+   ec.Rebound = {
+      x = round(targ:getX()),
+      y = round(targ:getY()),
+      z = targ:getZ() or 0,
+   }
+   EnclosureChallenge.setReturnPointMarker()
 
 end
 -----------------------            ---------------------------

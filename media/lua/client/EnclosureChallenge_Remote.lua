@@ -56,6 +56,7 @@ end
 -----------------------            ---------------------------
 function EnclosureChallenge.isValidSq(sq)
     sq = sq or getPlayer():getCurrentSquare()
+    if EnclosureChallenge.isConquered(sq) then return false end
     return sq and sq:connectedWithFloor() and sq:getFloor() ~= nil
 end
 

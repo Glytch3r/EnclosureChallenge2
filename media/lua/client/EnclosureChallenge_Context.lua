@@ -107,7 +107,7 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
 	local unlockTitle = getText("ContextMenu_EnclosureChallenge_Unlock")..pts
 	local isConquered = status == "Conquered"
 	local isUnlocked = status == "Unlocked"
-	local clickedOutside = not EnclosureChallenge.isSameEnclosure(sq)
+	--local clickedOutside = not EnclosureChallenge.isSameEnclosure(sq)
 
 	if isConquered then
 		unlockTitle = "CLEARED: " .. tostring(pts)
@@ -120,20 +120,18 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
 		context:hideAndChildren()
 	end)
 
-	local UnlockNotAvailable = false
 
-	if isChallenger or isUnlocked or not isCanUnlock then
-		UnlockNotAvailable = true
-	end
 
+
+	unlockOpt.notAvailable = not isCanUnlock
+--[[
 	if clickedOutside then
 		UnlockNotAvailable = true
 		local unlockOptTip = ISWorldObjectContextMenu.addToolTip()
 		unlockOptTip.description = getText("ContextMenu_EnclosureChallenge_ClickedOutsideUnlock")
 		unlockOpt.toolTip = unlockOptTip
-	end
+	end ]]
 
-	unlockOpt.notAvailable = UnlockNotAvailable
 
 
 	-----------------------      start*      ---------------------------
@@ -172,6 +170,7 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
 			EnclosureChallenge.saveCoord()
 			EnclosureChallenge.tpRandMidSq()
 			context:hideAndChildren()
+
 		end)
 		local startRemoteTip = ISWorldObjectContextMenu.addToolTip()
 		startRemoteTip.description = getText("ContextMenu_EnclosureChallenge_StartRemote_tip")
@@ -212,7 +211,7 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
 
 		end)
 
-		dbgSub:addOption("dbgWin", worldobjects, function()
+		dbgSub:addOption("dbgWin - set hrs to 0", worldobjects, function()
 			EnclosureChallenge.dbgWin()
 			--EnclosureChallenge.doWin()
 		end)
@@ -259,7 +258,7 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
 			EnclosureChallenge.clearRebound()
 		end)
 		dbgSub:addOption("storeConquered", worldobjects, function()
-			EnclosureChallenge.storeConquered(false)
+			EnclosureChallenge.storeConquered(true)
 		end)
 		dbgSub:addOption("disabler false", worldobjects, function()
 			EnclosureChallenge.disabler(false)

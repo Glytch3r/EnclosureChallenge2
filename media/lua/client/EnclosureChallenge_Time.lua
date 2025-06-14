@@ -40,7 +40,7 @@ function EnclosureChallenge.ChallengeTimer()
     end
 
     local isRemote = EnclosureChallenge.isRemoteMode()
-    local encStr = isRemote and ec.RemoteChallenge or ec.AdditiveChallenge
+    local encStr = ec.RemoteChallenge or ec.AdditiveChallenge
 
     if ec.ChallengeTime == 0 and encStr and encStr ~= "" then
         if EnclosureChallenge.isShouldAnnounce() then
@@ -58,12 +58,13 @@ function EnclosureChallenge.ChallengeTimer()
         end
 
         if pl:isAlive() then
-            EnclosureChallenge.doWin(isRemote)
-            ec.AdditiveChallenge = ""
+            if getCore():getDebug() then print("WIN") end
+            EnclosureChallenge.doWin()
+            --ec.AdditiveChallenge = ""
             ec.RemoteChallenge = ""
         end
 
-        if getCore():getDebug() then print("WIN") end
+
     end
 end
 Events.EveryHours.Add(EnclosureChallenge.ChallengeTimer)

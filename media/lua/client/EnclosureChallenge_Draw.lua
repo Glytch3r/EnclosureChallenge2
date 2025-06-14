@@ -298,16 +298,19 @@ function EnclosureChallenge.GUI()
 
     local encInfo = {
         string.format("X: %d   Y: %d", round(x), round(y)),
-        "Enclosure: "..tostring(encStr),
+        "Enclosure: "..tosdtring(encStr),
         tostring(status),
         "",
     }
 
     if ec then
         table.insert(encInfo, tostring(EnclosureChallenge.getChallengeCount()) .. " : Unlocked")
-        table.insert(encInfo, tostring(EnclosureChallenge.getConqueredCount()) .. " : Conquered")
-        table.insert(encInfo, tostring(ec.RemoteWins) .. " : RemoteWins")
-        table.insert(encInfo, tostring(ec.UnlockPoints) .. " : Points")
+        table.insert(encInfo, tostring(ec.UnlockPoints) .. " :Unlock Points")
+        --table.insert(encInfo, tostring(EnclosureChallenge.getConqueredCount()) .. " : Conquered")
+        --table.insert(encInfo, tostring(ec.RemoteWins) .. " : RemoteWins")
+
+        table.insert(encInfo, tostring(EnclosureChallenge.getConqueredCount()) .. " : Remote Conquered")
+
         table.insert(encInfo, "\nRewardChoice:\n" .. tostring(EnclosureChallenge.getRewardTitle(ec.RewardChoice)))
     else
         table.insert(encInfo, "\nNo Enclosure Data")
