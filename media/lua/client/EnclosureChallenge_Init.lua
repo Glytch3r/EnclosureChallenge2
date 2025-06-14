@@ -41,7 +41,7 @@ function EnclosureChallenge.initChallengeData(pl)
     ec.Conquered         = ec.Conquered         or {}
     ec.PrevCoord         = {}
     ec.Rebound           = ec.Rebound           or {}
-
+    ec.AdditiveWins      = ec.AdditiveWins      or 0
     ec.ChallengeTime     = ec.ChallengeTime     or 0
     ec.RemoteChallenge   = ec.RemoteChallenge   or ""
     ec.AdditiveChallenge = ec.AdditiveChallenge or ""

@@ -35,6 +35,7 @@ function EnclosureChallenge.resetData()
 	EnclosureChallenge.clearRebound()
 	pl:getModData().EnclosureChallenge = nil
 	EnclosureChallenge.initChallengeData(pl)
+
 end
 -----------------------            --------fffff-------------------
 

@@ -83,6 +83,7 @@ Events.OnEnclosureChange.Add(EnclosureChallenge.updateMarkers)
 function EnclosureChallenge.doQuit(isRemote)
 	EnclosureChallenge.setChallenge(false, isRemote)
 	EnclosureChallenge.clearChallengeData()
+
 end
 
 
@@ -102,9 +103,14 @@ function EnclosureChallenge.setChallenge(isStart, isRemote)
          if isRemote then
             ec.RemoteChallenge = tostring(encStr)
             ec.AdditiveChallenge = ""
+            Events.EveryHours.Add(EnclosureChallenge.RemoteTimer)
+
          else
             ec.RemoteChallenge = ""
+            if not ec.AdditiveWins then ec.AdditiveWins = 0 end
             ec.AdditiveChallenge = tostring(encStr)
+            Events.EveryHours.Add(EnclosureChallenge.AdditiveTimer)
+
          end
       end
 
@@ -124,10 +130,15 @@ function EnclosureChallenge.clearChallengeData()
        local ec = EnclosureChallenge.getData()
    if not ec then return end
    ec.ChallengeTime = 0
+   Events.EveryHours.Remove(EnclosureChallenge.AdditiveTimer)
+   Events.EveryHours.Remove(EnclosureChallenge.RemoteTimer)
    ec.RemoteChallenge = ""
    ec.AdditiveChallenge = ""
    EnclosureChallenge.delReturnPointMarker()
    EnclosureChallenge.clearRebound()
+
+
+
 end
 function EnclosureChallenge.doWin()
    local pl = getPlayer(); if not pl then return end

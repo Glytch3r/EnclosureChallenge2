@@ -129,4 +129,5 @@ function EnclosureChallenge.doReward()
 	ISInventoryPage.dirtyUI()
 end
 
+
 -----------------------            ---------------------------

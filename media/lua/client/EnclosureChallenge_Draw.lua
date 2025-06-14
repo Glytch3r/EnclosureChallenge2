@@ -207,6 +207,7 @@ Events.OnPlayerUpdate.Add(EnclosureChallenge.MouseTipHandler)
 -----------------------            ---------------------------
 
 -----------------------            ---------------------------
+
 EnclosureChallenge.guiTicks = 0
 
 function EnclosureChallenge.GUI()

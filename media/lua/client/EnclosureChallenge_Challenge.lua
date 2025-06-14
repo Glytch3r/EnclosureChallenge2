@@ -86,19 +86,33 @@ end
 -----------------------            ---------------------------
 
 function EnclosureChallenge.getChallengeTimeStr()
-    local pl = getPlayer()
-    local str = ""
-    if EnclosureChallenge.isChallenger() then
+    local ec = EnclosureChallenge.getData()
+    if ec and EnclosureChallenge.isChallenger() then
+        --local pl = getPlayer()
+        local str = ""
         local time = EnclosureChallenge.getChallengeTime()
-        if time and time > 0 then
-            if time == 1 then
-                str = "Final Hour"
+        if ec.RemoteChallenge then
+
+            if time and time > 0 then
+                if time == 1 then
+                    str = "Final Hour"
+                else
+                    str = "Hours Remaining: " .. tostring(time)
+                end
+            end
+        elseif ec.AdditiveChallenge then
+            --local milestone = SandboxVars.EnclosureChallenge.ChallengeHours or 168
+            --local surv = EnclosureChallenge.getChallengeTime() % milestone
+            if time == 0 then
+                str = "Survived for 0 Hours"
+            elseif time == 1 then
+                str = "Survived for 1 Hour"
             else
-                str = "Hours Remaining: " .. tostring(time)
+                str = "Survived for "..tostring(time).." Hours"
             end
         end
+        return str
     end
-    return str
 end
 
 

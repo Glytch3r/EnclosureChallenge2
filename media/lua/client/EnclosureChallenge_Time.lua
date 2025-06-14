@@ -28,7 +28,7 @@ require "lua_timers"
 
 EnclosureChallenge = EnclosureChallenge or {}
 
-function EnclosureChallenge.ChallengeTimer()
+function EnclosureChallenge.RemoteTimer()
     local pl = getPlayer(); if not pl then return end
     local user = pl:getUsername()
     local ec = EnclosureChallenge.getData()
@@ -66,44 +66,54 @@ function EnclosureChallenge.ChallengeTimer()
 
             EnclosureChallenge.doWin()
 
-            if ec.AdditiveChallenge then
-                local hrs = SandboxVars.EnclosureChallenge.ChallengeHours or 168
-                ec.ChallengeTime = hrs
-                pl:Say(tostring("Survive for "..tostring(hrs).." Hours"))
 
-            else
-                ec.RemoteChallenge = ""
-            end
+            ec.RemoteChallenge = ""
+
 
 
         end
 
+        Events.EveryHours.Remove(EnclosureChallenge.RemoteTimer)
 
     end
 end
-Events.EveryHours.Add(EnclosureChallenge.ChallengeTimer)
+
+
 --[[
-function EnclosureChallenge.ChallengeTimer()
-    local pl = getPlayer()
+           if ec.AdditiveChallenge then
+                local hrs = SandboxVars.EnclosureChallenge.ChallengeHours or 168
+                ec.ChallengeTime = hrs
+                pl:Say(tostring("Survive for "..tostring(hrs).." Hours"))
+
+        end
+ ]]
+function EnclosureChallenge.AdditiveTimer()
+    local pl = getPlayer(); if not pl then return end
     local user = pl:getUsername()
+    local ec = EnclosureChallenge.getData()
+    if not ec then return  end
+    if not EnclosureChallenge.isChallenger() then return  end
+    local milestone = SandboxVars.EnclosureChallenge.ChallengeHours or 168
+    local isRemote = EnclosureChallenge.isRemoteMode()
+    local encStr = ec.AdditiveChallenge
+    if not encStr or (encStr and encStr == "") then
+        ec.ChallengeTime = 0
+        Events.EveryHours.Remove(EnclosureChallenge.AdditiveTimer)
+    end
+    if ec.ChallengeTime and ec.ChallengeTime > 0 then
+        ec.ChallengeTime = ec.ChallengeTime + 1
+    end
 
-    local ec =  EnclosureChallenge.getData()
-    if not EnclosureChallenge.isChallenger() then return false end
-    if ec and ec.ChallengeTime and ec.ChallengeTime > 0 then
-        ec.ChallengeTime = ec.ChallengeTime - 1
-        if ec.ChallengeTime <= 0 then
-
+    if ec.ChallengeTime % milestone == 0 then
+        ec.AdditiveWins = ec.AdditiveWins + 1
+        if pl:isAlive() then
             if EnclosureChallenge.isShouldAnnounce() then
-                local enc = EnclosureChallenge.getEnclosureXY( pl:getX(),   pl:getY())
-                if not enc then return end
-                local EnclosureX = enc.x
-                local EnclosureY = enc.y
-
-                local posStr = (EnclosureX and EnclosureY) and ": [" .. EnclosureX .. ", " .. EnclosureY .. "]" or ""
-                if not SandboxVars.EnclosureChallenge.CoordNotif then
-                    posStr = ""
+                local enc = EnclosureChallenge.getEnclosureXY(pl:getX(), pl:getY())
+                local posStr = ""
+                if enc and SandboxVars.EnclosureChallenge.CoordNotif then
+                    posStr = string.format(": [%d, %d]", enc.x, enc.y)
                 end
-                local msg = tostring(user) .. " " .. getText("ContextMenu_EnclosureChallenge_Conquer").. "  ".. tostring(posStr)
+                local msg = string.format("%s %s  %s", user, getText("ContextMenu_EnclosureChallenge_Conquer"), posStr)
                 if isClient() then
                     processGeneralMessage(msg)
                 else
@@ -112,20 +122,23 @@ function EnclosureChallenge.ChallengeTimer()
             end
 
 
-            if pl:isAlive() then
-                EnclosureChallenge.doWin()
-            end
+            if getCore():getDebug() then print("WIN") end
 
-            if getCore():getDebug() then
-                print("WIN")
+            EnclosureChallenge.doWin()
 
-            end
         end
-	end
+    end
 
-            --EnclosureChallenge.setChallenge(false, false)
+
 end
-Events.EveryHours.Add(EnclosureChallenge.ChallengeTimer) ]]
+
+
+
+
+
+
+
+
 -----------------------            ---------------------------
 function EnclosureChallenge.getSec()
     local cal = PZCalendar and PZCalendar.getInstance and PZCalendar.getInstance()

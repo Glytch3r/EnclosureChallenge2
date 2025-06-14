@@ -46,6 +46,7 @@ function EnclosureChallenge.onYes(isQuit, isRemote)
 		EnclosureChallenge.doQuit(isRemote)
 	else
 		EnclosureChallenge.setChallenge(true, isRemote)
+
 	end
 
 
