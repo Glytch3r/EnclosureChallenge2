@@ -63,13 +63,16 @@ function EnclosureChallenge.onYes(isQuit, isRemote)
 	end
 end
 
-function EnclosureChallenge.onNo(isRemote, isQuit)
+function EnclosureChallenge.onNo(isQuit, isRemote)
+		print('isQuit '..tostring(isQuit))
+		print('isRemote '..tostring(isRemote))
 	if isQuit then
 		EnclosureChallenge.sfx(true)
 
 	elseif isRemote then
+
 		EnclosureChallenge.goBack()
-		EnclosureChallenge.clearCoord()
+
 	end
 end
 
@@ -89,7 +92,7 @@ function EnclosureChallenge.ConfirmDialog(pl, text, title, isQuit, isRemote, unl
 	local plNum = pl:getPlayerNum()
 
 	local dialog
-
+	EnclosureChallenge.saveCoord()
 	local function onClick(_, button)
 		EnclosureChallenge.disabler(false)
 
@@ -97,10 +100,12 @@ function EnclosureChallenge.ConfirmDialog(pl, text, title, isQuit, isRemote, unl
 			if unlockTarg then
 				EnclosureChallenge.doUnlock(unlockTarg)
 			else
+
 				EnclosureChallenge.onYes(isQuit, isRemote)
 			end
 		elseif button.internal == "NO" then
-			EnclosureChallenge.onNo(isRemote, isQuit)
+			EnclosureChallenge.onNo(isQuit, isRemote)
+
 		end
 
 		dialog:setVisible(false)

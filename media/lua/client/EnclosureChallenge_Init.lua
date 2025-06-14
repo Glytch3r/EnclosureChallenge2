@@ -39,7 +39,7 @@ function EnclosureChallenge.initChallengeData(pl)
    -- ec.RemoteWins        = ec.RemoteWins        or 0
     ec.Challenges        = ec.Challenges        or {}
     ec.Conquered         = ec.Conquered         or {}
-    ec.PrevCoord         = {}
+    ec.OriginCoords      = ec.OriginCoords         or {}
     ec.Rebound           = ec.Rebound           or {}
     ec.AdditiveWins      = ec.AdditiveWins      or 0
     ec.ChallengeTime     = ec.ChallengeTime     or 0
@@ -95,7 +95,7 @@ Events.OnPlayerDeath.Add(function()
 		end
 	end
 	--EnclosureChallenge.setChallenge(false, false)
-end)
+end)d
 
 
 

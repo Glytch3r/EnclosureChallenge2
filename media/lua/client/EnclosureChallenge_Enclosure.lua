@@ -129,10 +129,10 @@ win ec.UnlockPoints = ec.UnlockPoints + SandboxVars.EnclosureChallenge.UnlockPoi
 
 
 RemoteChallenge:
-store prevcoords data
+store OriginCoordss data
 teleport random mid sq
-dialog yes = clear prevcoords, store rebound, add "return" markers and symbol, set ChallengeTime,  store data ec.RemoteChallenge = encStr
-dialog no = cancels challenge, goback prevcoords function
+dialog yes = clear OriginCoordss, store rebound, add "return" markers and symbol, set ChallengeTime,  store data ec.RemoteChallenge = encStr
+dialog no = cancels challenge, goback OriginCoordss function
 quit= clear rebound, ec.RemoteChallenge = "", ChallengeTime = 0
 out of bounds during challenge = check using ec.RemoteChallenge ~= encStr
 if out of bounds, teleport to return point using ec.Rebound

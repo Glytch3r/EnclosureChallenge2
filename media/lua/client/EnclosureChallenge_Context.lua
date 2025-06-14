@@ -165,6 +165,7 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
 
 	if not isChallenger and SandboxVars.EnclosureChallenge.AllowRemoteChallenge then
 		local startRemoteOpt = rootMenu:addOption(getText("ContextMenu_EnclosureChallenge_StartRemote"), worldobjects, function()
+
 			EnclosureChallenge.saveCoord()
 			EnclosureChallenge.tpRandMidSq()
 			context:hideAndChildren()

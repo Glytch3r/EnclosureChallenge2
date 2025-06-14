@@ -207,7 +207,6 @@ Events.OnPlayerUpdate.Add(EnclosureChallenge.MouseTipHandler)
 -----------------------            ---------------------------
 
 -----------------------            ---------------------------
-
 EnclosureChallenge.guiTicks = 0
 
 function EnclosureChallenge.GUI()
@@ -215,26 +214,24 @@ function EnclosureChallenge.GUI()
 
     EnclosureChallenge.guiTicks = EnclosureChallenge.guiTicks + 1
     local isCacheFrame = (EnclosureChallenge.guiTicks % 30 == 0)
-    local isChallenger = EnclosureChallenge.isChallenger()
+
+    local pl = getPlayer()
+    if not pl then return end
+
+    local isChallenger = EnclosureChallenge.isChallenger(pl)
     local isRemoteMode = EnclosureChallenge.isRemoteMode()
 
     EnclosureChallenge.cache = EnclosureChallenge.cache or {}
     local cache = EnclosureChallenge.cache
 
-    if not isCacheFrame then
-        if isChallenger then
-            local modeStr = isRemoteMode and "Remote Mode" or "Additive Mode"
-            local timeStr = EnclosureChallenge.getChallengeTimeStr()
-            local headerStr = string.format("%s\n%s", modeStr, timeStr)
-            getTextManager():DrawString(UIFont.Medium, cache.xPos, cache.yPos - 42, headerStr, 1, 0, 0, cache.alpha)
+    if not isCacheFrame and cache.xPos then
+        if isChallenger and cache.headerStr and cache.timeSize then
+            getTextManager():DrawString(cache.timeSize, cache.xPos, cache.yPos - cache.textGap, cache.headerStr, 1, 0, 0, cache.alpha)
         end
-
         getTextManager():DrawString(cache.fSize, cache.xPos, cache.yPos, table.concat(cache.encInfo, '\n'), cache.col.r, cache.col.g, cache.col.b, cache.alpha)
         return
     end
 
-    local pl = getPlayer()
-    if not pl then return end
     local xPercentPos = SandboxVars.EnclosureChallengeGUI.xPercentPos or 4
     local yPercentPos = SandboxVars.EnclosureChallengeGUI.yPercentPos or 55
     local xOffset = SandboxVars.EnclosureChallengeGUI.xOffset or 50
@@ -301,11 +298,11 @@ function EnclosureChallenge.GUI()
     local fSize = fontSizes[optSizes] or UIFont.Small
     local timeSize = timeSizes[optSizes] or UIFont.Medium
 
+    local headerStr = ""
     if isChallenger then
         local modeStr = isRemoteMode and "Remote Mode" or "Additive Mode"
         local timeStr = EnclosureChallenge.getChallengeTimeStr()
-        local headerStr = string.format("%s\n%s", modeStr, timeStr)
-        getTextManager():DrawString(timeSize, xPos, yPos - textGap, headerStr, 1, 0, 0, alpha)
+        headerStr = string.format("%s\n%s", modeStr, timeStr)
         status = ""
     end
 
@@ -318,14 +315,32 @@ function EnclosureChallenge.GUI()
 
     if ec then
         table.insert(encInfo, tostring(EnclosureChallenge.getChallengeCount()) .. " : Unlocked")
+        table.insert(encInfo, tostring(ec.AdditiveWins) .. " :Additive Wins")
+        table.insert(encInfo, tostring(EnclosureChallenge.getConqueredCount()) .. " : Remote Wins")
+
         table.insert(encInfo, tostring(ec.UnlockPoints) .. " :Unlock Points")
-        table.insert(encInfo, tostring(EnclosureChallenge.getConqueredCount()) .. " : Remote Conquered")
         table.insert(encInfo, "\nRewardChoice:\n" .. tostring(EnclosureChallenge.getRewardTitle(ec.RewardChoice)))
+
+
     else
         table.insert(encInfo, "\nNo Enclosure Data")
     end
 
-    EnclosureChallenge.cache = {fSize=fSize,xPos=xPos,yPos=yPos,encInfo=encInfo,col=col,alpha=alpha}
+    EnclosureChallenge.cache = {
+        fSize = fSize,
+        xPos = xPos,
+        yPos = yPos,
+        encInfo = encInfo,
+        col = col,
+        alpha = alpha,
+        headerStr = headerStr,
+        timeSize = timeSize,
+        textGap = textGap,
+    }
+
+    if isChallenger then
+        getTextManager():DrawString(timeSize, xPos, yPos - textGap, headerStr, 1, 0, 0, alpha)
+    end
     getTextManager():DrawString(fSize, xPos, yPos, table.concat(encInfo, '\n'), col.r, col.g, col.b, alpha)
 end
 

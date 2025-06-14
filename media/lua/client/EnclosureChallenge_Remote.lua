@@ -31,29 +31,38 @@ EnclosureChallenge = EnclosureChallenge or {}
 
 function EnclosureChallenge.goBack()
 	local pl = getPlayer()
-	if not pl then return end
+
+    EnclosureChallenge.clearCoord()
 	local ec = EnclosureChallenge.getData()
-	local p = ec.PrevCoord
+	if not ec then return end
+	local p = ec.OriginCoords
+    if not pl then return end
+    print('goBack() '..tostring(tostring(p.x).." "..tostring( p.y )))
 	if p and p.x and p.y and p.z then
 		EnclosureChallenge.tp(pl, p.x, p.y, p.z)
+		--EnclosureChallenge.clearCoord()
 	end
 end
+
+
 function EnclosureChallenge.clearCoord()
 	local pl = getPlayer()
 	if not pl then return end
-	local ec = pl:getModData().EnclosureChallenge
-	ec.PrevCoord = nil
+	local ec = EnclosureChallenge.getData()
+	if not ec then return end
+	ec.OriginCoords = nil
 end
 
 function EnclosureChallenge.saveCoord()
     local pl = getPlayer()
     if not pl then return end
 	local ec = EnclosureChallenge.getData()
+    print("saveCoord()")
+    if not ec then return end
 
-    ec.PrevCoord = {x= round(pl:getX()), y = round(pl:getY()), z= pl:getZ()}
+    ec.OriginCoords = {x= round(pl:getX()), y = round(pl:getY()), z= pl:getZ()}
 end
-
------------------------            ---------------------------
+--[[  ]]-----------------------            ---------------------------
 function EnclosureChallenge.isValidSq(sq)
     sq = sq or getPlayer():getCurrentSquare()
     if EnclosureChallenge.isConquered(sq) then return false end
@@ -113,7 +122,10 @@ end
 
 function EnclosureChallenge.tpRandMidSq()
     local pl = getPlayer()
-    if EnclosureChallenge.isChallenger() then return end
+
+3
+    --if EnclosureChallenge.isChallenger() then return end
+	--EnclosureChallenge.clearCoord()
 
     local rTick = 0
     local waitTicks = 60
