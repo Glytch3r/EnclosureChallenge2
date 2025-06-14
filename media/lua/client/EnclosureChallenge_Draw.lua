@@ -298,7 +298,7 @@ function EnclosureChallenge.GUI()
 
     local encInfo = {
         string.format("X: %d   Y: %d", round(x), round(y)),
-        "Enclosure: "..tosdtring(encStr),
+        "Enclosure: "..tostring(encStr),
         tostring(status),
         "",
     }
