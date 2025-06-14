@@ -107,6 +107,7 @@ function EnclosureChallenge.doReward()
 	local int = EnclosureChallenge.getRewardChoice() or 0
 	local pl = getPlayer()
 	if not pl then return end
+    getSoundManager():playUISound("GainExperienceLevel")
 
 	local inv = pl:getInventory()
 	local itemList = EnclosureChallenge.parseItems(int)

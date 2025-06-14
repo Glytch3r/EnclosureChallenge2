@@ -121,6 +121,7 @@ function EnclosureChallenge.isConquered(targ)
 end
 
 function EnclosureChallenge.isUnlocked(targ)
+    targ = targ or getPlayer()
     local ec = EnclosureChallenge.getData()
     ec.Challenges = ec.Challenges or {}
 
@@ -129,7 +130,6 @@ function EnclosureChallenge.isUnlocked(targ)
 
     return ec.Challenges[encStr] == true
 end
-
 -----------------------            ---------------------------
 function EnclosureChallenge.isCanUnlock(targ)
     local pl = getPlayer()
@@ -146,6 +146,8 @@ end
 -----------------------            ---------------------------
 -----------------------            ---------------------------
 function EnclosureChallenge.storeEnclosure(encStr)
+    local ec = EnclosureChallenge.getData()
+
     if ec then
         ec.Challenges = ec.Challenges or {}
         ec.Challenges[encStr] = true
@@ -216,8 +218,6 @@ function EnclosureChallenge.storeConquered(encStr)
 
 
     end
-
-
 
 
 

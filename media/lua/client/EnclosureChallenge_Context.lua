@@ -109,9 +109,7 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
 	local isUnlocked = status == "Unlocked"
 	--local clickedOutside = not EnclosureChallenge.isSameEnclosure(sq)
 
-	if isConquered then
-		unlockTitle = "CLEARED: " .. tostring(pts)
-	elseif isUnlocked then
+	if isUnlocked then
 		unlockTitle = "UNLOCKED: " .. tostring(pts)
 	end
 

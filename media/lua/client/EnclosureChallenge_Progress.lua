@@ -135,11 +135,7 @@ function EnclosureChallenge.doWin()
    --isRemote = isRemote or EnclosureChallenge.isRemoteMode()
    if not ec then return end
    EnclosureChallenge.doReward()
-   if ec.RemoteChallenge then
-      EnclosureChallenge.storeConquered(ec.RemoteChallenge)
-      EnclosureChallenge.clearChallengeData()
-      EnclosureChallenge.setMarkers(pl, false)
-   end
+
 
    if (ec.AdditiveChallenge and ec.AdditiveChallenge ~= "") then
       local reward = SandboxVars.EnclosureChallenge.UnlockPointsReward or 1
@@ -147,15 +143,18 @@ function EnclosureChallenge.doWin()
       ec.UnlockPoints = ec.UnlockPoints or 0
       local reward = ec.UnlockPoints + reward
       ec.UnlockPoints = reward
-      getSoundManager():playUISound("GainExperienceLevel")
 
-      timer:Simple(1, function()
-            local hrs = SandboxVars.EnclosureChallenge.ChallengeHours or 168
-            ec.ChallengeTime = hrs
-            pl:Say(tostring("Survive for "..tostring(hrs).." Hours"))
-      end)
 
+      return
    end
+
+   if ec.RemoteChallenge then
+      EnclosureChallenge.storeConquered(ec.RemoteChallenge)
+      EnclosureChallenge.clearChallengeData()
+      EnclosureChallenge.setMarkers(pl, false)
+   end
+
+
 
 
 
