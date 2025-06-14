@@ -123,7 +123,7 @@ end
 function EnclosureChallenge.tpRandMidSq()
     local pl = getPlayer()
 
-3
+
     --if EnclosureChallenge.isChallenger() then return end
 	--EnclosureChallenge.clearCoord()
 
