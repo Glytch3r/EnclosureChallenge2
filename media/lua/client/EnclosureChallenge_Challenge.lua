@@ -47,12 +47,12 @@ function EnclosureChallenge.getChallengeTime()
 end
 
 function EnclosureChallenge.isAdditiveMode()
-    local ec = EnclosureChallenge.initChallengeData(pl)
+    local ec = EnclosureChallenge.getData()
     if not ec then return false end
     return (ec.AdditiveChallenge ~= nil and ec.AdditiveChallenge ~= "") or false
 end
 function EnclosureChallenge.isRemoteMode()
-    local ec = EnclosureChallenge.initChallengeData(pl)
+    local ec = EnclosureChallenge.getData()
     if not ec then return false end
     return (ec.RemoteChallenge ~= nil and ec.RemoteChallenge ~= "") or false
 end
