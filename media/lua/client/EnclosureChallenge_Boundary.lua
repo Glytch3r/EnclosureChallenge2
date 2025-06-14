@@ -51,50 +51,6 @@ end
 
 
 
-
-
-
-
-
---[[ function EnclosureChallenge.isOutOfBounds(targ)
-    local pl = getPlayer()
-    targ = targ or pl
-    if not targ then return false end
-    if not EnclosureChallenge.isChallenger() then return false end
-
-    local encStr = EnclosureChallenge.getEnclosureStr(targ)
-    if not encStr then return false end
-
-    local ec = EnclosureChallenge.getData()
-
-    if EnclosureChallenge.isRemoteMode() then
-        local currStr = EnclosureChallenge.getEnclosureStr(targ:getCurrentSquare()) -- error
-        return ec.RemoteChallenge ~= currStr
-    else
-        return not ec.Challenges[encStr]
-    end
-end ]]
---[[
-function EnclosureChallenge.isOutOfBounds(targ)
-	local pl = getPlayer()
-	if not pl or not EnclosureChallenge.isChallenger() then return false end
-
-	local targEncStr = EnclosureChallenge.getEnclosureStr(targ)
-	local plEncStr = EnclosureChallenge.getEnclosureStr(pl)
-	if not targEncStr or not plEncStr then return false end
-
-	local ec = EnclosureChallenge.getData()
-	if not ec then return false end
-
-	if EnclosureChallenge.isRemoteMode() then
-		return ec.RemoteChallenge ~= plEncStr
-	else
-		return not ec.Challenges[plEncStr]
-	end
-end
-
- ]]
-
 function EnclosureChallenge.isSameEnclosure(targ)
     local pl = getPlayer()
     targ = targ or EnclosureChallenge.getPointer()
@@ -148,6 +104,7 @@ function EnclosureChallenge.isRebound(sq)
 end
 
 function EnclosureChallenge.isReboundSq(sq)
+    if not sq then return false end
     return EnclosureChallenge.getReboundSq() == sq
 end
 
@@ -190,14 +147,17 @@ function EnclosureChallenge.reboundHandler()
 
     local state = EnclosureChallenge.reboundState
     state.bTick = state.bTick + 1
-
-    if state.bTick % 4 == 0 or EnclosureChallenge.isReboundSq(getPlayer():getCurrentSquare()) then
+    local pl = getPlayer()
+    if not pl or not state then
+        Events.OnTick.Remove(EnclosureChallenge.reboundHandler)
+    end
+    if state.bTick % 4 == 0 or EnclosureChallenge.isReboundSq(pl:getCurrentSquare()) then
         if not state.staggered and state.reboundPl then
             state.staggered = true
             if isClient() then
                 sendClientCommand("EnclosureChallenge", "stagger", {})
             else
-                EnclosureChallenge.stag(state.reboundPl)
+                EnclosureChallenge.stag(pl)
             end
             Events.OnTick.Remove(EnclosureChallenge.reboundHandler)
             EnclosureChallenge.isInTransit = false
@@ -243,6 +203,9 @@ function EnclosureChallenge.rebound(pl)
         state.reboundPl = nil
     end
 end
+
+
+-----------------------            ---------------------------
 --[[
 function EnclosureChallenge.rebound(pl)
     if EnclosureChallenge.isInTransit then return end

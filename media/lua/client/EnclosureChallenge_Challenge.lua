@@ -158,7 +158,16 @@ function EnclosureChallenge.storeEnclosure(targ)
     end
     return true
 end
-
+function EnclosureChallenge.getChallengeCount()
+    local ec = EnclosureChallenge.getData()
+    local tab = ec and ec.Challenges
+    if not tab then return 0 end
+    local count = 0
+    for _ in pairs(tab) do
+        count = count + 1
+    end
+    return count
+end
 
 -----------------------            ---------------------------
 function EnclosureChallenge.doUnlock(targ)
@@ -202,7 +211,7 @@ function EnclosureChallenge.storeConquered(isRemote)
     end
 
     if (not isRemote) or (ec.AdditiveChallenge and ec.AdditiveChallenge ~= "") then
-        local encStr = ec.AdditiveChallenge or EnclosureChallenge.getEnclosureStrXY(x, y) or EnclosureChallenge.getEnclosureStr(pl)
+        local encStr = tostring(ec.AdditiveChallenge) or EnclosureChallenge.getEnclosureStrXY(x, y) or EnclosureChallenge.getEnclosureStr(pl)
         if not encStr then return false end
 
         local reward = SandboxVars.EnclosureChallenge.UnlockPointsReward or 1
@@ -220,37 +229,13 @@ function EnclosureChallenge.storeConquered(isRemote)
     return true
 end
 
-
---[[
-
-
-function EnclosureChallenge.storeConquered(isRemote)
-    local pl = getPlayer(); if not pl then return false end
+function EnclosureChallenge.getConqueredCount()
     local ec = EnclosureChallenge.getData()
-    if not ec then return false end
-    local rebound = ec.Rebound
-    if not rebound or not rebound.x or not rebound.y then return false end
-    local x, y, z = rebound.x, rebound.y,  rebound.z
-
-    if isRemote or (ec.RemoteChallenge and ec.RemoteChallenge ~= "")  then
-        ec.RemoteWins = (ec.RemoteWins or 0) + 1
-        HaloTextHelper.addTextWithArrow(pl, "Remote Wins + 1", true, HaloTextHelper.getColorGreen())
+    local tab = ec and ec.Conquered
+    if not tab then return 0 end
+    local count = 0
+    for _ in pairs(tab) do
+        count = count + 1
     end
-    if not isRemote or  ec.AdditiveChallenge and ec.AdditiveChallenge ~= "" then
-        local encStr = ec.AdditiveChallenge or EnclosureChallenge.getEnclosureStrXY(x, y) or EnclosureChallenge.getEnclosureStr(pl)
-
-        local reward = SandboxVars.EnclosureChallenge.UnlockPointsReward or 1
-
-        ec.UnlockPoints = ec.UnlockPoints + reward
-        HaloTextHelper.addTextWithArrow(pl, "Unlock Points + "..tostring(reward), true, HaloTextHelper.getColorGreen())
-
-        local sq = getCell():getOrCreateGridSquare(x, y, z)
-        if sq then EnclosureChallenge.addChallengeSymbols(sq) end
-
-        ec.Conquered = ec.Conquered or {}
-        ec.Conquered[encStr] = true
-
-    end
-
-    return true
-end ]]
+    return count
+end

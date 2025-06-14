@@ -20,29 +20,34 @@ EnclosureChallenge = EnclosureChallenge or {}
 
 LuaEventManager.AddEvent("OnEnclosureChange")
 
+EnclosureChallenge.encTick = 0
+
 function EnclosureChallenge.EnclosureChange(pl)
-   if not isIngameState() or not pl then return end
-   local encStr  = EnclosureChallenge.getEnclosureStr(pl)
+    if not isIngameState() or not pl then return end
 
-   if EnclosureChallenge.PreviousEnclosure == nil then
-      EnclosureChallenge.PreviousEnclosure = ""
-   end
+    EnclosureChallenge.encTick = EnclosureChallenge.encTick + 1
+    if EnclosureChallenge.encTick % 10 ~= 0 then return end
 
-   if not encStr then return end
-   if EnclosureChallenge.PreviousEnclosure ~= encStr then
-      triggerEvent("OnEnclosureChange", encStr)
-      EnclosureChallenge.PreviousEnclosure = encStr
-   end
+    local encStr = EnclosureChallenge.getEnclosureStr(pl)
+    if EnclosureChallenge.PreviousEnclosure == nil then
+        EnclosureChallenge.PreviousEnclosure = ""
+    end
+
+    if not encStr then return end
+
+    if EnclosureChallenge.PreviousEnclosure ~= encStr then
+        triggerEvent("OnEnclosureChange", encStr)
+        EnclosureChallenge.PreviousEnclosure = encStr
+    end
 end
-Events.OnPlayerMove.Add(EnclosureChallenge.EnclosureChange)
 
-
+Events.OnPlayerUpdate.Add(EnclosureChallenge.EnclosureChange)
 
 
 function EnclosureChallenge.updateMarkers(encStr)
 
 	if getCore():getDebug() then
-        print('OnEnclosureChange ' .. "encStr")
+        print('OnEnclosureChange ' .. tostring(encStr))
 	end
 
     local pl = getPlayer()

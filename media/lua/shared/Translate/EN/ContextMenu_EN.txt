@@ -8,6 +8,8 @@ ContextMenu_EN = {
 	ContextMenu_EnclosureChallenge_GiveUp = "Forfeit Challenge",
 
 	ContextMenu_EnclosureChallenge_Unlock = "Unlock Enclosure",
+	ContextMenu_EnclosureChallenge_MustUnlock = "Must Unlock Enclosure To Challenge",
+
 
 	ContextMenu_EnclosureChallenge_Quit = "Quit Challenge",
 	ContextMenu_EnclosureChallenge_Quit_tip = "Quit current challenge early",
@@ -27,6 +29,7 @@ ContextMenu_EN = {
 	ContextMenu_EnclosureChallenge_Next = "Proceed to next level",
 
 	ContextMenu_EnclosureChallenge_ClickedOutside = "Must be inside the enclosure you wish to challenge",
+	ContextMenu_EnclosureChallenge_ClickedOutsideUnlock = "Must be inside the enclosure you wish to unlock",
 
 
 

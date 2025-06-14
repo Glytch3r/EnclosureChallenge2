@@ -1,7 +1,7 @@
 
 EnclosureChallenge = EnclosureChallenge or {}
 
-
+--[[
 function EnclosureChallenge.isExtended()
     local data = EnclosureChallenge.getData()
     if data and data.Challenges then
@@ -9,10 +9,10 @@ function EnclosureChallenge.isExtended()
     end
     return false
 end
+ ]]
 
 
-
-
+--[[
 function EnclosureChallenge.ExtendedChallenge()
     if isStart == nil then isStart = false end
     if isQuit == nil then isQuit = false end
@@ -36,6 +36,7 @@ function EnclosureChallenge.ExtendedChallenge()
         EnclosureChallenge.sfx(isStart)
     end
 end
+ ]]
 
 function EnclosureChallenge.ContinueDialog(pl, text, title, onClickCallback)
     pl = pl or getPlayer()

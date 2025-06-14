@@ -42,7 +42,7 @@ function EnclosureChallenge.ChallengeTimer()
     local isRemote = EnclosureChallenge.isRemoteMode()
     local encStr = isRemote and ec.RemoteChallenge or ec.AdditiveChallenge
 
-    if ec.ChallengeTime == 0 and encStr ~= "" then
+    if ec.ChallengeTime == 0 and encStr and encStr ~= "" then
         if EnclosureChallenge.isShouldAnnounce() then
             local enc = EnclosureChallenge.getEnclosureXY(pl:getX(), pl:getY())
             local posStr = ""
@@ -132,6 +132,7 @@ end
     Events.OnTick.Add(EnclosureChallenge.clockHandler)
 end ]]
 -----------------------            ---------------------------
+--[[
 function EnclosureChallenge.countdown()
     local pl = getPlayer()
     if not EnclosureChallenge.isChallenger() then return end
@@ -157,7 +158,7 @@ function EnclosureChallenge.countdown()
         ISChat.instance.servermsg = tostring(EnclosureChallenge.time)
     end
 end
-
+ ]]
 --[[
 
 function EnclosureChallenge.countdown()

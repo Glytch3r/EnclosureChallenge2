@@ -109,23 +109,36 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
 	local isUnlocked = status == "Unlocked"
 	local clickedOutside = not EnclosureChallenge.isSameEnclosure(sq)
 
-
 	if isConquered then
-		unlockTitle = "CLEARED: "..tostring(pts)
+		unlockTitle = "CLEARED: " .. tostring(pts)
 	elseif isUnlocked then
-		unlockTitle = "UNLOCKED: "..tostring(pts)
+		unlockTitle = "UNLOCKED: " .. tostring(pts)
 	end
+
 	local unlockOpt = rootMenu:addOption(unlockTitle, worldobjects, function()
-		EnclosureChallenge.ConfirmDialog(pl, "Unlock Enclosure? [ "..tostring(encStr).." ]", "Enclosure Challenge", false, false, sq)
+		EnclosureChallenge.ConfirmDialog(pl, "Unlock Enclosure? [ " .. tostring(encStr) .. " ]", "Enclosure Challenge", false, false, sq)
 		context:hideAndChildren()
 	end)
-	unlockOpt.notAvailable = not isCanUnlock or isChallenger or isUnlocked
+
+	local UnlockNotAvailable = false
+
+	if isChallenger or isUnlocked or not isCanUnlock then
+		UnlockNotAvailable = true
+	end
+
+	if clickedOutside then
+		UnlockNotAvailable = true
+		local unlockOptTip = ISWorldObjectContextMenu.addToolTip()
+		unlockOptTip.description = getText("ContextMenu_EnclosureChallenge_ClickedOutsideUnlock")
+		unlockOpt.toolTip = unlockOptTip
+	end
+
+	unlockOpt.notAvailable = UnlockNotAvailable
 
 
 	-----------------------      start*      ---------------------------
 
 	local startHereOpt = rootMenu:addOption(getText("ContextMenu_EnclosureChallenge_StartHere"), worldobjects, function()
-		context:hideAndChildren()
 
 	--legacy sync function i used for mods v1
 	--[[if isClient() then
@@ -134,11 +147,14 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
 
 
 		EnclosureChallenge.ConfirmDialog(pl, "Accept Challenge?", "Enclosure Challenge", false, false)
+		context:hideAndChildren()
 
 	end)
 
 	local startHereTip = ISWorldObjectContextMenu.addToolTip()
-	if isChallenger then
+	if not isUnlocked then
+		startHereTip.description = getText("ContextMenu_EnclosureChallenge_MustUnlock")  .. tostring(remaining)
+	elseif isChallenger then
 		startHereTip.description = getText("ContextMenu_EnclosureChallenge_Time")  .. tostring(remaining)
 	elseif clickedOutside then
 		startHereTip.description =  getText("ContextMenu_EnclosureChallenge_ClickedOutside")
@@ -233,9 +249,6 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
 
 		end)
 
-		dbgSub:addOption("storeRebound", worldobjects, function()
-			EnclosureChallenge.storeRebound(sq)
-		end)
 
 
 		dbgSub:addOption("rebound", worldobjects, function()

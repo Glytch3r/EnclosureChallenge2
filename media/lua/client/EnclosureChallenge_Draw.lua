@@ -295,11 +295,10 @@ function EnclosureChallenge.GUI()
         "",
     }
 
-
     if ec then
-        table.insert(encInfo, tostring(#ec.Conquered) .. " : Conquered")
+        table.insert(encInfo, tostring(EnclosureChallenge.getChallengeCount()) .. " : Unlocked")
+        table.insert(encInfo, tostring(EnclosureChallenge.getConqueredCount()) .. " : Conquered")
         table.insert(encInfo, tostring(ec.RemoteWins) .. " : RemoteWins")
-        table.insert(encInfo, tostring(#ec.Challenges) .. " : Unlocked")
         table.insert(encInfo, tostring(ec.UnlockPoints) .. " : Points")
         table.insert(encInfo, "\nRewardChoice:\n" .. tostring(EnclosureChallenge.getRewardTitle(ec.RewardChoice)))
     else
