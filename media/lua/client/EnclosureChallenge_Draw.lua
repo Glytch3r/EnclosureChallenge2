@@ -170,8 +170,11 @@ function EnclosureChallenge.DrawMouseTip(x, y, z, str, r, g, b)
     end
 end
 
+
 function EnclosureChallenge.MouseTipHandler(pl)
     if not isIngameState() then return end
+
+
     if not EnclosureChallenge.MouseTip then return end
     local sq = EnclosureChallenge.getPointer() or pl:getCurrentSquare()
     if not sq then return end
@@ -203,9 +206,14 @@ end
 Events.OnPlayerUpdate.Add(EnclosureChallenge.MouseTipHandler)
 
 
+EnclosureChallenge.guiTicks = 0
+
 
 function EnclosureChallenge.GUI()
     if not isIngameState() then return end
+
+    EnclosureChallenge.guiTicks = EnclosureChallenge.guiTicks + 1
+    if EnclosureChallenge.guiTicks % 30 ~= 0 then return end
 
     local pl = getPlayer()
     if not pl then return end
