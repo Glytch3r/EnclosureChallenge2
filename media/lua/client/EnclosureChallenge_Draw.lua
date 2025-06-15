@@ -301,15 +301,14 @@ function EnclosureChallenge.GUI()
     local headerStr = ""
     if isChallenger then
         local modeStr = isRemoteMode and "Remote Mode" or "Additive Mode"
-        local timeStr = EnclosureChallenge.getChallengeTimeStr()
+        local timeStr = EnclosureChallenge.getTimeStr()
         headerStr = string.format("%s\n%s", modeStr, timeStr)
         status = ""
     end
-
+    local caption = EnclosureChallenge.getEnclosureStatus2(pl)
     local encInfo = {
         string.format("X: %d   Y: %d", round(x), round(y)),
-        "Enclosure: "..tostring(encStr),
-        tostring(status),
+        "Enclosure:n"..tostring(encStr).."\n"..tostring(caption),
         "",
     }
 

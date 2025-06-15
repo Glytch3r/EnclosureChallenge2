@@ -39,13 +39,13 @@ function EnclosureChallenge.initChallengeData(pl)
     ec.OriginCoords      = ec.OriginCoords      or {}
     ec.Rebound           = ec.Rebound           or {}
     ec.AdditiveWins      = ec.AdditiveWins      or 0
-    ec.ChallengeTime     = ec.ChallengeTime     or 0
+    ec.RemoteTime        = ec.RemoteTime        or 0
+    ec.AdditiveTime      = ec.AdditiveTime      or 0
     ec.RemoteChallenge   = ec.RemoteChallenge   or ""
     ec.AdditiveChallenge = ec.AdditiveChallenge or ""
 
     return ec
 end
-
 
 Events.OnCreatePlayer.Add(function()
     if not isIngameState() then return end
@@ -54,49 +54,87 @@ Events.OnCreatePlayer.Add(function()
     if not pl then return end
 
     EnclosureChallenge.initChallengeData(pl)
-    --EnclosureChallenge.setMarkers(pl)
-    --EnclosureChallenge.setReturnPointMarker()
+
     local encStr = EnclosureChallenge.getEnclosureStr(pl)
     EnclosureChallenge.PreviousEnclosure = ""
-
     EnclosureChallenge.updateMarkers(encStr)
-    local isRemote = EnclosureChallenge.isRemoteMode()
 
-    local  ec = EnclosureChallenge.getData()
-    if isRemote and ec and EnclosureChallenge.isChallenger() and ec.ChallengeTime <= 0 then
-        --EnclosureChallenge.addChallengeSymbols(pl)
-        EnclosureChallenge.doWin()
+    local ec = EnclosureChallenge.getData()
+    if ec and EnclosureChallenge.isChallenger(pl) then
+        if EnclosureChallenge.isRemoteMode() and ec.RemoteTime <= 0 then
+            EnclosureChallenge.doWin()
+        else
+            Events.EveryHours.Add(EnclosureChallenge.RemoteTimer)
+        end
+
+        if EnclosureChallenge.isAdditiveMode() then
+            Events.EveryHours.Add(EnclosureChallenge.AdditiveTimer)
+        end
     end
 end)
-
-Events.OnPlayerDeath.Add(function()
-	local pl = getPlayer()
-	local user = pl:getUsername()
-	if not EnclosureChallenge.isChallenger()  then return end
-	if EnclosureChallenge.isShouldAnnounce() then
+LuaEventManager.AddEvent("OnEnclosureChange")
 
 
+function EnclosureChallenge.updateMarkers(encStr)
 
-	    local enc = EnclosureChallenge.getEnclosureXY(  pl:getX(),   pl:getY())
-        if not enc then return end
-
-        local encStr = EnclosureChallenge.getEnclosureStr(pl)
-		local posStr = (enc.x and enc.y) and ": [" .. tostring(encStr) .. "]" or ""
-		if not SandboxVars.EnclosureChallenge.CoordNotif then
-			posStr = ""
-		end
-
-		local msg = tostring(user) .. " " .. getText("ContextMenu_EnclosureChallenge_Fail").. "  ".. tostring(posStr)
-		if isClient() then
-			processGeneralMessage(msg)
-		else
-			pl:setHaloNote(msg, 150, 250, 150, 900)
-		end
+	if getCore():getDebug() then
+        print('OnEnclosureChange ' .. tostring(encStr))
 	end
-	--EnclosureChallenge.setChallenge(false, false)
-end)
+
+   local pl = getPlayer()
+   if not pl then return end
 
 
+   EnclosureChallenge.setMarkers(pl, SandboxVars.EnclosureChallenge.KeepMarkers)
+   EnclosureChallenge.addChallengeSymbols(pl)
+
+   local x = pl:getX()
+   local y = pl:getY()
+   local  midX, midY = EnclosureChallenge.getEnclosureMidXY(x, y, pl)
+   EnclosureChallenge.drawEnclosureGrid(midX, midY)
+   EnclosureChallenge.drawEnclosureGridOverlay(minimap, midX, midY)
+
+end
+Events.OnEnclosureChange.Add(EnclosureChallenge.updateMarkers)
+
+
+function EnclosureChallenge.OutOfBoundHandler()
+	local pl = getPlayer()
+	if not EnclosureChallenge.isChallenger(pl) then return end
+
+	if EnclosureChallenge.isOutOfBounds(pl) and pl:isAlive() then
+		timer:Simple(2, function()
+			EnclosureChallenge.rebound()
+		end)
+		pl:setHaloNote("OUT OF BOUNDS!", 255, 50, 50, 150)
+	end
+end
+
+Events.OnEnclosureChange.Add(EnclosureChallenge.OutOfBoundHandler)
+
+
+
+EnclosureChallenge.encTick = 0
+function EnclosureChallenge.EnclosureChange(pl)
+    if not isIngameState() or not pl then return end
+
+    EnclosureChallenge.encTick = EnclosureChallenge.encTick + 1
+    if EnclosureChallenge.encTick % 10 ~= 0 then return end
+
+    local encStr = EnclosureChallenge.getEnclosureStr(pl)
+    if EnclosureChallenge.PreviousEnclosure == nil then
+        EnclosureChallenge.PreviousEnclosure = ""
+    end
+
+    if not encStr then return end
+
+    if EnclosureChallenge.PreviousEnclosure ~= encStr then
+        triggerEvent("OnEnclosureChange", encStr)
+        EnclosureChallenge.PreviousEnclosure = encStr
+    end
+end
+
+Events.OnPlayerUpdate.Add(EnclosureChallenge.EnclosureChange)
 
 --[[ Events.OnCreatePlayer.Add(function()
     if isIngameState() then

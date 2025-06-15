@@ -28,114 +28,87 @@ require "lua_timers"
 
 EnclosureChallenge = EnclosureChallenge or {}
 
+function EnclosureChallenge.getTimeStr()
+    local ec = EnclosureChallenge.getData()
+    if not ec or not EnclosureChallenge.isChallenger() then return "" end
+
+    if EnclosureChallenge.isRemoteMode() then
+        local time = ec.RemoteTime
+        if time and time > 0 then
+            return (time == 1) and "Final Hour" or ("Hours Remaining: " .. tostring(time))
+        end
+    elseif EnclosureChallenge.isAdditiveMode() then
+        local time = ec.AdditiveTime or 0
+        return "Survived for " .. tostring(time) .. " Hour" .. ((time == 1) and "" or "s")
+    end
+
+    return ""
+end
+
 function EnclosureChallenge.RemoteTimer()
     local pl = getPlayer(); if not pl then return end
-    local user = pl:getUsername()
     local ec = EnclosureChallenge.getData()
-    if not ec then return false end
-    if not EnclosureChallenge.isChallenger() then return false end
+    if not ec or not EnclosureChallenge.isChallenger(pl) then return end
 
-    if ec.ChallengeTime and ec.ChallengeTime > 0 then
-        ec.ChallengeTime = ec.ChallengeTime - 1
+    if (ec.RemoteTime or 0) > 0 then
+        ec.RemoteTime = ec.RemoteTime - 1
     end
 
-    local isRemote = EnclosureChallenge.isRemoteMode()
-    local encStr = ec.RemoteChallenge or ec.AdditiveChallenge
-
-    if ec.ChallengeTime == 0 and encStr and encStr ~= "" then
-
-
-
+    if ec.RemoteTime <= 0 and ec.RemoteChallenge and ec.RemoteChallenge ~= "" then
         if pl:isAlive() then
             if EnclosureChallenge.isShouldAnnounce() then
                 local enc = EnclosureChallenge.getEnclosureXY(pl:getX(), pl:getY())
-                local posStr = ""
-                if enc and SandboxVars.EnclosureChallenge.CoordNotif then
-                    posStr = string.format(": [%d, %d]", enc.x, enc.y)
-                end
-                local msg = string.format("%s %s  %s", user, getText("ContextMenu_EnclosureChallenge_Conquer"), posStr)
+                local posStr = (enc and SandboxVars.EnclosureChallenge.CoordNotif)
+                    and string.format(": [%d, %d]", enc.x, enc.y) or ""
+                local msg = string.format("%s %s  %s", pl:getUsername(), getText("ContextMenu_EnclosureChallenge_Conquer"), posStr)
                 if isClient() then
                     processGeneralMessage(msg)
                 else
                     pl:setHaloNote(msg, 150, 250, 150, 900)
                 end
             end
-
-
             if getCore():getDebug() then print("WIN") end
-
             EnclosureChallenge.doWin()
-
-
             ec.RemoteChallenge = ""
-
-
-
         end
-
         Events.EveryHours.Remove(EnclosureChallenge.RemoteTimer)
-
     end
 end
 
-
---[[
-           if ec.AdditiveChallenge then
-                local hrs = SandboxVars.EnclosureChallenge.ChallengeHours or 168
-                ec.ChallengeTime = hrs
-                pl:Say(tostring("Survive for "..tostring(hrs).." Hours"))
-
-        end
- ]]
 function EnclosureChallenge.AdditiveTimer()
     local pl = getPlayer(); if not pl then return end
-    local user = pl:getUsername()
     local ec = EnclosureChallenge.getData()
-    if not ec then return  end
-    if not EnclosureChallenge.isChallenger() then return  end
-    local milestone = SandboxVars.EnclosureChallenge.ChallengeHours or 168
-    local isRemote = EnclosureChallenge.isRemoteMode()
+    if not ec or not EnclosureChallenge.isChallenger(pl) then return end
+
     local encStr = ec.AdditiveChallenge
-    if not encStr or (encStr and encStr == "") then
-        ec.ChallengeTime = 0
+    if not encStr or encStr == "" then
+        ec.AdditiveTime = 0
         Events.EveryHours.Remove(EnclosureChallenge.AdditiveTimer)
-    end
-    if ec.ChallengeTime and ec.ChallengeTime > 0 then
-        ec.ChallengeTime = ec.ChallengeTime + 1
+        return
     end
 
-    if ec.ChallengeTime % milestone == 0 then
-        ec.AdditiveWins = ec.AdditiveWins + 1
+    ec.AdditiveTime = (ec.AdditiveTime or 0) + 1
+    local milestone = SandboxVars.EnclosureChallenge.ChallengeHours or 168
+    if ec.AdditiveTime % milestone == 0 then
+        ec.AdditiveWins = (ec.AdditiveWins or 0) + 1
+
         if pl:isAlive() then
             if EnclosureChallenge.isShouldAnnounce() then
                 local enc = EnclosureChallenge.getEnclosureXY(pl:getX(), pl:getY())
-                local posStr = ""
-                if enc and SandboxVars.EnclosureChallenge.CoordNotif then
-                    posStr = string.format(": [%d, %d]", enc.x, enc.y)
-                end
-                local msg = string.format("%s %s  %s", user, getText("ContextMenu_EnclosureChallenge_Conquer"), posStr)
+                local posStr = (enc and SandboxVars.EnclosureChallenge.CoordNotif)
+                    and string.format(": [%d, %d]", enc.x, enc.y) or ""
+                local msg = string.format("%s %s  %s", pl:getUsername(), getText("ContextMenu_EnclosureChallenge_Conquer"), posStr)
                 if isClient() then
                     processGeneralMessage(msg)
                 else
                     pl:setHaloNote(msg, 150, 250, 150, 900)
                 end
             end
-
-
             if getCore():getDebug() then print("WIN") end
-
             EnclosureChallenge.doWin()
-
         end
     end
-
-
 end
-
-
-
-
-
 
 
 

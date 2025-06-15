@@ -41,10 +41,10 @@ option EnclosureChallenge.ReturnStaggered
 	type = boolean, default = true,
 	page = EnclosureChallenge, translation = EnclosureChallenge_ReturnStaggered,
 }
-option EnclosureChallenge.AllowQuitChallenge
+option EnclosureChallenge.AllowQuit
 {
 	type = boolean, default = true,
-	page = EnclosureChallenge, translation = EnclosureChallenge_AllowQuitChallenge,
+	page = EnclosureChallenge, translation = AllowQuit,
 }
 
 option EnclosureChallenge.StatusChat

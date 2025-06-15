@@ -36,7 +36,7 @@ Commands.EnclosureChallenge = {}
 
 Commands.EnclosureChallenge.prompt = function(player, args)
     local playerId = player:getOnlineID();
-    sendServerCommand('EnclosureChallenge', 'prompt', {id = playerId, EnclosureX = args.EnclosureX,  EnclosureY = args.EnclosureY, isRemote = args.isRemote })
+   -- sendServerCommand('EnclosureChallenge', 'prompt', {id = playerId, EnclosureX = args.EnclosureX,  EnclosureY = args.EnclosureY, isRemote = args.isRemote })
 end
 
 Commands.EnclosureChallenge.stagger = function(player, args)

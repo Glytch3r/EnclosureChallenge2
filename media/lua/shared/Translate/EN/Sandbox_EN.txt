@@ -10,7 +10,8 @@ Sandbox_EN = {
 	Sandbox_EnclosureChallenge_KeepMarkers = "Keep Markers",
 	Sandbox_EnclosureChallenge_KeepMarkers_tooltip = "Markers remains visible even after crossing enclosure bounds. May Cause buffer overun",
 
-	Sandbox_EnclosureChallenge_AllowQuitChallenge = "Allow Quit Challenge",
+	Sandbox_EnclosureChallenge_AllowQuit = "Allow Quit Challenges",
+
 	Sandbox_EnclosureChallenge_StatusChat = "Announce Challenge Status",
 	Sandbox_EnclosureChallenge_StatusChat_tooltip = "Multiplayer Only",
 

@@ -1,6 +1,48 @@
 
 EnclosureChallenge = EnclosureChallenge or {}
+--[[
+function EnclosureChallenge.unlockContext(playerIndex, context, worldObjects, test)
+    local pl = getSpecificPlayer(playerIndex)
+    if not pl or not pl:isAlive() then return end
 
+    if not clickedSquare or not EnclosureChallenge.isOutOfBounds(clickedSquare) then return end
+
+    context:addOption("Unlock Enclosure", worldObjects, function()
+        local modal = ISModalDialog:new(0, 0, 250, 120, "Unlock this enclosure?", true, nil, EnclosureChallenge.confirmUnlock)
+        modal:initialise()
+        modal:addToUIManager()
+        modal.moveWithMouse = true
+        modal.pl = pl
+        modal.sq = clickedSquare
+    end)
+end
+
+function EnclosureChallenge.confirmUnlock(button)
+    local dialog = button.parent
+    if button.internal == "YES" then
+        local pl = dialog.pl
+        local sq = dialog.sq
+
+        if pl and sq then
+            local encStr = EnclosureChallenge.getEnclosureStr(sq)
+            if encStr then
+                local ec = pl:getModData().EnclosureChallenge or {}
+                ec.Challenges = ec.Challenges or {}
+                ec.Challenges[encStr] = true
+                pl:setHaloNote("Enclosure Unlocked!", 0, 255, 0, 255)
+            end
+        end
+    end
+
+    dialog:removeFromUIManager()
+end
+Events.OnFillWorldObjectContextMenu.Remove(EnclosureChallenge.unlockContext)
+
+Events.OnFillWorldObjectContextMenu.Add(EnclosureChallenge.unlockContext)
+ ]]
+
+
+-----------------------            ---------------------------
 function EnclosureChallenge.ContinueDialog(pl, text, title, onClickCallback)
     pl = pl or getPlayer()
     if not pl or not text then return end

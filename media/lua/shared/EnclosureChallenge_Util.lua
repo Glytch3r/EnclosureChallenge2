@@ -97,14 +97,32 @@ function EnclosureChallenge.getEnclosureStatus(targ)
 
     local str = "Neutral"
 
-    if EnclosureChallenge.isConquered(targ) then
-        str = "Conquered"
-    elseif EnclosureChallenge.isUnlocked(targ) then
+    if EnclosureChallenge.isUnlocked(targ) then
         str = "Unlocked"
+    elseif EnclosureChallenge.isConquered(targ) then
+        str = "Conquered"
     end
 
     return str
 end
+function EnclosureChallenge.getEnclosureStatus2(targ)
+    if not isIngameState() then return "Neutral" end
+    if not targ then return "Neutral" end
+
+    local isUnlocked = EnclosureChallenge.isUnlocked(targ)
+    local isConquered = EnclosureChallenge.isConquered(targ)
+
+    if isUnlocked and isConquered then
+        return "Unlocked | Conquered "
+    elseif isConquered then
+        return "Conquered"
+    elseif isUnlocked then
+        return "Unlocked"
+    end
+
+    return "Neutral"
+end
+
 
 function EnclosureChallenge.getChallengeStatus(targ)
     if not isIngameState() then return "Neutral" end

@@ -39,7 +39,7 @@ function EnclosureChallenge.goBack()
         EnclosureChallenge.tp(pl, x, y, z)
     end
 
-
+    EnclosureChallenge.clearCoord()
 end
 
 function EnclosureChallenge.clearCoord()

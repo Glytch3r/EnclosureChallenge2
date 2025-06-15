@@ -39,8 +39,8 @@ end
 function EnclosureChallenge.dbgWin()
 
     local ec = EnclosureChallenge.getData()
-    ec.ChallengeTime = 0
-    print(ec.ChallengeTime)
+    ec.RemoteTime = 0
+    print(ec.RemoteTime)
 end
 function EnclosureChallenge.clipWhereami()
     local str = EnclosureChallenge.whereami()

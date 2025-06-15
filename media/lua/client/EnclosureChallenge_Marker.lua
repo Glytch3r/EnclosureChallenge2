@@ -94,15 +94,11 @@ function EnclosureChallenge.setMarkers(targ, keepOld)
     if not enc then return end
 
     EnclosureChallenge.edgeMarkers = EnclosureChallenge.edgeMarkers or {}
-
     if not keepOld then
-        local toRemove = EnclosureChallenge.getEdgeMarkersForEnclosure(enc, targ)
         for i = #EnclosureChallenge.edgeMarkers, 1, -1 do
             local marker = EnclosureChallenge.edgeMarkers[i]
-            if marker and EnclosureChallenge.tableContains(toRemove, marker) then
-                marker:remove()
-                table.remove(EnclosureChallenge.edgeMarkers, i)
-            end
+            if marker then marker:remove() end
+            table.remove(EnclosureChallenge.edgeMarkers, i)
         end
     end
 
@@ -137,6 +133,9 @@ function EnclosureChallenge.setMarkers(targ, keepOld)
 end
 
 -----------------------            ---------------------------
+
+
+
 -----------------------            ---------------------------
 function EnclosureChallenge.getEnclosureTexture(targ)
     return EnclosureChallenge.markerTab[EnclosureChallenge.getEnclosureStatus(targ)]

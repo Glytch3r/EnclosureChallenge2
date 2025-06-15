@@ -30,186 +30,169 @@ EnclosureChallenge = EnclosureChallenge or {}
 -----------------------  challenge out of bound  tp* bounds*      ---------------------------
 
 function EnclosureChallenge.isOutOfBounds(targ)
-    if not isIngameState() then return false end
-    if not targ then return false end
+	if not isIngameState() or not targ then return false end
 
-    local pl = getPlayer()
-    if not EnclosureChallenge.isChallenger(pl) then return false end
+	local pl = getPlayer()
+	if not pl:isAlive() or not EnclosureChallenge.isChallenger(pl) then return false end
 
-    local encStr = EnclosureChallenge.getEnclosureStr(targ)
-    if not encStr then return false end
+	local encStr = EnclosureChallenge.getEnclosureStr(targ)
+	if not encStr then return false end
 
-    local ec = EnclosureChallenge.getData()
-    if not ec then return false end
+	local ec = EnclosureChallenge.getData()
+	if not ec then return false end
 
-    if EnclosureChallenge.isRemoteMode() then
-        return tostring(encStr) ~= tostring(ec.RemoteChallenge)
-    else
-        ec.Challenges = ec.Challenges or {}
-        return not ec.Challenges[encStr]
-    end
+	if EnclosureChallenge.isRemoteMode() then
+		return tostring(encStr) ~= tostring(ec.RemoteChallenge)
+
+	elseif EnclosureChallenge.isAdditiveMode() then
+		local csq = pl:getCurrentSquare()
+		if csq then
+			if EnclosureChallenge.isUnlocked(csq) or EnclosureChallenge.getEnclosureStatus(csq) == "Unlocked" then
+				return false
+			end
+		end
+		ec.Challenges = ec.Challenges or {}
+		return not ec.Challenges[encStr]
+	end
+
+	return false
 end
 
 
 
 function EnclosureChallenge.isSameEnclosure(targ)
+	local pl = getPlayer()
+	targ = targ or EnclosureChallenge.getPointer()
+	if not targ then return false end
+
+	local plEncStr = EnclosureChallenge.getEnclosureStr(pl)
+	local targEncStr = EnclosureChallenge.getEnclosureStr(targ)
+	if not plEncStr or not targEncStr then return false end
+
+	return plEncStr == targEncStr
+end
+
+-----------------------    tp*        ---------------------------
+function EnclosureChallenge.rebound()
     local pl = getPlayer()
-    targ = targ or EnclosureChallenge.getPointer()
+	local ec = EnclosureChallenge.getData()
 
-    if not targ then return false end
-
-    local plEncStr = EnclosureChallenge.getEnclosureStr(pl)
-    if not plEncStr then return false end
-
-    local targEncStr = EnclosureChallenge.getEnclosureStr(targ)
-    if not targEncStr then return false end
-
-    return plEncStr == targEncStr
+	local p = ec.Rebound
+	if p and p.x and p.y and p.z then
+		EnclosureChallenge.tp(pl, p.x, p.y, p.z)
+	end
 end
+-----------------------      rebound*      ---------------------------
 
------------------------            ---------------------------
---[[
-function EnclosureChallenge.OutOfBoundHandler(pl)
-    pl = pl or getPlayer()
-    if not EnclosureChallenge.isChallenger() then return end
-    local id = pl:getOnlineID() or 0
-    playerTicks[id] = (playerTicks[id] or 0) + 1
-    local tick = playerTicks[id] % 60
-
-    if tick % 30 == 0 then
-        if EnclosureChallenge.isOutOfBounds(pl) and pl:isAlive() then
-            EnclosureChallenge.rebound(pl)
-            pl:setHaloNote("OUT OF BOUNDS", 255, 50, 50, 150)
-        end
-    end
-
-    if playerTicks[id] >= 60 then
-        playerTicks[id] = 0
-    end
-end
-
-Events.OnPlayerUpdate.Add(EnclosureChallenge.OutOfBoundHandler)
- ]]
------------------------            ---------------------------
 
 function EnclosureChallenge.isRebound(sq)
-    if not sq then return false end
-
-    local rebound = EnclosureChallenge.getRebound()
-    if not rebound or not rebound.x or not rebound.y then return false end
-
-    local x = math.floor(sq:getX())
-    local y = math.floor(sq:getY())
-
-    return x == math.floor(rebound.x) and y == math.floor(rebound.y)
+	if not sq then return false end
+	local x, y = math.floor(sq:getX()), math.floor(sq:getY())
+	local rx, ry = EnclosureChallenge.getRebound()
+	return rx and ry and x == math.floor(rx) and y == math.floor(ry)
 end
 
 function EnclosureChallenge.isReboundSq(sq)
-    if not sq then return false end
-    return EnclosureChallenge.getReboundSq() == sq
+	if not sq then return false end
+	return EnclosureChallenge.getReboundSq() == sq
 end
 
 function EnclosureChallenge.getRebound()
-    local ec = EnclosureChallenge.getData()
-    if not ec or not ec.Rebound then return nil end
-
-    return {
-        x = ec.Rebound.x,
-        y = ec.Rebound.y,
-        z = ec.Rebound.z,
-    }
+	local ec = EnclosureChallenge.getData()
+	if not ec or not ec.Rebound then return nil end
+	return ec.Rebound.x, ec.Rebound.y, ec.Rebound.z or 0
 end
 
 function EnclosureChallenge.getReboundSq()
-    local ec = EnclosureChallenge.getData()
-    if not ec or not ec.Rebound then return nil end
-
-    local x = ec.Rebound.x
-    local y = ec.Rebound.y
-    local z = ec.Rebound.z or 0
-
-    if not x or not y then return nil end
-    local returnSq = getCell():getOrCreateGridSquare(x, y, z)
-    return returnSq
+	local x, y, z = EnclosureChallenge.getRebound()
+	if not x or not y then return nil end
+	return getCell():getOrCreateGridSquare(x, y, z or 0)
 end
-
 -----------------------            ---------------------------
 
 
 -----------------------            ---------------------------
+EnclosureChallenge.Rebound = setmetatable({}, {
+    __index = {
+        tick = 0,
+        pl = nil,
+        staggered = false,
+        inTransit = false,
 
-EnclosureChallenge.reboundState = {
-    staggered = false,
-    bTick = 0,
-    reboundPl = nil,
-}
+        reset = function(self)
+            self.tick = 0
+            self.pl = nil
+            self.staggered = false
+            self.inTransit = false
+        end,
 
-function EnclosureChallenge.reboundHandler()
+        start = function(self, player)
+            if self.inTransit then return end
+            self.inTransit = true
 
-    local state = EnclosureChallenge.reboundState
-    state.bTick = state.bTick + 1
-    local pl = getPlayer()
-    if not pl or not state then
-        Events.OnTick.Remove(EnclosureChallenge.reboundHandler)
-    end
-    local csq = pl:getCurrentSquare()
-    if state.bTick % 4 == 0 or ( csq and EnclosureChallenge.isReboundSq(csq) ) then
-        if not state.staggered and state.reboundPl then
-            state.staggered = true
-            if isClient() then
-                sendClientCommand("EnclosureChallenge", "stagger", {})
-            else
-                EnclosureChallenge.stag(pl)
+            player = player or getPlayer()
+            local ec = player:getModData().EnclosureChallenge
+            if not ec or not ec.Rebound then
+                self:reset()
+                return
             end
-            Events.OnTick.Remove(EnclosureChallenge.reboundHandler)
-            EnclosureChallenge.isInTransit = false
-            state.reboundPl = nil
+
+            local x, y, z = ec.Rebound.x, ec.Rebound.y, ec.Rebound.z or 0
+            if not (x and y) then
+                self:reset()
+                return
+            end
+
+            if isClient() then
+                sendClientCommand("EnclosureChallenge", "send", {})
+            else
+                EnclosureChallenge.tp(player, x, y, z)
+            end
+
+            self.pl = player
+            self.tick = 0
+            self.staggered = false
+
+            if SandboxVars.EnclosureChallenge.ReturnStaggered then
+                Events.OnTick.Add(self.handler)
+            else
+                self:reset()
+            end
+        end,
+
+        handler = function()
+            local rebound = EnclosureChallenge.Rebound
+            local pl = getPlayer()
+            if not pl then
+                Events.OnTick.Remove(rebound.handler)
+                return
+            end
+
+            rebound.tick = rebound.tick + 1
+            local csq = pl:getCurrentSquare()
+
+            if rebound.tick % 4 == 0 or (csq and EnclosureChallenge.isReboundSq(csq)) then
+                if not rebound.staggered and rebound.pl then
+                    rebound.staggered = true
+
+                    if isClient() then
+                        sendClientCommand("EnclosureChallenge", "stagger", {})
+                    else
+                        EnclosureChallenge.stag(pl)
+                    end
+
+                    Events.OnTick.Remove(rebound.handler)
+                    rebound:reset()
+                end
+            end
         end
-    end
-end
-
-
-function EnclosureChallenge.rebound(pl)
-    if EnclosureChallenge.isInTransit then return end
-    EnclosureChallenge.isInTransit = true
-
-    pl = pl or getPlayer()
-    local ec = pl:getModData().EnclosureChallenge
-    if not ec or not ec.Rebound then
-        EnclosureChallenge.isInTransit = false
-        return
-    end
-
-    local x, y = ec.Rebound.x, ec.Rebound.y
-    local z = ec.Rebound.z or 0
-    if not (x and y) then
-        EnclosureChallenge.isInTransit = false
-        return
-    end
-
-    if isClient() then
-        sendClientCommand("EnclosureChallenge", "send", {})
-    else
-        EnclosureChallenge.tp(pl, x, y, z)
-    end
-
-    local state = EnclosureChallenge.reboundState
-    state.staggered = false
-    state.bTick = 0
-    state.reboundPl = pl
-
-    if SandboxVars.EnclosureChallenge.ReturnStaggered then
-        Events.OnTick.Add(EnclosureChallenge.reboundHandler)
-    else
-        EnclosureChallenge.isInTransit = false
-        state.reboundPl = nil
-    end
-end
-
+    }
+})
 
 -----------------------            ---------------------------
 --[[
-function EnclosureChallenge.rebound(pl)
+
+function EnclosureChallenge.rebound()
     if EnclosureChallenge.isInTransit then return end
     EnclosureChallenge.isInTransit = true
 
@@ -244,20 +227,13 @@ function EnclosureChallenge.rebound(pl)
         state.reboundPl = nil
     end
 end
+
  ]]
 --[[
 if not getVariableBoolean("BumpStaggered") then
     return
 end ]]
------------------------    tp*        ---------------------------
---[[  function EnclosureChallenge.rebound(pl)
-    pl = pl or getPlayer()
-	local ec = pl:getModData().EnclosureChallenge
-	local p = ec.Rebound
-	if p and p.x and p.y and p.z then
-		EnclosureChallenge.tp(pl, p.x, p.y, p.z)
-	end
-end ]]
+
 -----------------------    tp*        ---------------------------
 --[[  function EnclosureChallenge.rebo     und(pl)
     pl = pl or getPlayer()

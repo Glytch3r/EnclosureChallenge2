@@ -29,7 +29,42 @@ require "lua_timers"
 EnclosureChallenge = EnclosureChallenge or {}
 
 -----------------------            ---------------------------
+function EnclosureChallenge.setChallenge(isStart, isRemote)
+	local pl = getPlayer(); if not pl then return end
+	local ec = EnclosureChallenge.getData(); if not ec then return end
 
+	if not isStart then
+		ec.RemoteTime = 0
+		Events.EveryHours.Remove(EnclosureChallenge.RemoteTimer)
+		return
+	end
+
+	local encStr = EnclosureChallenge.getEnclosureStr(pl)
+	if not encStr then return end
+
+	EnclosureChallenge.storeRebound(pl)
+	EnclosureChallenge.addChallengeSymbols(pl)
+
+	if isRemote then
+		ec.RemoteChallenge = encStr
+		ec.RemoteTime = SandboxVars.EnclosureChallenge.ChallengeHours or 168
+		ec.AdditiveChallenge = ""
+		ec.AdditiveTime = 0
+		ec.AdditiveWins = 0
+
+		Events.EveryHours.Remove(EnclosureChallenge.AdditiveTimer)
+		Events.EveryHours.Add(EnclosureChallenge.RemoteTimer)
+	else
+		ec.AdditiveChallenge = encStr
+		ec.AdditiveTime = 0
+		ec.AdditiveWins = ec.AdditiveWins or 0
+		ec.RemoteChallenge = ""
+		ec.RemoteTime = 0
+
+		Events.EveryHours.Remove(EnclosureChallenge.RemoteTimer)
+		Events.EveryHours.Add(EnclosureChallenge.AdditiveTimer)
+	end
+end
 
 -----------------------            ---------------------------
 
@@ -38,12 +73,18 @@ function EnclosureChallenge.isChallenger()
     return (EnclosureChallenge.isRemoteMode() or EnclosureChallenge.isAdditiveMode())
 end
 
-
-function EnclosureChallenge.getChallengeTime()
+function EnclosureChallenge.getAdditiveTime()
     local ec = EnclosureChallenge.getData()
     if not ec then return 0 end
-    ec.ChallengeTime = ec.ChallengeTime or 0
-    return ec.ChallengeTime
+    ec.AdditiveTime = ec.AdditiveTime or 0
+    return ec.AdditiveTime
+end
+
+function EnclosureChallenge.getRemoteTime()
+    local ec = EnclosureChallenge.getData()
+    if not ec then return 0 end
+    ec.RemoteTime = ec.RemoteTime or 0
+    return ec.RemoteTime
 end
 function EnclosureChallenge.isAdditiveMode()
     local ec = EnclosureChallenge.getData()
@@ -83,37 +124,6 @@ end
 
 
 -----------------------            ---------------------------
-
-function EnclosureChallenge.getChallengeTimeStr()
-    local ec = EnclosureChallenge.getData()
-    local str = ""
-    if ec and EnclosureChallenge.isChallenger() then
-        --local pl = getPlayer()
-
-        local time = EnclosureChallenge.getChallengeTime()
-        if EnclosureChallenge.isRemoteMode() then
-
-            if time and time > 0 then
-                if time == 1 then
-                    str = "Final Hour"
-                else
-                    str = "Hours Remaining: " .. tostring(time)
-                end
-            end
-        elseif EnclosureChallenge.isAdditiveMode() then
-            --local milestone = SandboxVars.EnclosureChallenge.ChallengeHours or 168
-            --local surv = EnclosureChallenge.getChallengeTime() % milestone
-            if time == 0 then
-                str = "Survived for 0 Hours"
-            elseif time == 1 then
-                str = "Survived for 1 Hour"
-            else
-                str = "Survived for "..tostring(time).." Hours"
-            end
-        end
-    end
-    return str
-end
 
 
 function EnclosureChallenge.getChallenges()

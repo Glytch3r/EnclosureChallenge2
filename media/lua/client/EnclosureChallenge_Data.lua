@@ -18,6 +18,9 @@
 
 EnclosureChallenge = EnclosureChallenge or {}
 
+
+
+
 function EnclosureChallenge.getData()
     local pl = getPlayer()
     if not pl then return nil end
@@ -39,8 +42,38 @@ function EnclosureChallenge.resetData()
 	EnclosureChallenge.initChallengeData(pl)
 
 end
------------------------            --------fffff-------------------
 
+
+-----------------------            ---------------------------
+function EnclosureChallenge.clearRebound() -- also removes markers
+    local ec = EnclosureChallenge.getData()
+    if not ec or not ec.Rebound then return end
+    ec.Rebound = {}
+    EnclosureChallenge.delReturnPointMarker()
+end
+
+function EnclosureChallenge.storeRebound(targ) -- also sets markers
+   local pl = getPlayer()
+   targ = targ or pl
+   if not targ then return end
+
+   EnclosureChallenge.clearRebound()
+
+   local ec = EnclosureChallenge.getData()
+   if not ec then return end
+   local encStr =  EnclosureChallenge.getEnclosureStr(targ)
+
+   ec.Rebound = {
+      x = round(targ:getX()),
+      y = round(targ:getY()),
+      z = targ:getZ() or 0,
+   }
+   EnclosureChallenge.setReturnPointMarker()
+
+end
+-----------------------            ---------------------------
+
+-----------------------            ---------------------------
 function EnclosureChallenge.getPoints()
     local ec = EnclosureChallenge.getData()
     if not ec then return nil end

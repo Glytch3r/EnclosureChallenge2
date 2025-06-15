@@ -36,20 +36,20 @@ local Commands = {}
 Commands.EnclosureChallenge = {}
 
 function EnclosureChallenge.stag(targ)
-	if SandboxVars.EnclosureChallenge.ReturnStaggered  then
-	if not EnclosureChallenge.waitStag then
-        EnclosureChallenge.waitStag= true
+	if SandboxVars.EnclosureChallenge.ReturnStaggered then
+        if not EnclosureChallenge.waitStag then
+            EnclosureChallenge.waitStag= true
             timer:Simple(0.5, function()
                 targ:setBumpType("pushedFront");
                 targ:setVariable("BumpFall", true);
                 targ:setVariable("BumpFallType", "pushedFront");
             end)
-            timer:Simple(2, function()
+            timer:Simple(1.5, function()
                 EnclosureChallenge.waitStag = true
-
             end)
+
         end
-	end
+    end
 end
 
 
