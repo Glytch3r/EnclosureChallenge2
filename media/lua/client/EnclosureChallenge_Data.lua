@@ -21,12 +21,14 @@ EnclosureChallenge = EnclosureChallenge or {}
 function EnclosureChallenge.getData()
     local pl = getPlayer()
     if not pl then return nil end
-    local data = pl:getModData()
-    if not data.EnclosureChallenge then
-        return EnclosureChallenge.initChallengeData(pl)
+
+    local md = pl:getModData()
+    if not md.EnclosureChallenge then
+        EnclosureChallenge.initChallengeData(pl)
     end
-    return data.EnclosureChallenge
+    return md.EnclosureChallenge
 end
+
 -----------------------            ---------------------------
 function EnclosureChallenge.resetData()
 	local pl = getPlayer()

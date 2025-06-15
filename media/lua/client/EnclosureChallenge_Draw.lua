@@ -109,8 +109,8 @@ function EnclosureChallenge.DrawMouseTip(x, y, z, str, r, g, b)
         tag:setVisibleRadius(360)
 
 
-        local yOffset = SandboxVars.EnclosureChallengeGUI.xMouseOffset or 0
-        local xOffset = SandboxVars.EnclosureChallengeGUI.yMouseOffset or 0
+        local yOffset = SandboxVars.EnclosureChallengeGUI.yMouseOffset or 0
+        local xOffset = SandboxVars.EnclosureChallengeGUI.xMouseOffset or 0
         local function drawFunc()
             if not EnclosureChallenge.MouseTip then
                 Events.OnPostRender.Remove(drawFunc)

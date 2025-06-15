@@ -40,7 +40,7 @@ function EnclosureChallenge.onYes(isQuit, isRemote)
 
 	--isRemote = isRemote or EnclosureChallenge.isRemoteMode()
 	EnclosureChallenge.sfx(not isQuit)
-	EnclosureChallenge.clearCoord()
+
 
 	if isQuit then
 		EnclosureChallenge.doQuit(isRemote)
@@ -64,15 +64,12 @@ function EnclosureChallenge.onYes(isQuit, isRemote)
 end
 
 function EnclosureChallenge.onNo(isQuit, isRemote)
-		print('isQuit '..tostring(isQuit))
-		print('isRemote '..tostring(isRemote))
+	print('isQuit '..tostring(isQuit))
+	print('isRemote '..tostring(isRemote))
 	if isQuit then
 		EnclosureChallenge.sfx(true)
-
 	elseif isRemote then
-
 		EnclosureChallenge.goBack()
-
 	end
 end
 
@@ -100,12 +97,12 @@ function EnclosureChallenge.ConfirmDialog(pl, text, title, isQuit, isRemote, unl
 			if unlockTarg then
 				EnclosureChallenge.doUnlock(unlockTarg)
 			else
-
-				EnclosureChallenge.onYes(isQuit, isRemote)
+				if isRemote then
+					EnclosureChallenge.onYes(isQuit, isRemote)
+				end
 			end
 		elseif button.internal == "NO" then
 			EnclosureChallenge.onNo(isQuit, isRemote)
-
 		end
 
 		dialog:setVisible(false)

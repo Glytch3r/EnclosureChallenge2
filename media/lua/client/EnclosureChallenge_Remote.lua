@@ -26,52 +26,70 @@
 █████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████--]]
 
 --EnclosureChallenge_Remote.lua
+
 EnclosureChallenge = EnclosureChallenge or {}
 -----------------------   remote challenge        ---------------------------
-
 function EnclosureChallenge.goBack()
-	local pl = getPlayer()
-
-    EnclosureChallenge.clearCoord()
-	local ec = EnclosureChallenge.getData()
-	if not ec then return end
-	local p = ec.OriginCoords
+    local pl = getPlayer()
     if not pl then return end
-    print('goBack() '..tostring(tostring(p.x).." "..tostring( p.y )))
-	if p and p.x and p.y and p.z then
-		EnclosureChallenge.tp(pl, p.x, p.y, p.z)
-		--EnclosureChallenge.clearCoord()
-	end
+
+    local x, y, z = EnclosureChallenge.getCoords()
+    if x and y and z then
+        print("goBack() to:".. tostring(x)..", ".. tostring(y)..", ".. tostring(z))
+        EnclosureChallenge.tp(pl, x, y, z)
+    end
+
+
 end
 
-
 function EnclosureChallenge.clearCoord()
-	local pl = getPlayer()
-	if not pl then return end
-	local ec = EnclosureChallenge.getData()
-	if not ec then return end
-	ec.OriginCoords = nil
+    local ec = EnclosureChallenge.getData()
+    if ec then
+        ec.OriginCoords = {}
+    end
 end
 
 function EnclosureChallenge.saveCoord()
     local pl = getPlayer()
     if not pl then return end
-	local ec = EnclosureChallenge.getData()
-    print("saveCoord()")
-    if not ec then return end
 
-    ec.OriginCoords = {x= round(pl:getX()), y = round(pl:getY()), z= pl:getZ()}
+    local csq = pl:getCurrentSquare()
+    if not csq then return end
+
+    local ec = EnclosureChallenge.getData()
+    if ec then
+        if ec.OriginCoords  and ec.OriginCoords.x == nil and ec.OriginCoords.y == nil then
+            ec.OriginCoords = {
+                x = round(csq:getX()),
+                y = round(csq:getY()),
+                z = csq:getZ()
+            }
+        end
+        print("saveCoord()"..tostring(ec.OriginCoords.x)..",  "..tostring(ec.OriginCoords.y))
+
+    end
 end
---[[  ]]-----------------------            ---------------------------
+function EnclosureChallenge.getCoords()
+    local ec = EnclosureChallenge.getData()
+    ec.OriginCoords = ec.OriginCoords or {}
+    if ec and ec.OriginCoords then
+        return ec.OriginCoords.x, ec.OriginCoords.y, ec.OriginCoords.z
+    end
+    return nil, nil, nil
+end
+-----------------------            ---------------------------
+
 function EnclosureChallenge.isValidSq(sq)
     sq = sq or getPlayer():getCurrentSquare()
     if EnclosureChallenge.isConquered(sq) then return false end
     return sq and sq:connectedWithFloor() and sq:getFloor() ~= nil
 end
 
+-----------------------            ---------------------------
 function EnclosureChallenge.getEnclosureMidXY(x, y, targ)
-    local size = EnclosureChallenge.EnclosureSize
+    local size = EnclosureChallenge.EnclosureSize or 189
     local pl = getPlayer()
+
     if pl then
         x = x or pl:getX()
         y = y or pl:getY()
@@ -96,8 +114,7 @@ function EnclosureChallenge.getRandMidCoord()
 
     if not ISWorldMap_instance then
         ISWorldMap.ShowWorldMap(0)
-        if not ISWorldMap_instance then return nil, nil, nil, nil end
-        ISWorldMap_instance:close()
+        return nil, nil, nil, nil
     end
 
     local mapAPI = ISWorldMap_instance.javaObject and ISWorldMap_instance.javaObject:getAPIv1()
@@ -122,10 +139,7 @@ end
 
 function EnclosureChallenge.tpRandMidSq()
     local pl = getPlayer()
-
-
-    --if EnclosureChallenge.isChallenger() then return end
-	--EnclosureChallenge.clearCoord()
+    if not pl then return end
 
     local rTick = 0
     local waitTicks = 60
@@ -138,6 +152,7 @@ function EnclosureChallenge.tpRandMidSq()
         pl:Say("Map API failed.")
         return
     end
+
 
     EnclosureChallenge.tp(pl, midX, midY)
 
@@ -153,12 +168,14 @@ function EnclosureChallenge.tpRandMidSq()
                     Events.OnTick.Remove(tpHandler)
                     return
                 end
+
                 midX, midY, enclosureX, enclosureY = EnclosureChallenge.getRandMidCoord()
                 if not midX then
                     pl:Say("Retry failed.")
                     Events.OnTick.Remove(tpHandler)
                     return
                 end
+
                 EnclosureChallenge.tp(pl, midX, midY)
                 rTick = 0
                 return

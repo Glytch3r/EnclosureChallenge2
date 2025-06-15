@@ -35,6 +35,7 @@ function EnclosureChallenge.tp(pl, x, y, z)
 	pl:setLx(x)
 	pl:setLy(y)
 	pl:setLz(z)
+
 end
 -----------------------            ---------------------------
 --[[
@@ -83,7 +84,7 @@ function EnclosureChallenge.getEnclosureXY(x, y)
     local y = math.floor((y - 1) / size)
     return { x = x, y = y , z = 0}
 end ]]
---[[ function EnclosureChallenge.getEnclosure(targ)
+function EnclosureChallenge.getEnclosure(targ)
 
     targ = targ or getPlayer()
     if not targ then return nil end
@@ -95,7 +96,7 @@ end ]]
     local x = math.floor((x - 1) / size)
     local y = math.floor((y - 1) / size)
     return { x = x, y = y , z = 0}
-end ]]
+end
 
 function EnclosureChallenge.getEnclosureStr(targ)
     targ = targ or getPlayer()

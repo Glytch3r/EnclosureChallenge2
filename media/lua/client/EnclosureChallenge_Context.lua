@@ -77,6 +77,8 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
     local pl = getSpecificPlayer(plNum)
     local sq = clickedSquare
     if not pl or not sq then return end
+	local clickedOutside = not EnclosureChallenge.isSameEnclosure(sq)
+
     --if (sq == pl:getCurrentSquare()) or  getCore():getDebug() then
 	local ec = EnclosureChallenge.getData()
 	local remaining = ec.ChallengeTime or 0
@@ -99,15 +101,16 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
 
 	local isCanUnlock = EnclosureChallenge.isCanUnlock(sq)
 	local encStr = EnclosureChallenge.getEnclosureStr(sq)
-	local enc = EnclosureChallenge.getEnclosure(sq)
 	local status = EnclosureChallenge.getEnclosureStatus(sq)
+
+--[[ 	local enc = EnclosureChallenge.getEnclosure(sq)
 	local EnclosureX = enc.x
-	local EnclosureY = enc.y
+	local EnclosureY = enc.y ]]
+
 	local pts = ' [  Points: '.. tostring(EnclosureChallenge.getPoints())..' ]'
 	local unlockTitle = getText("ContextMenu_EnclosureChallenge_Unlock")..pts
 	local isConquered = status == "Conquered"
 	local isUnlocked = status == "Unlocked"
-	--local clickedOutside = not EnclosureChallenge.isSameEnclosure(sq)
 
 	if isUnlocked then
 		unlockTitle = "UNLOCKED: " .. tostring(pts)
@@ -124,7 +127,7 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
 	unlockOpt.notAvailable = not isCanUnlock
 --[[
 	if clickedOutside then
-		UnlockNotAvailable = true
+		UnlqockNotAvailable = true
 		local unlockOptTip = ISWorldObjectContextMenu.addToolTip()
 		unlockOptTip.description = getText("ContextMenu_EnclosureChallenge_ClickedOutsideUnlock")
 		unlockOpt.toolTip = unlockOptTip

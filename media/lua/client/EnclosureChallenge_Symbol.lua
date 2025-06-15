@@ -67,8 +67,13 @@ function EnclosureChallenge.delSym(x, y)
 	if not ISWorldMap_instance then return end
 	if not x or not y then return end
 
+    if not ISWorldMap_instance then
+        ISWorldMap.ShowWorldMap(0)
+        ISWorldMap_instance:close()
+    end
 	local mapAPI = ISWorldMap_instance.javaObject:getAPIv1()
 	local symAPI = mapAPI:getSymbolsAPI()
+
 
 	for i = symAPI:getSymbolCount() - 1, 0, -1 do
 		local sym = symAPI:getSymbolByIndex(i)
@@ -82,10 +87,10 @@ end
 
 
 function EnclosureChallenge.addChallengeSymbols(targ)
-	if not ISWorldMap_instance then
-		ISWorldMap.ShowWorldMap(0)
-		if ISWorldMap_instance then ISWorldMap_instance:close() end
-	end
+    if not ISWorldMap_instance then
+        ISWorldMap.ShowWorldMap(0)
+        ISWorldMap_instance:close()
+    end
 	if not ISWorldMap_instance or not ISWorldMap_instance.javaObject then return end
 
     local pl = getPlayer();

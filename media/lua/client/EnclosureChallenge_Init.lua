@@ -24,29 +24,28 @@ EnclosureChallenge.EnclosureSize = 189
 EnclosureChallenge.MarkerCache = {}
 -----------------------    init*        ---------------------------
 --local  ec = EnclosureChallenge.getData()
-
 function EnclosureChallenge.initChallengeData(pl)
     pl = pl or getPlayer()
-    if not pl then return end
+    if not pl then return nil end
 
     local md = pl:getModData()
     md.EnclosureChallenge = md.EnclosureChallenge or {}
     local ec = md.EnclosureChallenge
 
-
     ec.UnlockPoints      = ec.UnlockPoints      or SandboxVars.EnclosureChallenge.StartingUnlockPoints or 1
     ec.RewardChoice      = ec.RewardChoice      or 0
-   -- ec.RemoteWins        = ec.RemoteWins        or 0
     ec.Challenges        = ec.Challenges        or {}
     ec.Conquered         = ec.Conquered         or {}
-    ec.OriginCoords      = ec.OriginCoords         or {}
+    ec.OriginCoords      = ec.OriginCoords      or {}
     ec.Rebound           = ec.Rebound           or {}
     ec.AdditiveWins      = ec.AdditiveWins      or 0
     ec.ChallengeTime     = ec.ChallengeTime     or 0
     ec.RemoteChallenge   = ec.RemoteChallenge   or ""
     ec.AdditiveChallenge = ec.AdditiveChallenge or ""
+
     return ec
 end
+
 
 Events.OnCreatePlayer.Add(function()
     if not isIngameState() then return end
@@ -61,11 +60,11 @@ Events.OnCreatePlayer.Add(function()
     EnclosureChallenge.PreviousEnclosure = ""
 
     EnclosureChallenge.updateMarkers(encStr)
+    local isRemote = EnclosureChallenge.isRemoteMode()
 
     local  ec = EnclosureChallenge.getData()
-    if ec and EnclosureChallenge.isChallenger() and ec.ChallengeTime <= 0 then
+    if isRemote and ec and EnclosureChallenge.isChallenger() and ec.ChallengeTime <= 0 then
         --EnclosureChallenge.addChallengeSymbols(pl)
-        --local isRemote = EnclosureChallenge.isRemoteMode()
         EnclosureChallenge.doWin()
     end
 end)
@@ -95,7 +94,7 @@ Events.OnPlayerDeath.Add(function()
 		end
 	end
 	--EnclosureChallenge.setChallenge(false, false)
-end)d
+end)
 
 
 

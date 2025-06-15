@@ -45,17 +45,16 @@ function EnclosureChallenge.getChallengeTime()
     ec.ChallengeTime = ec.ChallengeTime or 0
     return ec.ChallengeTime
 end
-
 function EnclosureChallenge.isAdditiveMode()
     local ec = EnclosureChallenge.getData()
-    if not ec then return false end
-    return (ec.AdditiveChallenge ~= nil and ec.AdditiveChallenge ~= "") or false
+    return ec and ec.AdditiveChallenge ~= ""
 end
+
 function EnclosureChallenge.isRemoteMode()
     local ec = EnclosureChallenge.getData()
-    if not ec then return false end
-    return (ec.RemoteChallenge ~= nil and ec.RemoteChallenge ~= "") or false
+    return ec and ec.RemoteChallenge ~= ""
 end
+
 
 function EnclosureChallenge.getModeStr()
     if EnclosureChallenge.isChallenger() then
@@ -87,11 +86,12 @@ end
 
 function EnclosureChallenge.getChallengeTimeStr()
     local ec = EnclosureChallenge.getData()
+    local str = ""
     if ec and EnclosureChallenge.isChallenger() then
         --local pl = getPlayer()
-        local str = ""
+
         local time = EnclosureChallenge.getChallengeTime()
-        if ec.RemoteChallenge and ec.RemoteChallenge ~= "" then
+        if EnclosureChallenge.isRemoteMode() then
 
             if time and time > 0 then
                 if time == 1 then
@@ -100,7 +100,7 @@ function EnclosureChallenge.getChallengeTimeStr()
                     str = "Hours Remaining: " .. tostring(time)
                 end
             end
-        elseif ec.AdditiveChallenge and ec.AdditiveChallenge ~= "" then
+        elseif EnclosureChallenge.isAdditiveMode() then
             --local milestone = SandboxVars.EnclosureChallenge.ChallengeHours or 168
             --local surv = EnclosureChallenge.getChallengeTime() % milestone
             if time == 0 then
@@ -111,8 +111,8 @@ function EnclosureChallenge.getChallengeTimeStr()
                 str = "Survived for "..tostring(time).." Hours"
             end
         end
-        return str
     end
+    return str
 end
 
 
