@@ -47,18 +47,23 @@ end
 
 function EnclosureChallenge.OutsideZedHandler(zed, pl, bp, wpn)
     local zSq = zed:getSquare()
-    if  (not zSq and EnclosureChallenge.isSameEnclosure(zSq) or EnclosureChallenge.isOutOfBounds(zed)) and EnclosureChallenge.isChallenger() then
-        if not zed:avoidDamage() then
-            zed:setAvoidDamage(true);
-            zed:getModData()['EnclosureChallenge_AvoidDamage'] = true
-            zed:addLineChatElement('OUT OF BOUNDS')
+    if not zSq then return end
+    if SandboxVars.EnclosureChallenge.ZedNoDmg then
+        if not EnclosureChallenge.isChallenger() then return end
+        local remote = EnclosureChallenge.isRemoteMode()
+        local additive = EnclosureChallenge.isAdditiveMode()
+        if (not EnclosureChallenge.isSameEnclosure(zSq) and remote) or (additive and EnclosureChallenge.getEnclosureStatus(zSq) ~= "Unlocked") then
+            if not zed:avoidDamage() then
+                zed:setAvoidDamage(true);
+                zed:getModData()['EnclosureChallenge_AvoidDamage'] = true
+                zed:addLineChatElement('OUT OF BOUNDS')
+            end
+        else
+            if zed:avoidDamage() and zed:getModData()['EnclosureChallenge_AvoidDamage'] ~= nil then
+                zed:setAvoidDamage(false);
+                zed:getModData()['EnclosureChallenge_AvoidDamage'] = nil
+            end
         end
-    else
-        if zed:avoidDamage() and zed:getModData()['EnclosureChallenge_AvoidDamage'] ~= nil then
-            zed:setAvoidDamage(false);
-            zed:getModData()['EnclosureChallenge_AvoidDamage'] = nil
-        end
-
     end
 end
 

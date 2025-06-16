@@ -33,7 +33,7 @@ function EnclosureChallenge.isOutOfBounds(targ)
 	if not isIngameState() or not targ then return false end
 
 	local pl = getPlayer()
-	if not pl:isAlive() or not EnclosureChallenge.isChallenger(pl) then return false end
+	if not pl:isAlive() or not EnclosureChallenge.isChallenger() then return false end
 
 	local encStr = EnclosureChallenge.getEnclosureStr(targ)
 	if not encStr then return false end

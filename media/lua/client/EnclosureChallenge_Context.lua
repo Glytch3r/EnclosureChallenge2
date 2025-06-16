@@ -158,6 +158,69 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
         cellOpt.notAvailable = true
     end
 
+
+
+	-----------------------            ---------------------------
+	local guiMenu = rootMenu:addOption("GUI Settings")
+	local guiSub = ISContextMenu:getNew(context)
+	context:addSubMenu(guiMenu, guiSub)
+
+
+	local xpMenu = guiSub:addOption("X Percent")
+	local xpSub = ISContextMenu:getNew(context)
+	context:addSubMenu(xpMenu, xpSub)
+
+	local ypMenu = guiSub:addOption("Y Percent")
+	local ypSub = ISContextMenu:getNew(context)
+	context:addSubMenu(ypMenu, ypSub)
+
+
+
+
+	local sMenu = guiSub:addOption("Header Space")
+	local tSub = ISContextMenu:getNew(context)
+	context:addSubMenu(sMenu, tSub)
+
+
+
+
+
+	local guiSettings = EnclosureChallenge.getGUISettings()
+	guiSettings = guiSettings or {}
+	for i = 1, 10 do
+
+		local pick = i * 10
+		local label = tostring(pick) .. " %"
+
+
+
+		local checkxp = xpSub:addOption(label, worldobjects, function()
+			guiSettings.xPercentPos = pick
+			context:hideAndChildren()
+			getSoundManager():playUISound("UIActivateMainMenuItem")
+		end)
+		context:setOptionChecked(checkxp, guiSettings.xPercentPos == pick)
+
+		local checkyp = ypSub:addOption(label, worldobjects, function()
+			guiSettings.yPercentPos = pick
+			context:hideAndChildren()
+			getSoundManager():playUISound("UIActivateMainMenuItem")
+		end)
+		context:setOptionChecked(checkyp, guiSettings.yPercentPos == pick)
+
+
+		local checkt =  tSub:addOption( tostring(round(i*4*3.5)) , worldobjects, function()
+			guiSettings.textGap = round(i*4*3.5)
+			context:hideAndChildren()
+			getSoundManager():playUISound("UIActivateMainMenuItem")
+		end)
+		context:setOptionChecked(checkt, guiSettings.textGap == pick)
+
+
+
+
+	end
+
     ----------------------- category submenu ---------------------------
     EnclosureChallenge.addCategorySubmenu(context, rootMenu, worldobjects)
 
@@ -205,6 +268,14 @@ end
 
 Events.OnFillWorldObjectContextMenu.Remove(EnclosureChallenge.Context)
 Events.OnFillWorldObjectContextMenu.Add(EnclosureChallenge.Context)
+
+
+
+
+
+
+
+
 --[[
 function EnclosureChallenge.ConfirmDialog(pl, text, title, isQuit, isRemote, unlockTarg)
     pl = pl or getPlayer()

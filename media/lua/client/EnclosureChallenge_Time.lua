@@ -48,7 +48,7 @@ end
 function EnclosureChallenge.RemoteTimer()
     local pl = getPlayer(); if not pl then return end
     local ec = EnclosureChallenge.getData()
-    if not ec or not EnclosureChallenge.isChallenger(pl) then return end
+    if not ec or not EnclosureChallenge.isChallenger() then return end
 
     if (ec.RemoteTime or 0) > 0 then
         ec.RemoteTime = ec.RemoteTime - 1
@@ -78,7 +78,7 @@ end
 function EnclosureChallenge.AdditiveTimer()
     local pl = getPlayer(); if not pl then return end
     local ec = EnclosureChallenge.getData()
-    if not ec or not EnclosureChallenge.isChallenger(pl) then return end
+    if not ec or not EnclosureChallenge.isChallenger() then return end
 
     local encStr = ec.AdditiveChallenge
     if not encStr or encStr == "" then

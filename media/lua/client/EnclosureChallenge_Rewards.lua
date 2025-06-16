@@ -104,10 +104,12 @@ function EnclosureChallenge.getRewardChance(int)
 end
 -----------------------            ---------------------------
 function EnclosureChallenge.doReward()
+	local remote, additive = EnclosureChallenge.isShouldSpawnItem()
+	if not (remote or additive) then return end
 	local int = EnclosureChallenge.getRewardChoice() or 0
 	local pl = getPlayer()
 	if not pl then return end
-    getSoundManager():playUISound("GainExperienceLevel")
+
 
 	local inv = pl:getInventory()
 	local itemList = EnclosureChallenge.parseItems(int)
@@ -119,15 +121,16 @@ function EnclosureChallenge.doReward()
 		local randomItem = itemList[ZombRand(1, #itemList)]
 		if randomItem then
 			local title = EnclosureChallenge.getRewardTitle(int)
-
 			pl:setHaloNote("Enclosure Challenge Reward:\n(" .. tostring(title) .. ") - " .. tostring(randomItem), 150, 250, 150, 900)
 			inv:AddItem(randomItem)
 			inv:setDrawDirty(true)
+			getSoundManager():playUISound("GainExperienceLevel")
 		end
 	end
 
 	ISInventoryPage.dirtyUI()
 end
+
 
 
 -----------------------            ---------------------------

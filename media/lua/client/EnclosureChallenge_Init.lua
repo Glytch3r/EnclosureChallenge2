@@ -44,8 +44,21 @@ function EnclosureChallenge.initChallengeData(pl)
     ec.RemoteChallenge   = ec.RemoteChallenge   or ""
     ec.AdditiveChallenge = ec.AdditiveChallenge or ""
 
+    ec.GUI = ec.GUI or {}
+    ec.GUI.textGap   =  ec.GUI.textGap or
+
+    ec.GUI.xPercentPos =  ec.GUI.xPercentPos or 50
+    ec.GUI.yPercentPos =  ec.GUI.yPercentPos or 50
     return ec
 end
+
+function EnclosureChallenge.getGUISettings()
+    local  ec = EnclosureChallenge.getData()
+    if not ec then return end
+    ec.GUI = ec.GUI or {}
+    return ec.GUI
+end
+
 
 Events.OnCreatePlayer.Add(function()
     if not isIngameState() then return end
@@ -60,7 +73,7 @@ Events.OnCreatePlayer.Add(function()
     EnclosureChallenge.updateMarkers(encStr)
 
     local ec = EnclosureChallenge.getData()
-    if ec and EnclosureChallenge.isChallenger(pl) then
+    if ec and EnclosureChallenge.isChallenger() then
         if EnclosureChallenge.isRemoteMode() and ec.RemoteTime <= 0 then
             EnclosureChallenge.doWin()
         else
@@ -100,7 +113,7 @@ Events.OnEnclosureChange.Add(EnclosureChallenge.updateMarkers)
 
 function EnclosureChallenge.OutOfBoundHandler()
 	local pl = getPlayer()
-	if not EnclosureChallenge.isChallenger(pl) then return end
+	if not EnclosureChallenge.isChallenger() then return end
 
 	if EnclosureChallenge.isOutOfBounds(pl) and pl:isAlive() then
 		timer:Simple(2, function()
@@ -154,13 +167,3 @@ end)
 -----------------------       ---------------------------
 
 
-
---[[_____________________________________________________________________________________________________________________________
-   ░▒▓██████▓▒░    ░▒▓████████▓▒░    ░▒▓█▓▒░         ░▒▓█▓▒░      ░▒▓██████▓▒░   ░▒▓█▓▒░ ░▒▓█▓▒░  ░▒▓███████▓▒░    ░▒▓█▓▒░  ░▒█▒░
-  ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░           ░▒▓█▓▒░         ░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░ ░▒▓█▓▒░  ▒▓░    ░▒▓█▓▒░   ░▒▓█▓▒░  ░▒█▒░
-  ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░           ░▒▓█▓▒░         ░▒▓█▓▒░     ░▒▓█▓▒░         ░▒▓█▓▒░ ░▒▓█▓▒░         ░▒▓█▓▒░   ░▒▓█▓▒░  ░▒▓▒░
-  ░▒▓█▓▒▒▓███▓▒░   ░▒▓█▓▒░         ░▒▓██████▓▒░      ░▒▓█▓▒░     ░▒▓█▓▒░         ░▒▓█████████▓▒░     ░▒▓███▓▒░     ░▒▓███████▓▒░
-  ░▒▓█▓▒░          ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░     ░▒▓█▓▒░     ░▒▓█▓▒░         ░▒▓█▓▒░ ░▒▓█▓▒░         ░▒▓█▓▒░   ░▒▓█▒░  ░▒▓█▒░
-  ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░     ░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░ ░▒▓█▓▒░  ▒▓░    ░▒▓█▓▒░   ░▒▓█▒░  ░▒▓█▒░
-   ░▒▓█████▓▒░     ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓███████▓▒░   ░▒▓██████▓▒░   ░▒▓█▓▒░ ░▒▓█▓▒░  ░▒▓███████▓▒░    ░▒▓███████▓▒░
-█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████--]]

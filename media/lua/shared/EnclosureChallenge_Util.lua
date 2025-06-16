@@ -78,7 +78,7 @@ function EnclosureChallenge.getEnclosureColor(targ)
     if not isIngameState() then return end
 
     local colStr = SandboxVars.EnclosureChallengeGUI.BadColor
-
+    if not colStr then return end
     targ = targ or getPlayer()
     if not targ then return EnclosureChallenge.parseColor(colStr) end
     local status = EnclosureChallenge.getEnclosureStatus(targ)
@@ -159,9 +159,7 @@ end
 table.insert(keyBinding, {value = "[Enclosure Challenge]"})
 table.insert(keyBinding, {value = "Adjust_Enclosure_GUI_Opacity", key = Keyboard.KEY_O})
 table.insert(keyBinding, {value = "Adjust_Enclosure_GUI_Position", key = Keyboard.KEY_P})
-
 table.insert(keyBinding, {value = "Toggle_Enclosure_MouseTip", key = Keyboard.KEY_N})
-
 
 -----------------------            ---------------------------
 

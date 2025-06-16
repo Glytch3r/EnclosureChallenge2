@@ -44,6 +44,7 @@ Sandbox_EN = {
 	Sandbox_EnclosureChallenge_ReturnStaggered = "Return Staggered",
 	Sandbox_EnclosureChallenge_ReturnStaggered_tooltip = "Out-of-bounds players are teleported back and briefly staggered",
 
+	Sandbox_EnclosureChallenge_ZedNoDmg = "No Dmg to Out of bounds Zeds",
 
 
 	Sandbox_EnclosureChallenge14 = "Enclosure Challenge Rewards 14",
@@ -63,6 +64,11 @@ Sandbox_EN = {
 
 	Sandbox_EnclosureChallengeGUI = "Enclosure Challenge GUI"
 
+	Sandbox_EnclosureChallengeGUI_textGap = "GUI Text Spacing",
+	Sandbox_EnclosureChallengeGUI_xPercentPos = "GUI X Position percent",
+	Sandbox_EnclosureChallengeGUI_yPercentPos = "GUI Y Position percent",
+
+
 	Sandbox_EnclosureChallengeGUI_MarkerColor = "Marker Color",
 	Sandbox_EnclosureChallengeGUI_MarkerColor_tooltip = "Red;Green;Blue;Alpha",
 
@@ -80,18 +86,13 @@ Sandbox_EN = {
 
 	Sandbox_EnclosureChallengeGUI_FontSize = "GUI Font Size",
 
-	Sandbox_EnclosureChallengeGUI_xPercentPos = "GUI X Percent Position"
-	Sandbox_EnclosureChallengeGUI_yPercentPos = "GUI Y Percent Position"
+
+	Sandbox_EnclosureChallengeGUI_xOffset = "GUI X Offset",
+	Sandbox_EnclosureChallengeGUI_yOffset = "GUI Y Offset",
 
 
-	Sandbox_EnclosureChallengeGUI_xOffset = "GUI X Offset"
-	Sandbox_EnclosureChallengeGUI_yOffset = "GUI Y Offset"
-
-	Sandbox_EnclosureChallengeGUI_textGap = "GUI Text Space"
-	Sandbox_EnclosureChallengeGUI_textGap_tooltip = "The Space between the two GUI sections"
-
-	Sandbox_EnclosureChallengeGUI_xMouseOffset = "Mouse ToolTip X Offset"
-	Sandbox_EnclosureChallengeGUI_yMouseOffset = "Mouse ToolTip Y Offset"
+	Sandbox_EnclosureChallengeGUI_xMouseOffset = "Mouse ToolTip X Offset",
+	Sandbox_EnclosureChallengeGUI_yMouseOffset = "Mouse ToolTip Y Offset",
 
 	Sandbox_EnclosureChallenge1_RewardTitle = "Rewards 1 Category Title",
 	Sandbox_EnclosureChallenge1_RewardTitle_tooltip = "Leave the title blank to disable the category",
