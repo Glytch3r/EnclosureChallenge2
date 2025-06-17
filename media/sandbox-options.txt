@@ -97,13 +97,13 @@ option EnclosureChallengeGUI.FontSize
 
 option EnclosureChallengeGUI.xOffset
 {
-	type = double, min = -9999, max = 9999, default = 12,
+	type = double, min = -9999, max = 9999, default = 200,
 	page = EnclosureChallengeGUI, translation = EnclosureChallengeGUI_xOffset,
 }
 
 option EnclosureChallengeGUI.yOffset
 {
-	type = double, min = -9999, max = 9999, default = 12,
+	type = double, min = -9999, max = 9999, default = 200,
 	page = EnclosureChallengeGUI, translation = EnclosureChallengeGUI_yOffset,
 }
 
@@ -124,17 +124,6 @@ option EnclosureChallengeGUI.textGap
 	type = double, min = -9999, max = 9999, default = 42,
 	page = EnclosureChallengeGUI, translation = EnclosureChallengeGUI_textGap,
 }
-option EnclosureChallengeGUI.xPercentPos
-{
-	type = double, min = 0, max = 100, default = 4,
-	page = EnclosureChallengeGUI, translation = EnclosureChallengeGUI_xPercentPos,
-}
-option EnclosureChallengeGUI.yPercentPos
-{
-	type = double, min = 0, max = 100, default = 66,
-	page = EnclosureChallengeGUI, translation = EnclosureChallengeGUI_yPercentPos,
-}
-
 
 option EnclosureChallengeGUI.GUIHeaderColor
 {

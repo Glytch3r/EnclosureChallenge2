@@ -45,8 +45,8 @@ function EnclosureChallenge.initChallengeData(pl)
     ec.AdditiveChallenge = ec.AdditiveChallenge or ""
 
     ec.GUI = ec.GUI or {}
-    ec.GUI.textGap   =  ec.GUI.textGap or
-
+    ec.GUI.textGap   =  ec.GUI.textGap or 42
+    ec.GUI.posGUI    =  ec.GUI.posGUI or 3
     ec.GUI.xPercentPos =  ec.GUI.xPercentPos or 50
     ec.GUI.yPercentPos =  ec.GUI.yPercentPos or 50
     return ec

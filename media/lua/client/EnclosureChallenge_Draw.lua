@@ -70,9 +70,12 @@ function EnclosureChallenge.toggle(key)
     elseif key == core:getKey("Adjust_Enclosure_GUI_Position") then
         EnclosureChallenge.posGUI = (EnclosureChallenge.posGUI % #EnclosureChallenge.posTab) + 1
         msg = EnclosureChallenge.posTab[EnclosureChallenge.posGUI] or "Invalid GUI Position"
+        local settings = EnclosureChallenge.getGUISettings()
+        settings.posGUI = EnclosureChallenge.posGUI  or 1
     end
 
     if msg then
+        print(msg)
         getPlayer():setHaloNote(msg, 255, 250, 255, 255)
     end
 
@@ -214,6 +217,7 @@ function EnclosureChallenge.GUI()
     if not isIngameState() then return end
 
     local settings = EnclosureChallenge.getGUISettings()
+
     local pl = getPlayer()
     if not pl then return end
 
@@ -235,9 +239,10 @@ function EnclosureChallenge.GUI()
     end
 
 
-    local xOffset = SandboxVars.EnclosureChallenge.xOffset or 50
-    local yOffset = SandboxVars.EnclosureChallenge.yOffset or 50
+    local xOffset = SandboxVars.EnclosureChallenge.xOffset or 200
+    local yOffset = SandboxVars.EnclosureChallenge.yOffset or 200
     local textGap = settings.textGap or 42
+    local pos = settings.posGUI or EnclosureChallenge.posGUI  or 3
 
     local xPercentPos = settings.xPercentPos or 4
     local yPercentPos = settings.yPercentPos or 55
@@ -246,7 +251,7 @@ function EnclosureChallenge.GUI()
     local scrW = getCore():getScreenWidth()
     local scrH = getCore():getScreenHeight()
 
-    local pos = EnclosureChallenge.posGUI
+
     local xPos, yPos
     if pos == 6 then
         xPos = (scrW / 8) + 55
@@ -314,7 +319,7 @@ function EnclosureChallenge.GUI()
     local caption = EnclosureChallenge.getEnclosureStatus2(pl)
     local encInfo = {
         string.format("X: %d   Y: %d", round(x), round(y)),
-        "Enclosure:n"..tostring(encStr).."\n"..tostring(caption),
+        "Enclosure:  "..tostring(encStr).."\n"..tostring(caption),
         "",
     }
 
