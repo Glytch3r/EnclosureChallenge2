@@ -46,6 +46,13 @@ Sandbox_EN = {
 
 	Sandbox_EnclosureChallenge_ZedNoDmg = "No Dmg to Out of bounds Zeds",
 
+	Sandbox_EnclosureChallenge_AdditiveItemReward = "Additive Item Reward",
+	Sandbox_EnclosureChallenge_AdditiveItemReward_tooltip = "Spawn Random Item Reward Every Additive Stage",
+
+	Sandbox_EnclosureChallenge_RemoteItemReward = "Remote Item Reward",
+	Sandbox_EnclosureChallenge_RemoteItemReward_tooltip = "Spawn Random Item Reward After Remote Challenge Completion",
+
+
 
 	Sandbox_EnclosureChallenge14 = "Enclosure Challenge Rewards 14",
     Sandbox_EnclosureChallenge13 = "Enclosure Challenge Rewards 13",

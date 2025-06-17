@@ -208,13 +208,13 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
 		end)
 		context:setOptionChecked(checkyp, guiSettings.yPercentPos == pick)
 
-
-		local checkt =  tSub:addOption( tostring(round(i*4*3.5)) , worldobjects, function()
-			guiSettings.textGap = round(i*4*3.5)
+        local textPick = round(i*4*3.5)
+		local checkt =  tSub:addOption( tostring(textPick) , worldobjects, function()
+			guiSettings.textGap = textPick
 			context:hideAndChildren()
 			getSoundManager():playUISound("UIActivateMainMenuItem")
 		end)
-		context:setOptionChecked(checkt, guiSettings.textGap == pick)
+		context:setOptionChecked(checkt, guiSettings.textGap == textPick)
 
 
 

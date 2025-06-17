@@ -179,59 +179,71 @@ option EnclosureChallenge.RemoteItemReward
 
 
 
+
+
 option EnclosureChallenge1.RewardTitle   { type = string, default = Food, page = EnclosureChallenge1, translation = EnclosureChallenge1_RewardTitle, }
-option EnclosureChallenge1.Rewards       { type = string, default = Base.TinnedSoupOpen;Base.TunaTin, page = EnclosureChallenge1, translation = EnclosureChallenge1_Rewards, }
+option EnclosureChallenge1.Rewards       { type = string, default = Base.DogfoodOpen;Base.Cupcake;Base.Ham;Base.SoupBowl;Base.CannedChili;Base.CannedBolognese;Base.CannedMushroomSoup;Base.BeefJerky;Base.Corndog;Base.PopBottle;Base.Chocolate, page = EnclosureChallenge1, translation = EnclosureChallenge1_Rewards, }
 option EnclosureChallenge1.RewardChance  { type = double, min = 0, max = 100, default = 100, page = EnclosureChallenge1, translation = EnclosureChallenge1_RewardChance, }
 
 option EnclosureChallenge2.RewardTitle   { type = string, default = Medical, page = EnclosureChallenge2, translation = EnclosureChallenge2_RewardTitle, }
-option EnclosureChallenge2.Rewards       { type = string, default = Base.Bandage;Base.AlcoholWipes, page = EnclosureChallenge2, translation = EnclosureChallenge2_Rewards, }
+option EnclosureChallenge2.Rewards       { type = string, default = Base.CottonBalls;Base.SutureNeedle;Base.Bandage;Base.AlcoholBandage;Base.PillsVitamins;Base.AlcoholWipes;Base.Splint;Base.Tweezers;Base.Antibiotics;Base.Tweezers, page = EnclosureChallenge2, translation = EnclosureChallenge2_Rewards, }
 option EnclosureChallenge2.RewardChance  { type = double, min = 0, max = 100, default = 100, page = EnclosureChallenge2, translation = EnclosureChallenge2_RewardChance, }
 
 option EnclosureChallenge3.RewardTitle   { type = string, default = Tools, page = EnclosureChallenge3, translation = EnclosureChallenge3_RewardTitle, }
-option EnclosureChallenge3.Rewards       { type = string, default = Base.Hammer;Base.Saw, page = EnclosureChallenge3, translation = EnclosureChallenge3_Rewards, }
+option EnclosureChallenge3.Rewards       { type = string, default = Base.HandAxe;Base.PipeWrench;Base.Machete;Base.Screwdriver;Base.BallPeenHammer;Base.Wrench;Base.Hammer;Base.Shovel;Base.HuntingKnife;Base.PickAxe, page = EnclosureChallenge3, translation = EnclosureChallenge3_Rewards, }
 option EnclosureChallenge3.RewardChance  { type = double, min = 0, max = 100, default = 100, page = EnclosureChallenge3, translation = EnclosureChallenge3_RewardChance, }
 
 option EnclosureChallenge4.RewardTitle   { type = string, default = Clothes, page = EnclosureChallenge4, translation = EnclosureChallenge4_RewardTitle, }
-option EnclosureChallenge4.Rewards       { type = string, default = Base.Jacket;Base.Pants, page = EnclosureChallenge4, translation = EnclosureChallenge4_Rewards, }
+option EnclosureChallenge4.Rewards       { type = string, default = Base.Socks_Ankle;Base.Bag_FannyPackFront;Base.WeddingJacket;Base.Ghillie_Top;Base.Suit_Jacket;Base.PonchoGreen;Base.LongCoat_Bathrobe;Base.Hat_Spiffo;Base.Apron_Spiffos;Base.SpiffoSuit;Base.SpiffoTail, page = EnclosureChallenge4, translation = EnclosureChallenge4_Rewards, }
 option EnclosureChallenge4.RewardChance  { type = double, min = 0, max = 100, default = 100, page = EnclosureChallenge4, translation = EnclosureChallenge4_RewardChance, }
 
 option EnclosureChallenge5.RewardTitle   { type = string, default = Firearms, page = EnclosureChallenge5, translation = EnclosureChallenge5_RewardTitle, }
-option EnclosureChallenge5.Rewards       { type = string, default = Base.Pistol;Base.Shotgun;Base.Bullets9mm, page = EnclosureChallenge5, translation = EnclosureChallenge5_Rewards, }
+option EnclosureChallenge5.Rewards       { type = string, default = Base.VarmintRifle;Base.HuntingRifle;Base.Shotgun;Base.Pistol;Base.DoubleBarrelShotgun;Base.Pistol2;Base.Pistol3;Base.Revolver;Base.AssaultRifle;Base.AssaultRifle2, page = EnclosureChallenge5, translation = EnclosureChallenge5_Rewards, }
 option EnclosureChallenge5.RewardChance  { type = double, min = 0, max = 100, default = 100, page = EnclosureChallenge5, translation = EnclosureChallenge5_RewardChance, }
 
 option EnclosureChallenge6.RewardTitle   { type = string, default = Literature, page = EnclosureChallenge6, translation = EnclosureChallenge6_RewardTitle, }
-option EnclosureChallenge6.Rewards       { type = string, default = Base.Book;Base.Magazine;Base.SkillBook1, page = EnclosureChallenge6, translation = EnclosureChallenge6_Rewards, }
+option EnclosureChallenge6.Rewards       { type = string, default = Base.Book;Base.BookFishing1;Base.BookCarpentry1;Base.BookMechanic1;Base.BookFirstAid1;Base.BookMetalWelding1;Base.BookElectrician1;Base.BookCooking1;Base.BookFarming1;Base.BookForaging1;Base.BookTailoring1, page = EnclosureChallenge6, translation = EnclosureChallenge6_Rewards, }
 option EnclosureChallenge6.RewardChance  { type = double, min = 0, max = 100, default = 100, page = EnclosureChallenge6, translation = EnclosureChallenge6_RewardChance, }
 
 option EnclosureChallenge7.RewardTitle   { type = string, default = Electronics, page = EnclosureChallenge7, translation = EnclosureChallenge7_RewardTitle, }
-option EnclosureChallenge7.Rewards       { type = string, default = Base.WalkieTalkie2;Base.Radio;Base.ElectronicsMag1, page = EnclosureChallenge7, translation = EnclosureChallenge7_Rewards, }
+option EnclosureChallenge7.Rewards       { type = string, default = Base.CordlessPhone;Radio.CDplayer;Radio.RadioRed;Radio.WalkieTalkie1;Radio.HamRadio1;Radio.RadioReceiver;Radio.RadioTransmitter;Radio.ScannerModule;Base.Battery;Base.LightBulbBlue;Base.Torch, page = EnclosureChallenge7, translation = EnclosureChallenge7_Rewards, }
 option EnclosureChallenge7.RewardChance  { type = double, min = 0, max = 100, default = 100, page = EnclosureChallenge7, translation = EnclosureChallenge7_RewardChance, }
 
 option EnclosureChallenge8.RewardTitle   { type = string, default = Farming, page = EnclosureChallenge8, translation = EnclosureChallenge8_RewardTitle, }
-option EnclosureChallenge8.Rewards       { type = string, default = farming.RedRadish;farming.CarrotSeed;farming.BroccoliSeed;farming.RedRadishSeed, page = EnclosureChallenge8, translation = EnclosureChallenge8_Rewards, }
+option EnclosureChallenge8.Rewards       { type = string, default = farming.CarrotBagSeed;farming.BroccoliBagSeed;farming.RedRadishBagSeed;farming.StrewberrieBagSeed;farming.TomatoBagSeed;farming.GardeningSprayEmpty;farming.WateredCan;farming.PotatoBagSeed;farming.CabbageBagSeed;Base.Fertilizer, page = EnclosureChallenge8, translation = EnclosureChallenge8_Rewards, }
 option EnclosureChallenge8.RewardChance  { type = double, min = 0, max = 100, default = 100, page = EnclosureChallenge8, translation = EnclosureChallenge8_RewardChance, }
 
 option EnclosureChallenge9.RewardTitle   { type = string, default = Survival, page = EnclosureChallenge9, translation = EnclosureChallenge9_RewardTitle, }
-option EnclosureChallenge9.Rewards       { type = string, default = Base.TrapBox;Base.FishingRod;Base.TentKit, page = EnclosureChallenge9, translation = EnclosureChallenge9_Rewards, }
+option EnclosureChallenge9.Rewards       { type = string, default = Base.BarbedWire;Base.TrapStick;Base.FishingTackle;Base.WoodenStick;Base.FireWoodKit;Base.Lighter;Base.Coal;Base.RedPen;camping.CampfireKit;camping.Flint;camping.CampingTentKit, page = EnclosureChallenge9, translation = EnclosureChallenge9_Rewards, }
 option EnclosureChallenge9.RewardChance  { type = double, min = 0, max = 100, default = 100, page = EnclosureChallenge9, translation = EnclosureChallenge9_RewardChance, }
 
 option EnclosureChallenge10.RewardTitle  { type = string, default = Automotives, page = EnclosureChallenge10, translation = EnclosureChallenge10_RewardTitle, }
-option EnclosureChallenge10.Rewards      { type = string, default = Base.GasCan;Base.CarBattery, page = EnclosureChallenge10, translation = EnclosureChallenge10_Rewards, }
+option EnclosureChallenge10.Rewards      { type = string, default = Base.Jack;Base.LugWrench;Base.TirePump;Base.EngineParts;Base.CarBattery1;Base.NormalGasTank1;Base.CarBatteryCharger;Base.NormalTire1;Base.NormalBrake1;Base.NormalSuspension1, page = EnclosureChallenge10, translation = EnclosureChallenge10_Rewards, }
 option EnclosureChallenge10.RewardChance { type = double, min = 0, max = 100, default = 100, page = EnclosureChallenge10, translation = EnclosureChallenge10_RewardChance, }
 
 option EnclosureChallenge11.RewardTitle  { type = string, default = Cleaning, page = EnclosureChallenge11, translation = EnclosureChallenge11_RewardTitle, }
-option EnclosureChallenge11.Rewards      { type = string, default = Base.Bleach;Base.Mop;Base.Soap2, page = EnclosureChallenge11, translation = EnclosureChallenge11_Rewards, }
+option EnclosureChallenge11.Rewards      { type = string, default = Base.Mop;Base.Bleach;Base.Disinfectant;Base.BucketEmpty;Base.CleaningLiquid2;Base.CleaningLiquid;Base.Soap;Base.DishClothWet;Base.BathTowel;Base.Tissue, page = EnclosureChallenge11, translation = EnclosureChallenge11_Rewards, }
 option EnclosureChallenge11.RewardChance { type = double, min = 0, max = 100, default = 100, page = EnclosureChallenge11, translation = EnclosureChallenge11_RewardChance, }
 
 option EnclosureChallenge12.RewardTitle  { type = string, default = Crafting, page = EnclosureChallenge12, translation = EnclosureChallenge12_RewardTitle, }
-option EnclosureChallenge12.Rewards      { type = string, default = Base.Nails;Base.Plank;Base.Glue, page = EnclosureChallenge12, translation = EnclosureChallenge12_Rewards, }
+option EnclosureChallenge12.Rewards      { type = string, default = Base.PropaneTank;Base.ConcretePowder;Base.Doorknob;Base.Hinge;Base.ElectricWire;Base.ScrewsBox;Base.Glue;Base.Rope;Base.DuctTape;Base.NailsBox;Base.SmallSheetMetal, page = EnclosureChallenge12, translation = EnclosureChallenge12_Rewards, }
 option EnclosureChallenge12.RewardChance { type = double, min = 0, max = 100, default = 100, page = EnclosureChallenge12, translation = EnclosureChallenge12_RewardChance, }
 
 option EnclosureChallenge13.RewardTitle  { type = string, default = Miscellaneous, page = EnclosureChallenge13, translation = EnclosureChallenge13_RewardTitle, }
-option EnclosureChallenge13.Rewards      { type = string, default = Base.Dice;Base.Dogtag;Base.Pen, page = EnclosureChallenge13, translation = EnclosureChallenge13_Rewards, }
+option EnclosureChallenge13.Rewards      { type = string, default = Base.Money;Base.Eraser;Base.Comb;Base.Dice;Base.Lipstick;Base.Locket;Base.Mirror;Base.Razor;Base.ToyBear;Base.Wallet;Base.HairDyeBlack, page = EnclosureChallenge13, translation = EnclosureChallenge13_Rewards, }
 option EnclosureChallenge13.RewardChance { type = double, min = 0, max = 100, default = 100, page = EnclosureChallenge13, translation = EnclosureChallenge13_RewardChance, }
 
-option EnclosureChallenge14.RewardTitle   { type = string, default = Melee, page = EnclosureChallenge14, translation = EnclosureChallenge14_RewardTitle, }
-option EnclosureChallenge14.Rewards       { type = string, default = Base.Katana;Base.Sledgehammer2, page = EnclosureChallenge14, translation = EnclosureChallenge14_Rewards, }
+option EnclosureChallenge14.RewardTitle   { type = string, default = Ammo, page = EnclosureChallenge14, translation = EnclosureChallenge14_RewardTitle, }
+option EnclosureChallenge14.Rewards       { type = string, default = Base.308Box;Base.556Box;Base.Bullets38Box;Base.ShotgunShellsBox;Base.Bullets44Box;Base.Bullets45Box;Base.Bullets9mmBox;Base.AmmoStraps;Base.Sling;Base.GunPowder, page = EnclosureChallenge14, translation = EnclosureChallenge14_Rewards, }
 option EnclosureChallenge14.RewardChance  { type = double, min = 0, max = 100, default = 100, page = EnclosureChallenge14, translation = EnclosureChallenge14_RewardChance, }
+
+
+
+
+
+
+
+
+
+
 
