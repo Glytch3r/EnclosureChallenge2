@@ -40,6 +40,9 @@ end
 --local  ec = EnclosureChallenge.getData()
 
 function EnclosureChallenge.initChallengeData(pl)
+    if not isIngameState() then return  end
+
+    if not SandboxVars then return end
     pl = pl or getPlayer()
     if not pl then return nil end
 
@@ -59,7 +62,7 @@ function EnclosureChallenge.initChallengeData(pl)
     ec.RemoteChallenge   = ec.RemoteChallenge   or ""
     ec.AdditiveChallenge = ec.AdditiveChallenge or ""
 
-    ec.GUI               = ec.GUI or {}
+    ec.GUI               = ec.GUI               or {}
     ec.GUI.textGap       = ec.GUI.textGap       or 42
     ec.GUI.posGUI        = ec.GUI.posGUI        or 3
     ec.GUI.xPercentPos   = ec.GUI.xPercentPos   or 80

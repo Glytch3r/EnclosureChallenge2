@@ -1,7 +1,6 @@
 version=1
 id=3500465092
 title=Enclosure Challenge
-description=
 description=[b]Enclosure Challenge 2[/b]
 description=
 description=Survive within a restricted cell-sized zone called "Enclosures".
@@ -95,6 +94,5 @@ description=https://ko-fi.com/glytch3r
 description=
 description=Workshop ID: 3500465092
 description=Mod ID: EnclosureChallenge2
-description=
 tags=Build 41;Balance;Building;Food;Framework;Items;Military;Misc;Models;Multiplayer;Pop Culture;Realistic;Silly/Fun;Textures;Vehicles;Weapons
 visibility=public
