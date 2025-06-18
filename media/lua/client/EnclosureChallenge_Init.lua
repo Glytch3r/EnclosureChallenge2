@@ -15,7 +15,6 @@
 |                       		                                    														 	  |
 |                       	Support:    https://ko-fi.com/glytch3r														    	  |
 |_______________________________________________________________________________________________________________________________-]]
-if not isIngameState() then return  end
 
 require "lua_timers"
 
@@ -26,6 +25,8 @@ EnclosureChallenge.EnclosureSize = 189
 EnclosureChallenge.MarkerCache = {}
 
 function EnclosureChallenge.getStartingUnlockPoints()
+    if not isIngameState() then return end
+
     local def = 1
     if SandboxVars
         and SandboxVars.EnclosureChallenge
@@ -63,10 +64,10 @@ function EnclosureChallenge.initChallengeData(pl)
     ec.AdditiveChallenge = ec.AdditiveChallenge or ""
 
     ec.GUI               = ec.GUI               or {}
+    ec.GUI.posGUI        = ec.GUI.posGUI        or 1
     ec.GUI.textGap       = ec.GUI.textGap       or 42
-    ec.GUI.posGUI        = ec.GUI.posGUI        or 3
-    ec.GUI.xPercentPos   = ec.GUI.xPercentPos   or 80
-    ec.GUI.yPercentPos   = ec.GUI.yPercentPos   or 80
+    ec.GUI.xPercentPos   = ec.GUI.xPercentPos   or 85
+    ec.GUI.yPercentPos   = ec.GUI.yPercentPos   or 85
 
     return ec
 end

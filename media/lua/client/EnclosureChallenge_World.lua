@@ -1,4 +1,3 @@
-if not isIngameState() then return  end
 
 --[[
 local mapAPI = ISWorldMap_instance.javaObject:getAPIv1()

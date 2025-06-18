@@ -16,7 +16,6 @@
 |                       		                                    														 	  |
 |                       	Support:    https://ko-fi.com/glytch3r														    	  |
 |_______________________________________________________________________________________________________________________________-]]
-if not isIngameState() then return  end
 
 EnclosureChallenge = EnclosureChallenge or {}
 

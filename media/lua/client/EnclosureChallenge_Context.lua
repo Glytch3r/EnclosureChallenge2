@@ -24,7 +24,6 @@
   ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░     ░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░ ░▒▓█▓▒░  ▒▓░    ░▒▓█▓▒░   ░▒▓█▒░  ░▒▓█▒░
    ░▒▓█████▓▒░     ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓███████▓▒░   ░▒▓██████▓▒░   ░▒▓█▓▒░ ░▒▓█▓▒░  ░▒▓███████▓▒░    ░▒▓███████▓▒░
 █████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████--]]
-if not isIngameState() then return  end
 
 EnclosureChallenge = EnclosureChallenge or {}
 -----------------------     sub*          ---------------------------
@@ -178,17 +177,44 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
 	context:addSubMenu(ypMenu, ypSub)
 
 
-
-
 	local sMenu = guiSub:addOption("Header Space")
 	local tSub = ISContextMenu:getNew(context)
 	context:addSubMenu(sMenu, tSub)
 
 
 
+    local guiSettings = EnclosureChallenge.getGUISettings()
+    guiSettings = guiSettings or {}
+
+    for pick = 5, 100, 5 do
+        local label = tostring(pick) .. " %"
+
+        local checkxp = xpSub:addOption(label, worldobjects, function()
+            guiSettings.xPercentPos = pick
+            context:hideAndChildren()
+            getSoundManager():playUISound("UIActivateMainMenuItem")
+        end)
+        context:setOptionChecked(checkxp, guiSettings.xPercentPos == pick)
+
+        local checkyp = ypSub:addOption(label, worldobjects, function()
+            guiSettings.yPercentPos = pick
+            context:hideAndChildren()
+            getSoundManager():playUISound("UIActivateMainMenuItem")
+        end)
+        context:setOptionChecked(checkyp, guiSettings.yPercentPos == pick)
+    end
+    --14, 28, 42, 56, 70, 84, 98, 112, 126, 140
+    for textPick = 14, 140, 14 do
+        local checkt = tSub:addOption(tostring(textPick).." px", worldobjects, function()
+            guiSettings.textGap = textPick
+            context:hideAndChildren()
+            getSoundManager():playUISound("UIActivateMainMenuItem")
+        end)
+        context:setOptionChecked(checkt, guiSettings.textGap == textPick)
+    end
 
 
-	local guiSettings = EnclosureChallenge.getGUISettings()
+--[[ 	local guiSettings = EnclosureChallenge.getGUISettings()
 	guiSettings = guiSettings or {}
 	for i = 1, 10 do
 
@@ -222,7 +248,7 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
 
 
 
-	end
+	end ]]
 
     ----------------------- category submenu ---------------------------
     EnclosureChallenge.addCategorySubmenu(context, rootMenu, worldobjects)
