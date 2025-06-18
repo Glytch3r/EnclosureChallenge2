@@ -15,6 +15,8 @@
 |                       		                                    														 	  |
 |                       	Support:    https://ko-fi.com/glytch3r														    	  |
 |_______________________________________________________________________________________________________________________________-]]
+if not isIngameState() then return  end
+
 require "lua_timers"
 
 EnclosureChallenge = EnclosureChallenge or {}
@@ -76,6 +78,9 @@ Events.OnCreatePlayer.Add(function()
 
     local ec = EnclosureChallenge.getData()
     if ec and EnclosureChallenge.isChallenger() then
+
+        EnclosureChallenge.setReturnPointMarker()
+
         if EnclosureChallenge.isRemoteMode() and ec.RemoteTime <= 0 then
             EnclosureChallenge.doWin()
         else
@@ -103,7 +108,7 @@ function EnclosureChallenge.updateMarkers(encStr)
 
    local x = pl:getX()
    local y = pl:getY()
-   local  midX, midY = EnclosureChallenge.getEnclosureMidXY(x, y, pl)
+   local midX, midY = EnclosureChallenge.getEnclosureMidXY(x, y, pl)
    EnclosureChallenge.drawEnclosureGrid(midX, midY)
    EnclosureChallenge.drawEnclosureGridOverlay(minimap, midX, midY)
 

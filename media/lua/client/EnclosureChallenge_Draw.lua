@@ -97,7 +97,7 @@ function EnclosureChallenge.getPointer()
     return getCell():getOrCreateGridSquare(math.floor(x), math.floor(y), z)
 end
 -----------------------     mouse*       ---------------------------
-
+--[[
 function EnclosureChallenge.DrawMouseTip(x, y, z, str, r, g, b)
     if not isIngameState() then return end
     local tag = TextDrawObject.new()
@@ -171,8 +171,72 @@ function EnclosureChallenge.DrawMouseTip(x, y, z, str, r, g, b)
             Events.OnPostRender.Remove(drawFunc)
         end)
     end
-end
+end ]]
 
+function EnclosureChallenge.DrawMouseTip(x, y, z, str, r, g, b)
+    if not isIngameState() then return end
+    if EnclosureChallenge.isActive then return end
+
+    EnclosureChallenge.isActive = true
+
+    local tag = TextDrawObject.new()
+    tag:setDefaultFont(UIFont.Small)
+    tag:ReadString(UIFont.Small, str, -1)
+    tag:setDefaultColors(r, g, b)
+    tag:setVisibleRadius(360)
+
+    local yOffset = SandboxVars.EnclosureChallengeGUI.yMouseOffset or 0
+    local xOffset = SandboxVars.EnclosureChallengeGUI.xMouseOffset or 0
+
+    EnclosureChallenge._drawFunc = function()
+        if not EnclosureChallenge.MouseTip then
+            Events.OnPostRender.Remove(EnclosureChallenge._drawFunc)
+            return
+        end
+        local zoom = getCore():getZoom(0)
+        local screenX = (IsoUtils.XToScreen(x + xOffset, y, z, 0) - IsoCamera.getOffX()) / zoom
+        local screenY = (IsoUtils.YToScreen(x + yOffset, y, z, 0) - IsoCamera.getOffY()) / zoom
+        tag:AddBatchedDraw(screenX, screenY - 48, r, g, b, 1, false)
+    end
+
+    if EnclosureChallenge.checkMark then
+        EnclosureChallenge.checkMark:remove()
+        EnclosureChallenge.checkMark = nil
+    end
+
+    local sq = getCell():getOrCreateGridSquare(x, y, z)
+    if sq then
+        local stamp = "EnclosureChallenge_Bounds"
+        local markerSize = 0.3
+
+        if EnclosureChallenge.isOutOfBounds(sq) then
+            stamp = "EnclosureChallenge_Challenger"
+            markerSize = 2
+            local col = EnclosureChallenge.parseColor(SandboxVars.EnclosureChallengeGUI.BadColor)
+            r, g, b = col.r, col.g, col.b
+        elseif EnclosureChallenge.isReboundSq(sq) then
+            stamp = "EnclosureChallenge_Circle"
+            markerSize = 2
+        elseif EnclosureChallenge.isConquered(sq) then
+            stamp = "EnclosureChallenge_Conquered"
+            markerSize = 1
+            local col = EnclosureChallenge.parseColor(SandboxVars.EnclosureChallengeGUI.GoodColor)
+            r, g, b = col.r, col.g, col.b
+        end
+
+        if EnclosureChallenge.MouseTip then
+            EnclosureChallenge.checkMark = getWorldMarkers():addGridSquareMarker(stamp, stamp, sq, r, g, b, false, markerSize)
+        end
+    end
+
+    Events.OnPostRender.Add(EnclosureChallenge._drawFunc)
+
+    timer:Simple(0.1, function()
+        Events.OnPostRender.Remove(EnclosureChallenge._drawFunc)
+        EnclosureChallenge._drawFunc = nil
+        EnclosureChallenge.isActive = nil
+    end)
+end
 
 function EnclosureChallenge.MouseTipHandler(pl)
     if not isIngameState() then return end

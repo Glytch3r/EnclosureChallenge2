@@ -1,4 +1,4 @@
-
+if not isIngameState() then return  end
 EnclosureChallenge = EnclosureChallenge or {}
 
 --[[ function EnclosureChallenge.getCurrentEnclosure(pl)
