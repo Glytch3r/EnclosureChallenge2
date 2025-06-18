@@ -1,3 +1,4 @@
+if not isIngameState() then return  end
 
 EnclosureChallenge = EnclosureChallenge or {}
 --[[
