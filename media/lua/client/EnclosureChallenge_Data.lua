@@ -18,12 +18,9 @@
 
 EnclosureChallenge = EnclosureChallenge or {}
 
-
-
-
 function EnclosureChallenge.getData()
     local pl = getPlayer()
-    if not pl then return nil end
+    if not isIngameState() or not pl then return nil end
 
     local md = pl:getModData()
     if not md.EnclosureChallenge then
@@ -31,6 +28,14 @@ function EnclosureChallenge.getData()
     end
     return md.EnclosureChallenge
 end
+
+function EnclosureChallenge.getGUISettings()
+    local ec = EnclosureChallenge.getData()
+    if not ec then return {} end  -- fail-safe: never return nil
+    ec.GUI = ec.GUI or {}
+    return ec.GUI
+end
+
 
 -----------------------            ---------------------------
 function EnclosureChallenge.resetData()

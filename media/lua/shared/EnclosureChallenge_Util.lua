@@ -124,18 +124,6 @@ function EnclosureChallenge.getEnclosureStatus2(targ)
 end
 
 
-function EnclosureChallenge.getChallengeStatus(targ)
-    if not isIngameState() then return "Neutral" end
-    targ = targ or getPlayer()
-    if not targ then return "Neutral" end
-
-    if EnclosureChallenge.isChallenger() and EnclosureChallenge.isSameEnclosure(targ) then
-        return EnclosureChallenge.getModeStr()
-    end
-
-    return EnclosureChallenge.getEnclosureStatus(targ)
-end
-
 -----------------------            ---------------------------
 function EnclosureChallenge.checkDist(pl, sq)
 	local dist = pl:DistTo(sq:getX(), sq:getY())

@@ -26,6 +26,7 @@ EnclosureChallenge.EnclosureSize = 189
 EnclosureChallenge.MarkerCache = {}
 -----------------------    init*        ---------------------------
 --local  ec = EnclosureChallenge.getData()
+
 function EnclosureChallenge.initChallengeData(pl)
     pl = pl or getPlayer()
     if not pl then return nil end
@@ -46,7 +47,7 @@ function EnclosureChallenge.initChallengeData(pl)
     ec.RemoteChallenge   = ec.RemoteChallenge   or ""
     ec.AdditiveChallenge = ec.AdditiveChallenge or ""
 
-    ec.GUI               = ec.GUI               or {}
+    ec.GUI               = ec.GUI or {}
     ec.GUI.textGap       = ec.GUI.textGap       or 42
     ec.GUI.posGUI        = ec.GUI.posGUI        or 3
     ec.GUI.xPercentPos   = ec.GUI.xPercentPos   or 80
@@ -56,12 +57,6 @@ function EnclosureChallenge.initChallengeData(pl)
 end
 
 
-function EnclosureChallenge.getGUISettings()
-    local  ec = EnclosureChallenge.getData()
-    if not ec then return end
-    ec.GUI = ec.GUI or {}
-    return ec.GUI
-end
 
 
 Events.OnCreatePlayer.Add(function()

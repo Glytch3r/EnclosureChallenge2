@@ -71,7 +71,9 @@ function EnclosureChallenge.toggle(key)
         EnclosureChallenge.posGUI = (EnclosureChallenge.posGUI % #EnclosureChallenge.posTab) + 1
         msg = EnclosureChallenge.posTab[EnclosureChallenge.posGUI] or "Invalid GUI Position"
         local settings = EnclosureChallenge.getGUISettings()
-        settings.posGUI = EnclosureChallenge.posGUI  or 1
+        if settings then
+            settings.posGUI = EnclosureChallenge.posGUI  or 1
+        end
     end
 
     if msg then

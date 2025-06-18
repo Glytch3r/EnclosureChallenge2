@@ -4,14 +4,14 @@ VERSION = 1,
 
 option EnclosureChallenge.KeepMarkers
 {
-	type = boolean, default = false,
+	type = boolean, default = true,
 	page = EnclosureChallenge, translation = EnclosureChallenge_KeepMarkers,
 }
 
 
 option EnclosureChallenge.StartingUnlockPoints
 {
-	type = integer, min = 0, max = 100, default = 5,
+	type = integer, min = 0, max = 100, default = 1,
 	page = EnclosureChallenge, translation = EnclosureChallenge_StartingUnlockPoints,
 }
 
@@ -51,7 +51,7 @@ option EnclosureChallenge.ReturnStaggered
 option EnclosureChallenge.AllowQuit
 {
 	type = boolean, default = true,
-	page = EnclosureChallenge, translation = AllowQuit,
+	page = EnclosureChallenge, translation = EnclosureChallenge_AllowQuit,
 }
 
 option EnclosureChallenge.StatusChat
@@ -78,12 +78,12 @@ option EnclosureChallenge.ChallengeHours
 
 option EnclosureChallenge.StopCar
 {
-	type = boolean, default = true,
+	type = boolean, default = false,
 	page = EnclosureChallenge, translation = EnclosureChallenge_StopCar,
 }
 option EnclosureChallenge.LeakBattery
 {
-	type = boolean, default = true,
+	type = boolean, default = false,
 	page = EnclosureChallenge, translation = EnclosureChallenge_LeakBattery,
 }
 

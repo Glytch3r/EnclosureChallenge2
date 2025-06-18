@@ -24,6 +24,8 @@
   ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░     ░▒▓█▓▒░     ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓█▓▒░ ░▒▓█▓▒░  ▒▓░    ░▒▓█▓▒░   ░▒▓█▒░  ░▒▓█▒░
    ░▒▓█████▓▒░     ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓███████▓▒░   ░▒▓██████▓▒░   ░▒▓█▓▒░ ░▒▓█▓▒░  ░▒▓███████▓▒░    ░▒▓███████▓▒░
 █████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████--]]
+if not isIngameState() then return  end
+
 require "lua_timers"
 
 EnclosureChallenge = EnclosureChallenge or {}
@@ -96,13 +98,25 @@ function EnclosureChallenge.isRemoteMode()
     return ec and ec.RemoteChallenge ~= ""
 end
 
-
 function EnclosureChallenge.getModeStr()
     if EnclosureChallenge.isChallenger() then
         if EnclosureChallenge.isAdditiveMode() then return "Additive Mode" end
         if EnclosureChallenge.isRemoteMode() then return "Remote Mode" end
     end
     return ""
+end
+
+
+function EnclosureChallenge.getChallengeStatus(targ)
+    if not isIngameState() then return "Neutral" end
+    targ = targ or getPlayer()
+    if not targ then return "Neutral" end
+
+    if EnclosureChallenge.isChallenger() and EnclosureChallenge.isSameEnclosure(targ) then
+        return EnclosureChallenge.getModeStr()
+    end
+
+    return EnclosureChallenge.getEnclosureStatus(targ)
 end
 
 
