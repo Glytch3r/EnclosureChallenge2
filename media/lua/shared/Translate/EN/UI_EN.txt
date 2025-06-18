@@ -5,5 +5,8 @@ UI_EN = {
     UI_optionscreen_binding_Adjust Enclosure GUI Opacity= "Adjust Enclosure GUI Opacity",
     UI_optionscreen_binding_Toggle Enclosure MouseTip = "Toggle Enclosure MouseTip",
 
+    UI_optionscreen_binding_Adjust_Enclosure_GUI_Opacity = "Adjust Enclosure GUI Opacity",
+    UI_optionscreen_binding_Adjust_Enclosure_GUI_Position = "Adjust Enclosure GUI Position",
+    UI_optionscreen_binding_Toggle_Enclosure_MouseTip = "Toggle Enclosure MouseTip",
 
 }
