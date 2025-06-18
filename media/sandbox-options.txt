@@ -219,7 +219,7 @@ option EnclosureChallenge12.Rewards      { type = string, default = Base.Propane
 option EnclosureChallenge12.RewardChance { type = double, min = 0, max = 100, default = 100, page = EnclosureChallenge12, translation = EnclosureChallenge12_RewardChance, }
 
 option EnclosureChallenge13.RewardTitle  { type = string, default = Miscellaneous, page = EnclosureChallenge13, translation = EnclosureChallenge13_RewardTitle, }
-option EnclosureChallenge13.Rewards      { type = string, default = Base.Money;Base.Eraser;Base.Comb;Base.Dice;Base.Lipstick;Base.Locket;Base.Mirror;Base.Razor;Base.ToyBear;Base.Wallet;Base.HairDyeBlack, page = EnclosureChallenge13, translation = EnclosureChallenge13_Rewards, }
+option EnclosureChallenge13.Rewards      { type = string, default = Base.Money;Base.Bag_DuffelBag;Base.Eraser;Base.Comb;Base.Dice;Base.Lipstick;Base.Locket;Base.Mirror;Base.Razor;Base.ToyBear;Base.Wallet;Base.HairDyeBlack, page = EnclosureChallenge13, translation = EnclosureChallenge13_Rewards, }
 option EnclosureChallenge13.RewardChance { type = double, min = 0, max = 100, default = 100, page = EnclosureChallenge13, translation = EnclosureChallenge13_RewardChance, }
 
 option EnclosureChallenge14.RewardTitle   { type = string, default = Ammo, page = EnclosureChallenge14, translation = EnclosureChallenge14_RewardTitle, }
