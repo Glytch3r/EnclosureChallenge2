@@ -203,7 +203,7 @@ option EnclosureChallenge8.Rewards       { type = string, default = farming.Carr
 option EnclosureChallenge8.RewardChance  { type = double, min = 0, max = 100, default = 100, page = EnclosureChallenge8, translation = EnclosureChallenge8_RewardChance, }
 
 option EnclosureChallenge9.RewardTitle   { type = string, default = Survival, page = EnclosureChallenge9, translation = EnclosureChallenge9_RewardTitle, }
-option EnclosureChallenge9.Rewards       { type = string, default = Base.BarbedWire;Base.TrapStick;Base.FishingTackle;Base.WoodenStick;Base.FireWoodKit;Base.Lighter;Base.Coal;Base.RedPen;camping.CampfireKit;camping.Flint;camping.CampingTentKit, page = EnclosureChallenge9, translation = EnclosureChallenge9_Rewards, }
+option EnclosureChallenge9.Rewards       { type = string, default = Base.TreeBranch;Base.BarbedWire;Base.TrapStick;Base.FishingTackle;Base.WoodenStick;Base.Log;Base.Lighter;Base.Coal;Base.RedPen;camping.Flint;Base.Plank, page = EnclosureChallenge9, translation = EnclosureChallenge9_Rewards, }
 option EnclosureChallenge9.RewardChance  { type = double, min = 0, max = 100, default = 100, page = EnclosureChallenge9, translation = EnclosureChallenge9_RewardChance, }
 
 option EnclosureChallenge10.RewardTitle  { type = string, default = Automotives, page = EnclosureChallenge10, translation = EnclosureChallenge10_RewardTitle, }
