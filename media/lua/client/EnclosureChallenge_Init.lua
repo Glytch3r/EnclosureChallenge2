@@ -24,6 +24,18 @@ EnclosureChallenge = EnclosureChallenge or {}
 EnclosureChallenge.encTick = 0
 EnclosureChallenge.EnclosureSize = 189
 EnclosureChallenge.MarkerCache = {}
+
+function EnclosureChallenge.getStartingUnlockPoints()
+    local def = 1
+    if SandboxVars
+        and SandboxVars.EnclosureChallenge
+        and type(SandboxVars.EnclosureChallenge.StartingUnlockPoints) == "number"
+    then
+        return SandboxVars.EnclosureChallenge.StartingUnlockPoints
+    end
+    return def
+end
+
 -----------------------    init*        ---------------------------
 --local  ec = EnclosureChallenge.getData()
 
@@ -35,7 +47,7 @@ function EnclosureChallenge.initChallengeData(pl)
     md.EnclosureChallenge = md.EnclosureChallenge or {}
     local ec = md.EnclosureChallenge
 
-    ec.UnlockPoints      = ec.UnlockPoints      or SandboxVars.EnclosureChallenge.StartingUnlockPoints or 1
+    ec.UnlockPoints      = ec.UnlockPoints      or EnclosureChallenge.getStartingUnlockPoints()
     ec.RewardChoice      = ec.RewardChoice      or 0
     ec.Challenges        = ec.Challenges        or {}
     ec.Conquered         = ec.Conquered         or {}
