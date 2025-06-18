@@ -127,6 +127,8 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
     startHereOpt.toolTip = startHereTip
 
     ----------------------- remote* ---------------------------
+
+
     if not isChallenger and SandboxVars.EnclosureChallenge.AllowRemoteChallenge then
         local remoteOpt = rootMenu:addOption(getText("ContextMenu_EnclosureChallenge_StartRemote"), worldobjects, function()
             EnclosureChallenge.saveCoord()

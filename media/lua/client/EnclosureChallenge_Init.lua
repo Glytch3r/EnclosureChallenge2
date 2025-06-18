@@ -19,7 +19,7 @@ require "lua_timers"
 
 EnclosureChallenge = EnclosureChallenge or {}
 
-
+EnclosureChallenge.encTick = 0
 EnclosureChallenge.EnclosureSize = 189
 EnclosureChallenge.MarkerCache = {}
 -----------------------    init*        ---------------------------
@@ -44,13 +44,15 @@ function EnclosureChallenge.initChallengeData(pl)
     ec.RemoteChallenge   = ec.RemoteChallenge   or ""
     ec.AdditiveChallenge = ec.AdditiveChallenge or ""
 
-    ec.GUI = ec.GUI or {}
-    ec.GUI.textGap   =  ec.GUI.textGap or 42
-    ec.GUI.posGUI    =  ec.GUI.posGUI or 3
-    ec.GUI.xPercentPos =  ec.GUI.xPercentPos or 50
-    ec.GUI.yPercentPos =  ec.GUI.yPercentPos or 50
+    ec.GUI               = ec.GUI               or {}
+    ec.GUI.textGap       = ec.GUI.textGap       or 42
+    ec.GUI.posGUI        = ec.GUI.posGUI        or 3
+    ec.GUI.xPercentPos   = ec.GUI.xPercentPos   or 80
+    ec.GUI.yPercentPos   = ec.GUI.yPercentPos   or 80
+
     return ec
 end
+
 
 function EnclosureChallenge.getGUISettings()
     local  ec = EnclosureChallenge.getData()
@@ -85,18 +87,16 @@ Events.OnCreatePlayer.Add(function()
         end
     end
 end)
+
+
 LuaEventManager.AddEvent("OnEnclosureChange")
-
-
 function EnclosureChallenge.updateMarkers(encStr)
-
 	if getCore():getDebug() then
         print('OnEnclosureChange ' .. tostring(encStr))
 	end
 
    local pl = getPlayer()
    if not pl then return end
-
 
    EnclosureChallenge.setMarkers(pl, SandboxVars.EnclosureChallenge.KeepMarkers)
    EnclosureChallenge.addChallengeSymbols(pl)
@@ -122,12 +122,11 @@ function EnclosureChallenge.OutOfBoundHandler()
 		pl:setHaloNote("OUT OF BOUNDS!", 255, 50, 50, 150)
 	end
 end
-
 Events.OnEnclosureChange.Add(EnclosureChallenge.OutOfBoundHandler)
 
 
 
-EnclosureChallenge.encTick = 0
+
 function EnclosureChallenge.EnclosureChange(pl)
     if not isIngameState() or not pl then return end
 
@@ -146,8 +145,9 @@ function EnclosureChallenge.EnclosureChange(pl)
         EnclosureChallenge.PreviousEnclosure = encStr
     end
 end
-
 Events.OnPlayerUpdate.Add(EnclosureChallenge.EnclosureChange)
+
+
 
 --[[ Events.OnCreatePlayer.Add(function()
     if isIngameState() then
