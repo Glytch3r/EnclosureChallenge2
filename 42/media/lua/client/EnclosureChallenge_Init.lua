@@ -79,8 +79,6 @@ function EnclosureChallenge.updateMarkers(encStr)
    local x = pl:getX()
    local y = pl:getY()
    local midX, midY = EnclosureChallenge.getEnclosureMidXY(x, y, pl)
-   EnclosureChallenge.drawEnclosureGrid(midX, midY)
-   EnclosureChallenge.drawEnclosureGridOverlay(minimap, midX, midY)
 
 end
 Events.OnEnclosureChange.Add(EnclosureChallenge.updateMarkers)
@@ -90,10 +88,9 @@ function EnclosureChallenge.OutOfBoundHandler()
 	local pl = getPlayer()
 	if not EnclosureChallenge.isChallenger() then return end
 
-	if EnclosureChallenge.isOutOfBounds(pl) and pl:isAlive() then
-		timer:Simple(2, function()
-			EnclosureChallenge.rebound()
-		end)
+	if EnclosureChallenge.isOutOfBounds(pl) and pl:isAlive() and not EnclosureChallenge.Rebound.inTransit then
+		EnclosureChallenge.outOfBoundsPending = true
+		EnclosureChallenge.rebound()
 		pl:setHaloNote("OUT OF BOUNDS!", 255, 50, 50, 150)
 	end
 end
@@ -101,6 +98,8 @@ Events.OnEnclosureChange.Add(EnclosureChallenge.OutOfBoundHandler)
 
 function EnclosureChallenge.EnclosureChange(pl)
     if not isIngameState() or not pl then return end
+
+    EnclosureChallenge.OutOfBoundHandler()
 
     EnclosureChallenge.encTick = EnclosureChallenge.encTick + 1
     if EnclosureChallenge.encTick % 10 ~= 0 then return end

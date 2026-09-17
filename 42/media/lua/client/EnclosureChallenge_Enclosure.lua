@@ -9,9 +9,15 @@ function EnclosureChallenge.tp(pl, x, y, z)
         return
     end
 
-    EnclosureChallenge.forceExitCar()
+    local vehicle = pl:getVehicle()
+    if vehicle and EnclosureChallenge.getVehicleSeat(pl, vehicle) == 0 then
+        if EnclosureChallenge.reboundVehicle(pl, x, y, z) then return true end
+    end
+
+    EnclosureChallenge.forceExitCar(pl)
     if luautils.stringStarts(getCore():getVersion(), "42") then
         pl:teleportTo(tonumber(x), tonumber(y), tonumber(z))
+        return true
     else
         pl:setX(x)
         pl:setY(y)
@@ -24,8 +30,9 @@ function EnclosureChallenge.tp(pl, x, y, z)
         end
         if pl.setLz then
             pl:setLz(z)
-        end
     end
+    return true
+end
 
 end
 

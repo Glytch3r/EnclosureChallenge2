@@ -38,6 +38,7 @@ function EnclosureChallenge.saveCoord()
                 y = round(csq:getY()),
                 z = csq:getZ()
             }
+            if isClient() and pl.transmitModData then pl:transmitModData() end
         end
         print("saveCoord()"..tostring(ec.OriginCoords.x)..",  "..tostring(ec.OriginCoords.y))
 
@@ -45,8 +46,9 @@ function EnclosureChallenge.saveCoord()
 end
 function EnclosureChallenge.getCoords()
     local ec = EnclosureChallenge.getData()
+    if not ec then return nil, nil, nil end
     ec.OriginCoords = ec.OriginCoords or {}
-    if ec and ec.OriginCoords then
+    if ec.OriginCoords then
         return ec.OriginCoords.x, ec.OriginCoords.y, ec.OriginCoords.z
     end
     return nil, nil, nil
@@ -123,6 +125,8 @@ end
 function EnclosureChallenge.tpRandMidSq()
     local pl = getPlayer()
     if not pl then return end
+    if EnclosureChallenge.remoteTeleportPending then return end
+    EnclosureChallenge.remoteTeleportPending = true
 
     local rTick = 0
     local waitTicks = 60
@@ -132,6 +136,7 @@ function EnclosureChallenge.tpRandMidSq()
 
     local midX, midY, enclosureX, enclosureY = EnclosureChallenge.getRandMidCoord()
     if not midX then
+        EnclosureChallenge.remoteTeleportPending = false
         pl:Say("Map API failed.")
         return
     end
@@ -148,6 +153,7 @@ function EnclosureChallenge.tpRandMidSq()
                 if attemptCount >= maxAttempts then
                     pl:Say("Unable to find valid location.")
                     EnclosureChallenge.goBack()
+                    EnclosureChallenge.remoteTeleportPending = false
                     Events.OnTick.Remove(tpHandler)
                     return
                 end
@@ -155,6 +161,7 @@ function EnclosureChallenge.tpRandMidSq()
                 midX, midY, enclosureX, enclosureY = EnclosureChallenge.getRandMidCoord()
                 if not midX then
                     pl:Say("Retry failed.")
+                    EnclosureChallenge.remoteTeleportPending = false
                     Events.OnTick.Remove(tpHandler)
                     return
                 end
@@ -165,6 +172,7 @@ function EnclosureChallenge.tpRandMidSq()
             end
 
             EnclosureChallenge.ConfirmDialog(pl, "Accept Remote Challenge?", "Enclosure Challenge", false, true)
+            EnclosureChallenge.remoteTeleportPending = false
             Events.OnTick.Remove(tpHandler)
         end
     end

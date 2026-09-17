@@ -51,8 +51,9 @@ function EnclosureChallenge.storeRebound(targ) -- also sets markers
     local ec = EnclosureChallenge.getData()
     if not ec then return end
     local encStr =  EnclosureChallenge.getEnclosureStr(targ)
-    ec.Rebound = ec.Rebound or { x = round(targ:getX()), y = round(targ:getY()), z = targ:getZ() or 0, }
+    ec.Rebound = { x = round(targ:getX()), y = round(targ:getY()), z = targ:getZ() or 0, }
     EnclosureChallenge.setReturnPointMarker()
+    if isClient() and pl.transmitModData then pl:transmitModData() end
 end
 -----------------------            ---------------------------
 

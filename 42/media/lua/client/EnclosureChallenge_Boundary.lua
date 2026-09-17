@@ -9,7 +9,9 @@ function EnclosureChallenge.isOutOfBounds(targ)
 	local pl = getPlayer()
 	if not pl or not pl:isAlive() or not EnclosureChallenge.isChallenger() then return false end
 
-	local encStr = EnclosureChallenge.getEnclosureStr(targ)
+	local vehicle = targ == pl and pl:getVehicle() or nil
+	local boundaryTarget = vehicle or targ
+	local encStr = EnclosureChallenge.getEnclosureStr(boundaryTarget)
 	if not encStr then return false end
 
 	local ec = EnclosureChallenge.getData()
@@ -45,12 +47,26 @@ end
 
 function EnclosureChallenge.rebound()
 	local pl = getPlayer()
-	local ec = EnclosureChallenge.getData()
-	local p = ec and ec.Rebound
-
-	if p and p.x and p.y and p.z then
-		EnclosureChallenge.tp(pl, p.x, p.y, p.z)
+	if EnclosureChallenge.Rebound and EnclosureChallenge.Rebound.start then
+		EnclosureChallenge.Rebound:start(pl)
 	end
+end
+
+function EnclosureChallenge.getBoundaryRebound(pl)
+	pl = pl or getPlayer()
+	local ec = EnclosureChallenge.getData()
+	if not pl or not ec then return nil end
+	local encStr = EnclosureChallenge.isRemoteMode() and ec.RemoteChallenge or ec.AdditiveChallenge
+	local encX, encY = encStr and tostring(encStr):match("^(-?%d+)_(-?%d+)$")
+	encX, encY = tonumber(encX), tonumber(encY)
+	if not encX or not encY then return nil end
+	local size = EnclosureChallenge.EnclosureSize or 189
+	local minX, minY = encX * size, encY * size
+	local maxX, maxY = minX + size, minY + size
+	local vehicle = pl:getVehicle()
+	local margin = vehicle and 2.0 or 0.5
+	local x, y = vehicle and vehicle:getX() or pl:getX(), vehicle and vehicle:getY() or pl:getY()
+	return { x = math.max(minX + margin, math.min(x, maxX - margin)), y = math.max(minY + margin, math.min(y, maxY - margin)), z = pl:getZ() }
 end
 
 function EnclosureChallenge.isReboundSq(sq)
@@ -74,21 +90,26 @@ EnclosureChallenge.Rebound = setmetatable({}, {
 		pl = nil,
 		staggered = false,
 		inTransit = false,
+		target = nil,
 
 		reset = function(self)
 			self.tick = 0
 			self.pl = nil
 			self.staggered = false
 			self.inTransit = false
+			self.pending = false
+			self.target = nil
+			EnclosureChallenge.outOfBoundsPending = false
 		end,
 
 		start = function(self, player)
 			if self.inTransit then return end
 			self.inTransit = true
+			self.pending = true
 
 			player = player or getPlayer()
 			local ec = player:getModData().EnclosureChallenge
-			local p = ec and ec.Rebound
+			local p = EnclosureChallenge.getBoundaryRebound(player) or (ec and ec.Rebound)
 
 			if not (p and p.x and p.y) then
 				self:reset()
@@ -102,6 +123,7 @@ EnclosureChallenge.Rebound = setmetatable({}, {
 			end
 
 			self.pl = player
+			self.target = { x = tonumber(p.x), y = tonumber(p.y), z = tonumber(p.z or 0) }
 			self.tick = 0
 			self.staggered = false
 
@@ -112,7 +134,7 @@ EnclosureChallenge.Rebound = setmetatable({}, {
 			end
 		end,
 
-		handler = function()
+			handler = function()
 			local rebound = EnclosureChallenge.Rebound
 			local pl = getPlayer()
 			if not pl then
@@ -123,7 +145,15 @@ EnclosureChallenge.Rebound = setmetatable({}, {
 			rebound.tick = rebound.tick + 1
 			local csq = pl:getCurrentSquare()
 
-			if rebound.tick % 4 == 0 or (csq and EnclosureChallenge.isReboundSq(csq)) then
+			if rebound.tick > 300 then
+				Events.OnTick.Remove(rebound.handler)
+				rebound:reset()
+				return
+			end
+
+			local target = rebound.target
+			local arrived = target and math.abs(pl:getX() - target.x) <= 2.5 and math.abs(pl:getY() - target.y) <= 2.5
+			if arrived or (csq and EnclosureChallenge.isReboundSq(csq)) then
 				if not rebound.staggered and rebound.pl then
 					rebound.staggered = true
 

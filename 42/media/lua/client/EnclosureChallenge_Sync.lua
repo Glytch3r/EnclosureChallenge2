@@ -45,7 +45,7 @@ function EnclosureChallenge.stag(targ)
                 targ:setVariable("BumpFallType", "pushedFront");
             end)
             timer:Simple(1.5, function()
-                EnclosureChallenge.waitStag = true
+                EnclosureChallenge.waitStag = false
             end)
 
         end
@@ -75,6 +75,12 @@ Commands.EnclosureChallenge.stagger = function(args)
     if targ then
 		EnclosureChallenge.stag(targ)
 	end
+end
+
+Commands.EnclosureChallenge.vehicleRebound = function(args)
+    if not args or not args.id then return end
+    local vehicle = getVehicleById and getVehicleById(args.id) or nil
+    if vehicle then EnclosureChallenge.moveVehicle(vehicle, args.x, args.y) end
 end
 
 Commands.EnclosureChallenge.prompt = function(args)
@@ -112,5 +118,3 @@ Events.OnServerCommand.Add(function(module, command, args)
 		Commands[module][command](args)
 	end
 end)
-
-

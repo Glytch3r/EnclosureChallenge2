@@ -26,6 +26,7 @@
 █████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████--]]
 
 require "lua_timers"
+require "ISUI/Maps/ISWorldMap"
 EnclosureChallenge = EnclosureChallenge or {}
 
 
@@ -87,33 +88,20 @@ end
 
 
 function EnclosureChallenge.addChallengeSymbols(targ)
-    if not ISWorldMap_instance then
-        ISWorldMap.ShowWorldMap(0)
-        ISWorldMap_instance:close()
+    EnclosureChallenge.clearChallengeSymbols()
+end
+
+function EnclosureChallenge.clearChallengeSymbols()
+    if not ISWorldMap_instance or not ISWorldMap_instance.javaObject then return end
+    local mapAPI = ISWorldMap_instance.javaObject:getAPIv1()
+    local symAPI = mapAPI and mapAPI:getSymbolsAPI()
+    if not symAPI then return end
+    for i = symAPI:getSymbolCount() - 1, 0, -1 do
+        local sym = symAPI:getSymbolByIndex(i)
+        if sym and EnclosureChallenge.isEncSym(sym:getTextureName()) then
+            symAPI:removeSymbolByIndex(i)
+        end
     end
-	if not ISWorldMap_instance or not ISWorldMap_instance.javaObject then return end
-
-    local pl = getPlayer();
-    if not pl then return end
-    targ = targ or pl
-    if not targ then return end
-
-	--local encStr = EnclosureChallenge.getEnclosureStr(targ)
-	local status = EnclosureChallenge.getEnclosureStatus(targ)
-	if not status then return end
-    local stampMap = {
-        ["Conquered"] = "Enclosure_Conquered",
-        ["Unlocked"]  = "Enclosure_Challenge",
-        ["Neutral"]   = nil,
-    }
-    local stamp = stampMap[status]
-    if not stamp then return end
-    local x = targ:getX()
-    local y = targ:getY()
-    local  midX, midY = EnclosureChallenge.getEnclosureMidXY(x, y, targ)
-
-    EnclosureChallenge.delSym(midX, midY)
-    EnclosureChallenge.addMapSymbol(midX, midY, stamp)
 
 end
 -----------------------            ---------------------------
@@ -121,9 +109,9 @@ end
 EnclosureChallenge.ISMiniMapOuter = EnclosureChallenge.ISMiniMapOuter or ISMiniMapOuter.render
 function ISMiniMapOuter:render()
     EnclosureChallenge.ISMiniMapOuter(self)
-    if not ISWorldMap_instance then return end
     if not self.mapAPI then return end
     local pl = getSpecificPlayer(self.playerNum)
+    if not pl then return end
     local x = pl:getX()
     local y = pl:getY()
     local midX, midY = EnclosureChallenge.getEnclosureMidXY(x, y, pl)
@@ -139,24 +127,69 @@ function EnclosureChallenge.drawEnclosureGridOverlay(minimap, midX, midY)
     local y1 = midY - half
     local y2 = midY + half
 
-    local step = 10 -- grid spacing
-    local col = {r=1, g=1, b=0.2, a=0.2}
-
-    for x = x1, x2, step do
-        EnclosureChallenge.drawMapLine(minimap, x, y1, x, y2, col)
-    end
-    for y = y1, y2, step do
-        EnclosureChallenge.drawMapLine(minimap, x1, y, x2, y, col)
-    end
+    local col = EnclosureChallenge.getEnclosureColor(getPlayer()) or {r=1, g=0.9, b=0.1, a=1}
+    local alpha = 0.50
+    EnclosureChallenge.drawMapLine(minimap, x1, y1, x2, y1, {r=col.r, g=col.g, b=col.b, a=alpha})
+    EnclosureChallenge.drawMapLine(minimap, x2, y1, x2, y2, {r=col.r, g=col.g, b=col.b, a=alpha})
+    EnclosureChallenge.drawMapLine(minimap, x2, y2, x1, y2, {r=col.r, g=col.g, b=col.b, a=alpha})
+    EnclosureChallenge.drawMapLine(minimap, x1, y2, x1, y1, {r=col.r, g=col.g, b=col.b, a=alpha})
 end
 function EnclosureChallenge.drawMapLine(minimap, x1, y1, x2, y2, col)
     if not minimap or not minimap.mapAPI then return end
-    local sx1 = minimap.mapAPI:worldToUIX(x1)
-    local sy1 = minimap.mapAPI:worldToUIY(y1)
-    local sx2 = minimap.mapAPI:worldToUIX(x2)
-    local sy2 = minimap.mapAPI:worldToUIY(y2)
+    local sx1 = minimap.mapAPI:worldToUIX(x1, y1)
+    local sy1 = minimap.mapAPI:worldToUIY(x1, y1)
+    local sx2 = minimap.mapAPI:worldToUIX(x2, y2)
+    local sy2 = minimap.mapAPI:worldToUIY(x2, y2)
 
-    minimap:drawLine(sx1, sy1, sx2, sy2, col.r, col.g, col.b, col.a)
+    local dx, dy = sx2 - sx1, sy2 - sy1
+    local length = math.sqrt(dx * dx + dy * dy)
+    if length <= 0 then return end
+    local half = 1.5
+    local nx, ny = -dy / length * half, dx / length * half
+    getRenderer():renderPoly(sx1 + nx, sy1 + ny, sx2 + nx, sy2 + ny,
+        sx2 - nx, sy2 - ny, sx1 - nx, sy1 - ny, col.r, col.g, col.b, col.a)
+end
+
+function EnclosureChallenge.drawWorldMapVisuals(map)
+    if not map or not map.mapAPI then return end
+    if not EnclosureChallenge.mapSymbolsCleared then
+        EnclosureChallenge.clearChallengeSymbols()
+        EnclosureChallenge.mapSymbolsCleared = true
+    end
+    local pl = getPlayer()
+    if not pl then return end
+    local size = EnclosureChallenge.EnclosureSize or 189
+    local x, y = pl:getX(), pl:getY()
+    local x1 = math.floor(x / size) * size
+    local y1 = math.floor(y / size) * size
+    local x2, y2 = x1 + size, y1 + size
+    local mx, my = map:getMouseX(), map:getMouseY()
+    local wx, wy = map.mapAPI:uiToWorldX(mx, my), map.mapAPI:uiToWorldY(mx, my)
+    if not wx or not wy then return end
+    local hovered = wx and wy and wx >= x1 and wx < x2 and wy >= y1 and wy < y2
+    local col = EnclosureChallenge.getEnclosureColor(pl) or {r=1, g=0.9, b=0.1}
+    local alpha = hovered and 0.95 or 0.50
+    local function line(ax, ay, bx, by)
+        local sx1, sy1 = map.mapAPI:worldToUIX(ax, ay), map.mapAPI:worldToUIY(ax, ay)
+        local sx2, sy2 = map.mapAPI:worldToUIX(bx, by), map.mapAPI:worldToUIY(bx, by)
+        if sx1 and sy1 and sx2 and sy2 then
+            EnclosureChallenge.drawMapLine(map, ax, ay, bx, by, {r=col.r, g=col.g, b=col.b, a=alpha})
+        end
+    end
+    line(x1, y1, x2, y1)
+    line(x2, y1, x2, y2)
+    line(x2, y2, x1, y2)
+    line(x1, y2, x1, y1)
+    map:drawText("X: " .. tostring(math.floor(wx)) .. "  |  Y: " .. tostring(math.floor(wy)), mx + 14, my + 38, 1, 1, 1, 1, UIFont.Small)
+end
+
+if ISWorldMap and not EnclosureChallenge.worldMapHooked then
+    EnclosureChallenge.worldMapHooked = true
+    local vanillaRender = ISWorldMap.render
+    ISWorldMap.render = function(self, ...)
+        vanillaRender(self, ...)
+        EnclosureChallenge.drawWorldMapVisuals(self)
+    end
 end
 
 -----------------------            ---------------------------
