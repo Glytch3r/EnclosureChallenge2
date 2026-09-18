@@ -111,17 +111,16 @@ end
 
 function EnclosureChallenge.getRandMidCoord()
     local size = EnclosureChallenge.EnclosureSize or 189
+    local is42 = luautils.stringStarts(getCore():getVersion(), "42")
 
     if not ISWorldMap_instance then
         ISWorldMap.ShowWorldMap(0)
-        return nil, nil, nil, nil
+        if not is42 then return nil, nil, nil, nil end
     end
 
     local mapAPI = ISWorldMap_instance.javaObject and ISWorldMap_instance.javaObject:getAPIv1()
-    if not mapAPI then return nil, nil, nil, nil end
-
-    local maxX = mapAPI:getWidthInSquares() - 1
-    local maxY = mapAPI:getHeightInSquares() - 1
+    local maxX = mapAPI and mapAPI:getWidthInSquares() - 1 or 16348
+    local maxY = mapAPI and mapAPI:getHeightInSquares() - 1 or 15683
 
     local boundLimitX = math.max(0, maxX - size)
     local boundLimitY = math.max(0, maxY - size)

@@ -100,9 +100,15 @@ function EnclosureChallenge.getRandMidCoord()
 
     if not maxX or not maxY or maxX <= 0 or maxY <= 0 then
         local cell = getCell()
-        if not cell then return nil, nil, nil, nil end
-        maxX = cell:getWidthInTiles() - 1
-        maxY = cell:getHeightInTiles() - 1
+        if cell then
+            maxX = cell:getWidthInTiles() - 1
+            maxY = cell:getHeightInTiles() - 1
+        end
+    end
+
+    if (not maxX or not maxY or maxX <= 0 or maxY <= 0) and is42 then
+        maxX = 16348
+        maxY = 15683
     end
 
     local boundLimitX = math.max(0, maxX - size)
