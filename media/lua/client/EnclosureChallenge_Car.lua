@@ -27,6 +27,36 @@
 
 EnclosureChallenge = EnclosureChallenge or {}
 
+function EnclosureChallenge.getVehicleSeat(pl, vehicle)
+    vehicle = vehicle or (pl and pl:getVehicle())
+    if not vehicle or not pl then return -1 end
+    return vehicle:getSeat(pl) or -1
+end
+
+function EnclosureChallenge.reboundMoveVehicle(vehicle, x, y)
+    if not vehicle or not x or not y then return false end
+    local transform = BaseVehicle.allocTransform()
+    vehicle:getWorldTransform(transform)
+    local origin = transform:getOrigin()
+    origin:set(origin:x() + (x - vehicle:getX()), origin:y(), origin:z() + (y - vehicle:getY()))
+    vehicle:setWorldTransform(transform)
+    BaseVehicle.releaseTransform(transform)
+    return true
+end
+
+function EnclosureChallenge.reboundVehicle(pl, x, y, z)
+    pl = pl or getPlayer()
+    local vehicle = pl and pl:getVehicle() or nil
+    if not vehicle or EnclosureChallenge.getVehicleSeat(pl, vehicle) ~= 0 then return false end
+    if isClient() then
+        local moved = EnclosureChallenge.reboundMoveVehicle(vehicle, tonumber(x), tonumber(y))
+        if not moved then return false end
+        sendClientCommand("EnclosureChallenge", "reboundVehicle", { id = vehicle:getId(), x = tonumber(x), y = tonumber(y), z = tonumber(z or vehicle:getZ()) })
+        return true
+    end
+    return EnclosureChallenge.reboundMoveVehicle(vehicle, tonumber(x), tonumber(y))
+end
+
 
 function EnclosureChallenge.getCar(sq)
 	local pl = getPlayer();

@@ -77,6 +77,12 @@ Commands.EnclosureChallenge.stagger = function(args)
 	end
 end
 
+Commands.EnclosureChallenge.vehicleRebound = function(args)
+    if not args or not args.id then return end
+    local vehicle = getVehicleById and getVehicleById(args.id) or nil
+    if vehicle then EnclosureChallenge.reboundMoveVehicle(vehicle, args.x, args.y) end
+end
+
 Commands.EnclosureChallenge.prompt = function(args)
     local EnclosureX = args.EnclosureX
     local EnclosureY = args.EnclosureY

@@ -27,6 +27,15 @@ function EnclosureChallenge.tp(pl, x, y, z)
         return
     end
 
+    local vehicle = pl:getVehicle()
+    if vehicle then
+        if EnclosureChallenge.getVehicleSeat(pl, vehicle) == 0 then
+            if EnclosureChallenge.reboundVehicle(pl, x, y, z) then return true end
+        else
+            return true
+        end
+    end
+
     EnclosureChallenge.forceExitCar()
 
   	pl:setX(x)

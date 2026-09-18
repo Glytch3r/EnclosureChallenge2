@@ -49,6 +49,27 @@ Commands.EnclosureChallenge.send = function(player, args)
     sendServerCommand("EnclosureChallenge", "send", {id = playerId})
 end
 
+Commands.EnclosureChallenge.reboundVehicle = function(player, args)
+    local vehicle = player and player:getVehicle() or nil
+    if not vehicle or not args or vehicle:getId() ~= args.id or vehicle:getSeat(player) ~= 0 then return end
+    local x, y = tonumber(args.x), tonumber(args.y)
+    if not x or not y then return end
+    if EnclosureChallenge.reboundMoveVehicleServer(vehicle, x, y) then
+        sendServerCommand("EnclosureChallenge", "vehicleRebound", { id = vehicle:getId(), x = x, y = y })
+    end
+end
+
+function EnclosureChallenge.reboundMoveVehicleServer(vehicle, toX, toY)
+    if not vehicle or not toX or not toY then return false end
+    local transform = BaseVehicle.allocTransform()
+    vehicle:getWorldTransform(transform)
+    local origin = transform:getOrigin()
+    origin:set(origin:x() + (tonumber(toX) - vehicle:getX()), origin:y(), origin:z() + (tonumber(toY) - vehicle:getY()))
+    vehicle:setWorldTransform(transform)
+    BaseVehicle.releaseTransform(transform)
+    return true
+end
+
 Events.OnClientCommand.Add(function(module, command, player, args)
 	if Commands[module] and Commands[module][command] then
 	    Commands[module][command](player, args)
