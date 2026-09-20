@@ -34,6 +34,10 @@ EnclosureChallenge.posGUI = EnclosureChallenge.posGUI or 1
 EnclosureChallenge.alphaGUI = EnclosureChallenge.alphaGUI or 1
 EnclosureChallenge.MouseTip = EnclosureChallenge.MouseTip or true
 
+function EnclosureChallenge.toggleMouseTip()
+    EnclosureChallenge.MouseTip = not EnclosureChallenge.MouseTip
+end
+
 EnclosureChallenge.posTab = {
     "Position: Screen Percent",
     "Position: Center Screen",

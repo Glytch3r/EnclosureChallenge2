@@ -13,6 +13,7 @@
   "ContextMenu_EnclosureChallenge_MidSq": "Center Square: ",
   "ContextMenu_EnclosureChallenge_Cell": "Enclosure: ",
   "ContextMenu_EnclosureChallenge_Time": "Remaining Hrs: ",
+  "ContextMenu_EnclosureChallenge_MouseTip": "Show Mouse Hover Info",
   "ContextMenu_EnclosureChallenge_Confirm": "Challenge Enclosure: ",
   "ContextMenu_EnclosureChallenge_Conquer": "Conquered Enclosure Challenge",
   "ContextMenu_EnclosureChallenge_Fail": "Failed The Challenge",

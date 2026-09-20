@@ -172,6 +172,13 @@ function EnclosureChallenge.Context(plNum, context, worldobjects)
     end)
     context:setOptionChecked(drawGridOpt, EnclosureChallenge.isDrawGridEnabled())
 
+    local mouseTipOpt = rootMenu:addOption(getText("ContextMenu_EnclosureChallenge_MouseTip"), worldobjects, function()
+        EnclosureChallenge.toggleMouseTip()
+        context:hideAndChildren()
+        getSoundManager():playUISound("UIActivateMainMenuItem")
+    end)
+    context:setOptionChecked(mouseTipOpt, EnclosureChallenge.MouseTip)
+
     for pick = 5, 100, 5 do
         local label = tostring(pick) .. " %"
 
