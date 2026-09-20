@@ -36,6 +36,7 @@ function EnclosureChallenge.setChallenge(isStart, isRemote)
 	if not encStr then return end
 
 	EnclosureChallenge.storeRebound(pl)
+	ec.LastValid = { x = pl:getX(), y = pl:getY(), z = pl:getZ() }
 	EnclosureChallenge.addChallengeSymbols(pl)
     
 	if isRemote then
@@ -53,6 +54,8 @@ function EnclosureChallenge.setChallenge(isStart, isRemote)
 		ec.RemoteTime = 0
 
 	end
+
+	if isClient() and pl.transmitModData then pl:transmitModData() end
 end
 
 -----------------------            ---------------------------

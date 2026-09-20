@@ -1,3 +1,4 @@
+
 ----------------------------------------------------------------
 -----  ▄▄▄   ▄    ▄   ▄  ▄▄▄▄▄   ▄▄▄   ▄   ▄   ▄▄▄    ▄▄▄  -----
 ----- █   ▀  █    █▄▄▄█    █    █   ▀  █▄▄▄█  ▀  ▄█  █ ▄▄▀ -----
@@ -72,21 +73,52 @@ function EnclosureChallenge.rebound()
 	end
 end
 
+function EnclosureChallenge.getReboundMode(pl)
+	local vehicle = pl and pl:getVehicle()
+	if vehicle then
+		if SandboxVars.EnclosureChallenge.VehicleRebounds == false then return 2 end
+		return tonumber(SandboxVars.EnclosureChallenge.VehicleReboundMode) or 3
+	end
+	return tonumber(SandboxVars.EnclosureChallenge.ReboundMode) or 3
+end
+
+function EnclosureChallenge.isBoundaryRebound(pl, mode)
+	mode = mode or EnclosureChallenge.getReboundMode(pl)
+	return pl and pl:getVehicle() and mode == 3 or pl and not pl:getVehicle() and mode == 2
+end
+
 function EnclosureChallenge.getBoundaryRebound(pl)
 	pl = pl or getPlayer()
 	local ec = EnclosureChallenge.getData()
 	if not pl or not ec then return nil end
-	local encStr = EnclosureChallenge.isRemoteMode() and ec.RemoteChallenge or ec.AdditiveChallenge
-	local encX, encY = encStr and tostring(encStr):match("^(-?%d+)_(-?%d+)$")
-	encX, encY = tonumber(encX), tonumber(encY)
-	if not encX or not encY then return nil end
+	local lastValid = ec.LastValid
+	if lastValid and lastValid.x and lastValid.y then
+		return { x = lastValid.x, y = lastValid.y, z = lastValid.z or pl:getZ() }
+	end
+	local rebound = ec.Rebound
+	if not rebound or not rebound.x or not rebound.y then return nil end
 	local size = EnclosureChallenge.EnclosureSize or 189
-	local minX, minY = encX * size, encY * size
+	local minX = math.floor((tonumber(rebound.x) - 1) / size) * size
+	local minY = math.floor((tonumber(rebound.y) - 1) / size) * size
 	local maxX, maxY = minX + size, minY + size
 	local vehicle = pl:getVehicle()
 	local margin = vehicle and 2.0 or 0.5
 	local x, y = vehicle and vehicle:getX() or pl:getX(), vehicle and vehicle:getY() or pl:getY()
 	return { x = math.max(minX + margin, math.min(x, maxX - margin)), y = math.max(minY + margin, math.min(y, maxY - margin)), z = pl:getZ() }
+end
+
+function EnclosureChallenge.isSafeLastValid(pl)
+	local ec = EnclosureChallenge.getData()
+	local rebound = ec and ec.Rebound
+	if not pl or not rebound or not rebound.x or not rebound.y then return false end
+	local size = EnclosureChallenge.EnclosureSize or 189
+	local minX = math.floor((tonumber(rebound.x) - 1) / size) * size
+	local minY = math.floor((tonumber(rebound.y) - 1) / size) * size
+	local maxX, maxY = minX + size, minY + size
+	local vehicle = pl:getVehicle()
+	local x = vehicle and vehicle:getX() or pl:getX()
+	local y = vehicle and vehicle:getY() or pl:getY()
+	return math.min(x - minX, maxX - x, y - minY, maxY - y) > 1
 end
 
 function EnclosureChallenge.isReboundSq(sq)
@@ -129,9 +161,13 @@ EnclosureChallenge.Rebound = setmetatable({}, {
 
 			player = player or getPlayer()
 			local ec = player:getModData().EnclosureChallenge
-			local p = SandboxVars.EnclosureChallenge.ReboundToBoundary ~= false
-				and (EnclosureChallenge.getBoundaryRebound(player) or (ec and ec.Rebound))
-				or (ec and ec.Rebound)
+			local mode = EnclosureChallenge.getReboundMode(player)
+			if mode == 1 then
+				self:reset()
+				return
+			end
+			local p = EnclosureChallenge.isBoundaryRebound(player, mode)
+				and EnclosureChallenge.getBoundaryRebound(player) or (ec and ec.Rebound)
 
 			if not (p and p.x and p.y) then
 				self:reset()
@@ -139,7 +175,9 @@ EnclosureChallenge.Rebound = setmetatable({}, {
 			end
 
 			if isClient() then
-				sendClientCommand("EnclosureChallenge", "send", {})
+				sendClientCommand("EnclosureChallenge", "send", {
+					x = p.x, y = p.y, z = p.z or 0,
+				})
 			else
 				EnclosureChallenge.tp(player, p.x, p.y, p.z or 0)
 			end

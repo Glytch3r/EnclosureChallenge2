@@ -126,6 +126,16 @@ function EnclosureChallenge.EnforceBoundary(pl)
         EnclosureChallenge.outOfBoundsPending = true
         EnclosureChallenge.rebound()
         pl:setHaloNote("OUT OF BOUNDS!", 255, 50, 50, 150)
+    else
+        local ec = EnclosureChallenge.getData()
+        if ec and EnclosureChallenge.isSafeLastValid(pl) then
+            local vehicle = pl:getVehicle()
+            ec.LastValid = {
+                x = vehicle and vehicle:getX() or pl:getX(),
+                y = vehicle and vehicle:getY() or pl:getY(),
+                z = pl:getZ(),
+            }
+        end
     end
 end
 Events.OnPlayerUpdate.Add(EnclosureChallenge.EnforceBoundary)

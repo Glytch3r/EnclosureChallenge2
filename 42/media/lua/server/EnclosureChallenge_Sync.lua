@@ -45,7 +45,14 @@ end
 
 Commands.EnclosureChallenge.send = function(player, args)
     local playerId = player:getOnlineID();
-    sendServerCommand("EnclosureChallenge", "send", {id = playerId})
+    local data = player:getModData().EnclosureChallenge
+    local point = args and args.x and args.y and args or (data and data.Rebound or nil)
+    sendServerCommand("EnclosureChallenge", "send", {
+        id = playerId,
+        x = point and point.x,
+        y = point and point.y,
+        z = point and point.z,
+    })
 end
 
 Commands.EnclosureChallenge.reboundVehicle = function(player, args)

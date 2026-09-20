@@ -61,8 +61,12 @@ Commands.EnclosureChallenge.send = function(args)
         local ec = EnclosureChallenge.getData()
         if not ec or not ec.Rebound then return  end
 
-        local boundary = SandboxVars.EnclosureChallenge.ReboundToBoundary ~= false
+        local mode = EnclosureChallenge.getReboundMode(targ)
+        if mode == 1 then return end
+        local boundary = (args.x and args.y) and { x = args.x, y = args.y, z = args.z or 0 }
+        boundary = boundary or (EnclosureChallenge.isBoundaryRebound(targ, mode)
             and EnclosureChallenge.getBoundaryRebound(targ)
+        )
         local x = boundary and boundary.x or ec.Rebound.x
         local y = boundary and boundary.y or ec.Rebound.y
         local z = boundary and boundary.z or ec.Rebound.z or 0
