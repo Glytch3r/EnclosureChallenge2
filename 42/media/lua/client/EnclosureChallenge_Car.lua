@@ -11,7 +11,6 @@
 |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|
 |                       	Portfolio:  https://steamcommunity.com/id/glytch3r/myworkshopfiles/							          |
 |                       		                                    														 	  |
-|                       	Discord:    glytch3r														      |
 |                       		                                    														 	  |
 |                       	Support:    https://ko-fi.com/glytch3r														    	  |
 |_______________________________________________________________________________________________________________________________-]]
@@ -33,7 +32,7 @@ function EnclosureChallenge.getVehicleSeat(pl, vehicle)
     return vehicle:getSeat(pl) or -1
 end
 
-function EnclosureChallenge.moveVehicle(vehicle, x, y)
+function EnclosureChallenge.reboundMoveVehicle(vehicle, x, y)
     if not vehicle or not x or not y then return false end
     local cell = vehicle:getCell()
     local square = cell and cell:getGridSquare(math.floor(x), math.floor(y), vehicle:getZ()) or nil
@@ -60,12 +59,12 @@ function EnclosureChallenge.reboundVehicle(pl, x, y, z)
     local vehicle = pl and pl:getVehicle() or nil
     if not vehicle or EnclosureChallenge.getVehicleSeat(pl, vehicle) ~= 0 then return false end
     if isClient() then
-        local moved = EnclosureChallenge.moveVehicle(vehicle, tonumber(x), tonumber(y))
+        local moved = EnclosureChallenge.reboundMoveVehicle(vehicle, tonumber(x), tonumber(y))
         if not moved then return false end
         sendClientCommand("EnclosureChallenge", "reboundVehicle", { id = vehicle:getId(), x = tonumber(x), y = tonumber(y), z = tonumber(z or vehicle:getZ()) })
         return moved
     end
-    return EnclosureChallenge.moveVehicle(vehicle, tonumber(x), tonumber(y))
+    return EnclosureChallenge.reboundMoveVehicle(vehicle, tonumber(x), tonumber(y))
 end
 
 

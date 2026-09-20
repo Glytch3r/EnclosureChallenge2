@@ -11,7 +11,6 @@
 |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|
 |                       	Portfolio:  https://steamcommunity.com/id/glytch3r/myworkshopfiles/							          |
 |                       		                                    														 	  |
-|                       	Discord:    glytch3r														      |
 |                       		                                    														 	  |
 |                       	Support:    https://ko-fi.com/glytch3r														    	  |
 |_______________________________________________________________________________________________________________________________-]]
@@ -88,7 +87,6 @@ end
 
 
 function EnclosureChallenge.addChallengeSymbols(targ)
-    EnclosureChallenge.clearChallengeSymbols()
 end
 
 function EnclosureChallenge.clearChallengeSymbols()
@@ -98,7 +96,12 @@ function EnclosureChallenge.clearChallengeSymbols()
     if not symAPI then return end
     for i = symAPI:getSymbolCount() - 1, 0, -1 do
         local sym = symAPI:getSymbolByIndex(i)
-        if sym and EnclosureChallenge.isEncSym(sym:getTextureName()) then
+        local textureName
+        if sym then
+            local ok, value = pcall(function() return sym:getTextureName() end)
+            if ok then textureName = value end
+        end
+        if sym and EnclosureChallenge.isEncSym(textureName) then
             symAPI:removeSymbolByIndex(i)
         end
     end
@@ -109,6 +112,7 @@ end
 EnclosureChallenge.ISMiniMapOuter = EnclosureChallenge.ISMiniMapOuter or ISMiniMapOuter.render
 function ISMiniMapOuter:render()
     EnclosureChallenge.ISMiniMapOuter(self)
+    if not EnclosureChallenge.isDrawGridEnabled() then return end
     if not self.mapAPI then return end
     local pl = getSpecificPlayer(self.playerNum)
     if not pl then return end
@@ -152,10 +156,6 @@ end
 
 function EnclosureChallenge.drawWorldMapVisuals(map)
     if not map or not map.mapAPI then return end
-    if not EnclosureChallenge.mapSymbolsCleared then
-        EnclosureChallenge.clearChallengeSymbols()
-        EnclosureChallenge.mapSymbolsCleared = true
-    end
     local pl = getPlayer()
     if not pl then return end
     local size = EnclosureChallenge.EnclosureSize or 189
@@ -194,6 +194,7 @@ end
 
 -----------------------            ---------------------------
 function EnclosureChallenge.drawEnclosureGrid(midX, midY)
+    if not EnclosureChallenge.isDrawGridEnabled() then return end
     if not ISWorldMap_instance then return end
     local mapAPI = ISWorldMap_instance.javaObject:getAPIv1()
     local symAPI = mapAPI:getSymbolsAPI()

@@ -11,7 +11,6 @@
 |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|
 |                       	Portfolio:  https://steamcommunity.com/id/glytch3r/myworkshopfiles/							          |
 |                       		                                    														 	  |
-|                       	Discord:    glytch3r														      |
 |                       		                                    														 	  |
 |                       	Support:    https://ko-fi.com/glytch3r														    	  |
 |_______________________________________________________________________________________________________________________________-]]
@@ -62,18 +61,19 @@ Commands.EnclosureChallenge.reboundVehicle = function(player, args)
     local otherVehicle = square:getVehicleContainer()
     if otherVehicle and otherVehicle ~= vehicle then return end
     if IsoFlagType and (square:has(IsoFlagType.collideN) or square:has(IsoFlagType.collideW)) then return end
+    EnclosureChallenge.reboundMoveVehicleServer(vehicle, x, y)
+    sendServerCommand("EnclosureChallenge", "vehicleRebound", { id = vehicle:getId(), x = x, y = y })
+end
+
+function EnclosureChallenge.reboundMoveVehicleServer(vehicle, toX, toY)
+    if not vehicle or not toX or not toY then return false end
     local transform = BaseVehicle.allocTransform()
     vehicle:getWorldTransform(transform)
     local origin = transform:getOrigin()
-    origin:set(origin:x() + (x - vehicle:getX()), origin:y(), origin:z() + (y - vehicle:getY()))
+    origin:set(origin:x() + (tonumber(toX) - vehicle:getX()), origin:y(), origin:z() + (tonumber(toY) - vehicle:getY()))
     vehicle:setWorldTransform(transform)
     BaseVehicle.releaseTransform(transform)
-    pcall(vehicle.update, vehicle)
-    pcall(vehicle.updateControls, vehicle)
-    pcall(vehicle.updateBulletStats, vehicle)
-    pcall(vehicle.updatePhysics, vehicle)
-    pcall(vehicle.updatePhysicsNetwork, vehicle)
-    sendServerCommand("EnclosureChallenge", "vehicleRebound", { id = vehicle:getId(), x = x, y = y })
+    return true
 end
 
 Events.OnClientCommand.Add(function(module, command, player, args)

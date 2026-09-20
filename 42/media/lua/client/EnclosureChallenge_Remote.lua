@@ -1,4 +1,23 @@
-
+----------------------------------------------------------------
+-----  ▄▄▄   ▄    ▄   ▄  ▄▄▄▄▄   ▄▄▄   ▄   ▄   ▄▄▄    ▄▄▄  -----
+----- █   ▀  █    █▄▄▄█    █    █   ▀  █▄▄▄█  ▀  ▄█  █ ▄▄▀ -----
+----- █  ▀█  █      █      █    █   ▄  █   █  ▄   █  █   █ -----
+-----  ▀▀▀▀  ▀▀▀▀   ▀      ▀     ▀▀▀   ▀   ▀   ▀▀▀   ▀   ▀ -----
+----------------------------------------------------------------
+--                                                            --
+--   Project Zomboid Modding Commissions                      --
+--   https://steamcommunity.com/id/glytch3r/myworkshopfiles   --
+--                                                            --
+--   ▫ Support  ꞉   https://ko-fi.com/glytch3r                --
+--   ▫ Youtube  ꞉   https://www.youtube.com/@glytch3r         --
+--   ▫ Github   ꞉   https://github.com/Glytch3r               --
+--                                                            --
+----------------------------------------------------------------
+----- ▄   ▄   ▄▄▄   ▄   ▄   ▄▄▄     ▄      ▄   ▄▄▄▄  ▄▄▄▄  -----
+----- █   █  █   ▀  █   █  ▀   █    █      █      █  █▄  █ -----
+----- ▄▀▀ █  █▀  ▄  █▀▀▀█  ▄   █    █    █▀▀▀█    █  ▄   █ -----
+-----  ▀▀▀    ▀▀▀   ▀   ▀   ▀▀▀   ▀▀▀▀▀  ▀   ▀    ▀   ▀▀▀  -----
+----------------------------------------------------------------
 --client/EnclosureChallenge_Remote.lua
 
 EnclosureChallenge = EnclosureChallenge or {}
@@ -106,7 +125,7 @@ function EnclosureChallenge.getRandMidCoord()
         end
     end
 
-    if (not maxX or not maxY or maxX <= 0 or maxY <= 0) and is42 then
+    if not maxX or not maxY or maxX <= 0 or maxY <= 0 then
         maxX = 16348
         maxY = 15683
     end
@@ -143,8 +162,8 @@ function EnclosureChallenge.tpRandMidSq()
     local midX, midY, enclosureX, enclosureY = EnclosureChallenge.getRandMidCoord()
     if not midX then
         EnclosureChallenge.remoteTeleportPending = false
-        pl:Say("Map API failed.")
-        return
+        midX, midY = EnclosureChallenge.getEnclosureMidXY(pl:getX(), pl:getY(), pl)
+        if not midX then return end
     end
 
 

@@ -11,7 +11,6 @@
 |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|
 |                       	Portfolio:  https://steamcommunity.com/id/glytch3r/myworkshopfiles/							          |
 |                       		                                    														 	  |
-|                       	Discord:    glytch3r														      |
 |                       		                                    														 	  |
 |                       	Support:    https://ko-fi.com/glytch3r														    	  |
 |_______________________________________________________________________________________________________________________________-]]
@@ -94,13 +93,15 @@ function EnclosureChallenge.setMarkers(targ, keepOld)
     if not enc then return end
 
     EnclosureChallenge.edgeMarkers = EnclosureChallenge.edgeMarkers or {}
-    if not keepOld then
+    if EnclosureChallenge.edgeMarkers then
         for i = #EnclosureChallenge.edgeMarkers, 1, -1 do
             local marker = EnclosureChallenge.edgeMarkers[i]
             if marker then marker:remove() end
             table.remove(EnclosureChallenge.edgeMarkers, i)
         end
     end
+
+    if false then
 
     local status = EnclosureChallenge.getEnclosureStatus(targ)
     local col = EnclosureChallenge.getEnclosureColor(targ)
@@ -129,6 +130,7 @@ function EnclosureChallenge.setMarkers(targ, keepOld)
             local marker = wm:addGridSquareMarker(stamp, stamp, sq, r, g, b, true, isChallenger and 1 or 0.5)
             table.insert(EnclosureChallenge.edgeMarkers, marker)
         end
+    end
     end
 end
 
@@ -166,6 +168,42 @@ function EnclosureChallenge.getEnclosurEdgeSquares(targ)
 
     return edgeSquares
 end
+
+function EnclosureChallenge.drawBoundaryLine(x1, y1, x2, y2, color)
+    local dx, dy = x2 - x1, y2 - y1
+    local length = math.sqrt(dx * dx + dy * dy)
+    if length <= 0 then return end
+    local half = 0.75
+    local nx, ny = -dy / length * half, dx / length * half
+    getRenderer():renderPoly(x1 + nx, y1 + ny, x2 + nx, y2 + ny,
+        x2 - nx, y2 - ny, x1 - nx, y1 - ny, color.r, color.g, color.b, color.a)
+end
+
+function EnclosureChallenge.drawEnclosureBoundary()
+    local pl = getPlayer()
+    if not pl or not EnclosureChallenge.isChallenger() then return end
+    local size = EnclosureChallenge.EnclosureSize or 189
+    local x, y, z = pl:getX(), pl:getY(), math.floor(pl:getZ())
+    local minX, minY = math.floor(x / size) * size, math.floor(y / size) * size
+    local maxX, maxY = minX + size, minY + size
+    local offsetX, offsetY = -getPlayerScreenLeft(0), -getPlayerScreenTop(0)
+    local function screen(wx, wy)
+        return isoToScreenX(0, wx, wy, z) + offsetX, isoToScreenY(0, wx, wy, z) + offsetY
+    end
+    local x1, y1 = screen(minX, minY)
+    local x2, y2 = screen(maxX, minY)
+    local x3, y3 = screen(maxX, maxY)
+    local x4, y4 = screen(minX, maxY)
+    local col = EnclosureChallenge.getEnclosureColor(pl) or {r=1, g=0.9, b=0.1, a=1}
+    col = {r=col.r, g=col.g, b=col.b, a=0.95}
+    EnclosureChallenge.drawBoundaryLine(x1, y1, x2, y2, col)
+    EnclosureChallenge.drawBoundaryLine(x2, y2, x3, y3, col)
+    EnclosureChallenge.drawBoundaryLine(x3, y3, x4, y4, col)
+    EnclosureChallenge.drawBoundaryLine(x4, y4, x1, y1, col)
+end
+
+Events.OnPreUIDraw.Remove(EnclosureChallenge.drawEnclosureBoundary)
+Events.OnPreUIDraw.Add(EnclosureChallenge.drawEnclosureBoundary)
 
 -----------------------            ---------------------------
 

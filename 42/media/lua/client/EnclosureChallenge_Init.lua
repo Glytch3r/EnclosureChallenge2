@@ -1,3 +1,23 @@
+----------------------------------------------------------------
+-----  ▄▄▄   ▄    ▄   ▄  ▄▄▄▄▄   ▄▄▄   ▄   ▄   ▄▄▄    ▄▄▄  -----
+----- █   ▀  █    █▄▄▄█    █    █   ▀  █▄▄▄█  ▀  ▄█  █ ▄▄▀ -----
+----- █  ▀█  █      █      █    █   ▄  █   █  ▄   █  █   █ -----
+-----  ▀▀▀▀  ▀▀▀▀   ▀      ▀     ▀▀▀   ▀   ▀   ▀▀▀   ▀   ▀ -----
+----------------------------------------------------------------
+--                                                            --
+--   Project Zomboid Modding Commissions                      --
+--   https://steamcommunity.com/id/glytch3r/myworkshopfiles   --
+--                                                            --
+--   ▫ Support  ꞉   https://ko-fi.com/glytch3r                --
+--   ▫ Youtube  ꞉   https://www.youtube.com/@glytch3r         --
+--   ▫ Github   ꞉   https://github.com/Glytch3r               --
+--                                                            --
+----------------------------------------------------------------
+----- ▄   ▄   ▄▄▄   ▄   ▄   ▄▄▄     ▄      ▄   ▄▄▄▄  ▄▄▄▄  -----
+----- █   █  █   ▀  █   █  ▀   █    █      █      █  █▄  █ -----
+----- ▄▀▀ █  █▀  ▄  █▀▀▀█  ▄   █    █    █▀▀▀█    █  ▄   █ -----
+-----  ▀▀▀    ▀▀▀   ▀   ▀   ▀▀▀   ▀▀▀▀▀  ▀   ▀    ▀   ▀▀▀  -----
+----------------------------------------------------------------
 --client/EnclosureChallenge_Init.lua
 EnclosureChallenge = EnclosureChallenge or {}
 
@@ -48,6 +68,7 @@ function EnclosureChallenge.initChallengeData(pl)
     ec.GUI.textGap       = ec.GUI.textGap       or 42
     ec.GUI.xPercentPos   = ec.GUI.xPercentPos   or 85
     ec.GUI.yPercentPos   = ec.GUI.yPercentPos   or 85
+    if ec.DrawGrid == nil then ec.DrawGrid = true end
 
     return ec
 end
@@ -95,6 +116,19 @@ function EnclosureChallenge.OutOfBoundHandler()
 	end
 end
 Events.OnEnclosureChange.Add(EnclosureChallenge.OutOfBoundHandler)
+
+function EnclosureChallenge.EnforceBoundary(pl)
+    if not isIngameState() or not pl or not pl:isAlive() then return end
+    if not EnclosureChallenge.isChallenger() then return end
+    if EnclosureChallenge.outOfBoundsPending then return end
+    if EnclosureChallenge.Rebound and EnclosureChallenge.Rebound.inTransit then return end
+    if EnclosureChallenge.isOutOfBounds(pl) then
+        EnclosureChallenge.outOfBoundsPending = true
+        EnclosureChallenge.rebound()
+        pl:setHaloNote("OUT OF BOUNDS!", 255, 50, 50, 150)
+    end
+end
+Events.OnPlayerUpdate.Add(EnclosureChallenge.EnforceBoundary)
 
 function EnclosureChallenge.EnclosureChange(pl)
     if not isIngameState() or not pl then return end

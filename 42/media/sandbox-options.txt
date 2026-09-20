@@ -59,6 +59,11 @@ option EnclosureChallenge.ReturnStaggered
 	type = boolean, default = true,
 	page = EnclosureChallenge, translation = EnclosureChallenge_ReturnStaggered,
 }
+option EnclosureChallenge.ReboundToBoundary
+{
+	type = boolean, default = true,
+	page = EnclosureChallenge, translation = EnclosureChallenge_ReboundToBoundary,
+}
 option EnclosureChallenge.AllowQuit
 {
 	type = boolean, default = true,

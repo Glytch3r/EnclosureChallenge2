@@ -1,3 +1,23 @@
+----------------------------------------------------------------
+-----  ▄▄▄   ▄    ▄   ▄  ▄▄▄▄▄   ▄▄▄   ▄   ▄   ▄▄▄    ▄▄▄  -----
+----- █   ▀  █    █▄▄▄█    █    █   ▀  █▄▄▄█  ▀  ▄█  █ ▄▄▀ -----
+----- █  ▀█  █      █      █    █   ▄  █   █  ▄   █  █   █ -----
+-----  ▀▀▀▀  ▀▀▀▀   ▀      ▀     ▀▀▀   ▀   ▀   ▀▀▀   ▀   ▀ -----
+----------------------------------------------------------------
+--                                                            --
+--   Project Zomboid Modding Commissions                      --
+--   https://steamcommunity.com/id/glytch3r/myworkshopfiles   --
+--                                                            --
+--   ▫ Support  ꞉   https://ko-fi.com/glytch3r                --
+--   ▫ Youtube  ꞉   https://www.youtube.com/@glytch3r         --
+--   ▫ Github   ꞉   https://github.com/Glytch3r               --
+--                                                            --
+----------------------------------------------------------------
+----- ▄   ▄   ▄▄▄   ▄   ▄   ▄▄▄     ▄      ▄   ▄▄▄▄  ▄▄▄▄  -----
+----- █   █  █   ▀  █   █  ▀   █    █      █      █  █▄  █ -----
+----- ▄▀▀ █  █▀  ▄  █▀▀▀█  ▄   █    █    █▀▀▀█    █  ▄   █ -----
+-----  ▀▀▀    ▀▀▀   ▀   ▀   ▀▀▀   ▀▀▀▀▀  ▀   ▀    ▀   ▀▀▀  -----
+----------------------------------------------------------------
 --client/EnclosureChallenge_Data.lua
 
 EnclosureChallenge = EnclosureChallenge or {}
@@ -18,6 +38,18 @@ function EnclosureChallenge.getGUISettings()
     if not ec then return {} end  -- fail-safe: never return nil
     ec.GUI = ec.GUI or {}
     return ec.GUI
+end
+
+function EnclosureChallenge.isDrawGridEnabled()
+    local ec = EnclosureChallenge.getData()
+    return not ec or ec.DrawGrid ~= false
+end
+
+function EnclosureChallenge.toggleDrawGrid()
+    local ec = EnclosureChallenge.getData()
+    if not ec then return end
+    ec.DrawGrid = not EnclosureChallenge.isDrawGridEnabled()
+    return ec.DrawGrid
 end
 
 

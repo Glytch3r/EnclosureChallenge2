@@ -26,6 +26,8 @@
   "Sandbox_EnclosureChallenge_LeakBattery_tooltip": "Drain Car Batteries during challenges",
   "Sandbox_EnclosureChallenge_ReturnStaggered": "Return Staggered",
   "Sandbox_EnclosureChallenge_ReturnStaggered_tooltip": "Out-of-bounds players are teleported back and briefly staggered",
+  "Sandbox_EnclosureChallenge_ReboundToBoundary": "Rebound to Boundary",
+  "Sandbox_EnclosureChallenge_ReboundToBoundary_tooltip": "Return out-of-bounds players to the nearest enclosure wall; disable to return them to the challenge center",
   "Sandbox_EnclosureChallenge_ZedNoDmg": "No Dmg to Out of bounds Zeds",
   "Sandbox_EnclosureChallenge_AdditiveItemReward": "Additive Item Reward",
   "Sandbox_EnclosureChallenge_AdditiveItemReward_tooltip": "Spawn Random Item Reward Every Additive Stage",

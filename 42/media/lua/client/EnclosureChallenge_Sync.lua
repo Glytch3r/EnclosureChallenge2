@@ -11,7 +11,6 @@
 |‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|
 |                       	Portfolio:  https://steamcommunity.com/id/glytch3r/myworkshopfiles/							          |
 |                       		                                    														 	  |
-|                       	Discord:    glytch3r														      |
 |                       		                                    														 	  |
 |                       	Support:    https://ko-fi.com/glytch3r														    	  |
 |_______________________________________________________________________________________________________________________________-]]
@@ -62,9 +61,11 @@ Commands.EnclosureChallenge.send = function(args)
         local ec = EnclosureChallenge.getData()
         if not ec or not ec.Rebound then return  end
 
-        local x = ec.Rebound.x
-        local y = ec.Rebound.y
-        local z = ec.Rebound.z or 0
+        local boundary = SandboxVars.EnclosureChallenge.ReboundToBoundary ~= false
+            and EnclosureChallenge.getBoundaryRebound(targ)
+        local x = boundary and boundary.x or ec.Rebound.x
+        local y = boundary and boundary.y or ec.Rebound.y
+        local z = boundary and boundary.z or ec.Rebound.z or 0
 
         EnclosureChallenge.tp(targ, x, y, z)
 
@@ -80,7 +81,7 @@ end
 Commands.EnclosureChallenge.vehicleRebound = function(args)
     if not args or not args.id then return end
     local vehicle = getVehicleById and getVehicleById(args.id) or nil
-    if vehicle then EnclosureChallenge.moveVehicle(vehicle, args.x, args.y) end
+    if vehicle then EnclosureChallenge.reboundMoveVehicle(vehicle, args.x, args.y) end
 end
 
 Commands.EnclosureChallenge.prompt = function(args)

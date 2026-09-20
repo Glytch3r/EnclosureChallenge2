@@ -1,3 +1,23 @@
+----------------------------------------------------------------
+-----  ▄▄▄   ▄    ▄   ▄  ▄▄▄▄▄   ▄▄▄   ▄   ▄   ▄▄▄    ▄▄▄  -----
+----- █   ▀  █    █▄▄▄█    █    █   ▀  █▄▄▄█  ▀  ▄█  █ ▄▄▀ -----
+----- █  ▀█  █      █      █    █   ▄  █   █  ▄   █  █   █ -----
+-----  ▀▀▀▀  ▀▀▀▀   ▀      ▀     ▀▀▀   ▀   ▀   ▀▀▀   ▀   ▀ -----
+----------------------------------------------------------------
+--                                                            --
+--   Project Zomboid Modding Commissions                      --
+--   https://steamcommunity.com/id/glytch3r/myworkshopfiles   --
+--                                                            --
+--   ▫ Support  ꞉   https://ko-fi.com/glytch3r                --
+--   ▫ Youtube  ꞉   https://www.youtube.com/@glytch3r         --
+--   ▫ Github   ꞉   https://github.com/Glytch3r               --
+--                                                            --
+----------------------------------------------------------------
+----- ▄   ▄   ▄▄▄   ▄   ▄   ▄▄▄     ▄      ▄   ▄▄▄▄  ▄▄▄▄  -----
+----- █   █  █   ▀  █   █  ▀   █    █      █      █  █▄  █ -----
+----- ▄▀▀ █  █▀  ▄  █▀▀▀█  ▄   █    █    █▀▀▀█    █  ▄   █ -----
+-----  ▀▀▀    ▀▀▀   ▀   ▀   ▀▀▀   ▀▀▀▀▀  ▀   ▀    ▀   ▀▀▀  -----
+----------------------------------------------------------------
 --client/EnclosureChallenge_Enclosure.lua
 EnclosureChallenge = EnclosureChallenge or {}
 
@@ -10,8 +30,13 @@ function EnclosureChallenge.tp(pl, x, y, z)
     end
 
     local vehicle = pl:getVehicle()
-    if vehicle and EnclosureChallenge.getVehicleSeat(pl, vehicle) == 0 then
-        if EnclosureChallenge.reboundVehicle(pl, x, y, z) then return true end
+    if vehicle then
+        if EnclosureChallenge.getVehicleSeat(pl, vehicle) == 0 then
+            if EnclosureChallenge.reboundVehicle(pl, x, y, z) then return true end
+        else
+            -- The driver moves the vehicle for everyone. Keep passengers inside it.
+            return true
+        end
     end
 
     EnclosureChallenge.forceExitCar(pl)
