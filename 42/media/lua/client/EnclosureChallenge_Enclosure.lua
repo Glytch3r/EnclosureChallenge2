@@ -32,14 +32,13 @@ function EnclosureChallenge.tp(pl, x, y, z)
     local vehicle = pl:getVehicle()
     if vehicle then
         local vehicleMode = tonumber(SandboxVars.EnclosureChallenge.VehicleReboundMode) or 3
-        if SandboxVars.EnclosureChallenge.VehicleRebounds ~= false and vehicleMode == 3 or
-            SandboxVars.EnclosureChallenge.VehicleRebounds ~= false and vehicleMode == 4 then
+        if vehicleMode == 3 or vehicleMode == 4 then
             if EnclosureChallenge.getVehicleSeat(pl, vehicle) == 0 then
                 if EnclosureChallenge.reboundVehicle(pl, x, y, z) then return true end
             else
                 return true
             end
-        elseif SandboxVars.EnclosureChallenge.VehicleRebounds ~= false and vehicleMode == 1 then
+        elseif vehicleMode == 1 then
             return true
         else
             EnclosureChallenge.forceExitCar(pl)

@@ -61,14 +61,9 @@ option EnclosureChallenge.ReturnStaggered
 }
 option EnclosureChallenge.ReboundMode
 {
-	type = enum, numValues = 3, default = 3,
+	type = enum, numValues = 3, default = 2,
 	page = EnclosureChallenge, translation = EnclosureChallenge_ReboundMode,
 	valueTranslation = EnclosureChallenge_ReboundMode,
-}
-option EnclosureChallenge.VehicleRebounds
-{
-	type = boolean, default = true,
-	page = EnclosureChallenge, translation = EnclosureChallenge_VehicleRebounds,
 }
 option EnclosureChallenge.VehicleReboundMode
 {

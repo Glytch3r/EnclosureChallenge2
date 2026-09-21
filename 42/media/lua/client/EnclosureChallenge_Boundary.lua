@@ -76,7 +76,6 @@ end
 function EnclosureChallenge.getReboundMode(pl)
 	local vehicle = pl and pl:getVehicle()
 	if vehicle then
-		if SandboxVars.EnclosureChallenge.VehicleRebounds == false then return 2 end
 		return tonumber(SandboxVars.EnclosureChallenge.VehicleReboundMode) or 3
 	end
 	return tonumber(SandboxVars.EnclosureChallenge.ReboundMode) or 3
@@ -219,7 +218,7 @@ EnclosureChallenge.Rebound = setmetatable({}, {
 
 					if isClient() then
 						sendClientCommand("EnclosureChallenge", "stagger", {})
-					else
+					elseif EnclosureChallenge.stag then
 						EnclosureChallenge.stag(pl)
 					end
 
