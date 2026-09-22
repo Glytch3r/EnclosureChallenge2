@@ -26,6 +26,12 @@
    ░▒▓█████▓▒░     ░▒▓█▓▒░        ░▒▓█▓▒░░▒▓█▓▒░  ░▒▓███████▓▒░   ░▒▓██████▓▒░   ░▒▓█▓▒░ ░▒▓█▓▒░  ░▒▓███████▓▒░    ░▒▓███████▓▒░
 █████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████--]]
 
+local function isB41()
+    return luautils.stringStarts(getCore():getVersion(), "41")
+end
+
+if not isB41() then return end
+
 EnclosureChallenge = EnclosureChallenge or {}
 
 function EnclosureChallenge.isOutOfBounds(targ)
@@ -161,7 +167,7 @@ EnclosureChallenge.Rebound = setmetatable({}, {
 
 					if isClient() then
 						sendClientCommand("EnclosureChallenge", "stagger", {})
-					else
+					elseif EnclosureChallenge.stag then
 						EnclosureChallenge.stag(pl)
 					end
 
@@ -327,7 +333,7 @@ EnclosureChallenge.Rebound = setmetatable({}, {
 
                     if isClient() then
                         sendClientCommand("EnclosureChallenge", "stagger", {})
-                    else
+                    elseif EnclosureChallenge.stag then
                         EnclosureChallenge.stag(pl)
                     end
 

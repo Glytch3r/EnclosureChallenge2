@@ -22,6 +22,12 @@
 
 --client/EnclosureChallenge_Boundary.lua
 
+local function isB42()
+    return luautils.stringStarts(getCore():getVersion(), "42")
+end
+
+if not isB42() then return end
+
 EnclosureChallenge = EnclosureChallenge or {}
 
 function EnclosureChallenge.isOutOfBounds(targ)
